@@ -6,6 +6,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+interface EmailRequest {
+  to: string;
+  programNames: string[];
+  totalBudget: number;
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -13,9 +19,11 @@ serve(async (req) => {
   }
 
   try {
-    const { to, programNames, totalBudget } = await req.json();
+    const { to, programNames, totalBudget } = await req.json() as EmailRequest;
+    console.log("Sending confirmation email to:", to);
+    
     const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
-
+    
     const formattedBudget = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -23,7 +31,7 @@ serve(async (req) => {
       maximumFractionDigits: 1,
     }).format(totalBudget);
 
-    const programList = programNames.map((name: string) => `• ${name}`).join('\n');
+    const programList = programNames.map(name => `• ${name}`).join('\n');
 
     const { data, error } = await resend.emails.send({
       from: 'Fantasy DOGE <onboarding@resend.dev>',
@@ -43,9 +51,11 @@ serve(async (req) => {
       throw error;
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    console.log("Email sent successfully:", data);
+    return new Response(JSON.stringify({ success: true, data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
+
   } catch (error) {
     console.error('Error in send-confirmation function:', error);
     return new Response(JSON.stringify({ error: error.message }), {
