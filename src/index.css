@@ -52,3 +52,16 @@
 .doge-button {
   @apply inline-flex items-center justify-center rounded-lg bg-doge-gold px-6 py-3 font-semibold text-white transition-all hover:bg-doge-gold/90 hover:scale-105;
 }
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 60s linear infinite;
+}

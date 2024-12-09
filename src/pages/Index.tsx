@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Coins, Trophy, Users } from "lucide-react";
-import ProgramList from "@/components/ProgramList";
+import ProgramGrid from "@/components/ProgramGrid";
 import DraftedPrograms from "@/components/DraftedPrograms";
 import ScoreBoard from "@/components/ScoreBoard";
 import ActivePlayers from "@/components/ActivePlayers";
+import ProgramTicker from "@/components/ProgramTicker";
+import ReformAdvocates from "@/components/ReformAdvocates";
 
 interface Program {
   id: string;
@@ -30,6 +32,8 @@ export default function Index() {
 
   return (
     <div className="min-h-screen">
+      <ProgramTicker />
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20">
         <div className="container mx-auto px-4">
@@ -54,6 +58,16 @@ export default function Index() {
         </div>
         <div className="absolute -bottom-40 right-0 h-96 w-96 animate-float opacity-10">
           <div className="doge-gradient h-full w-full rounded-full blur-3xl"></div>
+        </div>
+      </section>
+
+      {/* Reform Advocates Section */}
+      <section className="py-10 bg-secondary">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Join the Reform Movement
+          </h2>
+          <ReformAdvocates />
         </div>
       </section>
 
@@ -93,7 +107,7 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              <ProgramList
+              <ProgramGrid
                 selectedPrograms={selectedPrograms}
                 onSelectProgram={handleSelectProgram}
               />
