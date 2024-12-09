@@ -1,18 +1,18 @@
-import { Chainsaw, Axe } from "lucide-react";
+import { Scissors, Axe, Flame } from "lucide-react";
 
 export default function ReformLogo() {
   return (
     <div className="relative w-48 h-48 mx-auto">
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative grid grid-cols-3 gap-4">
-          {/* Elon with chainsaw */}
+          {/* Elon with scissors */}
           <div className="flex flex-col items-center">
             <img
               src="/lovable-uploads/62d7ee9d-6255-45a7-9796-b404dd5b73bc.png"
               alt="Elon"
               className="w-12 h-12 rounded-full"
             />
-            <Chainsaw className="text-doge-gold mt-2" />
+            <Scissors className="text-doge-gold mt-2" />
           </div>
           
           {/* Donald with "You're Fired" gesture */}
@@ -22,7 +22,7 @@ export default function ReformLogo() {
               alt="Donald"
               className="w-12 h-12 rounded-full"
             />
-            <span className="text-2xl mt-2">🔥</span>
+            <Flame className="text-doge-gold mt-2" />
           </div>
           
           {/* Vivek with axe */}
