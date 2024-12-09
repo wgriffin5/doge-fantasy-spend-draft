@@ -1,23 +1,37 @@
+import { useState, useEffect } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function ReformAdvocates() {
+  const [descriptionIndex, setDescriptionIndex] = useState(0);
+
   const advocates = [
     {
-      name: "Elon Musk",
+      name: "Lonnie Rockets",
       image: "/elon.png",
-      title: "Tech Innovator",
+      titles: ["Rocket Bro", "Mars Guy", "X Man", "Autistic African Immigrant", "Billionaire"],
     },
     {
-      name: "Donald Trump",
+      name: "Donny Fairways",
       image: "/trump.png",
-      title: "Former President",
+      titles: ["Melania's Husband", "Baron's Dad", "Casino Owner", "Reality TV Star", "You're Fired", "Billionaire"],
     },
     {
-      name: "Vivek Ramaswamy",
+      name: "V Brah",
       image: "/vivek.png",
-      title: "Entrepreneur",
+      titles: ["Bio Billionaire", "Hair Product Model"],
     },
   ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDescriptionIndex((prevIndex) => {
+        const maxLength = Math.max(...advocates.map(a => a.titles.length));
+        return (prevIndex + 1) % maxLength;
+      });
+    }, 3000); // Change description every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex justify-center gap-8 py-6">
@@ -34,7 +48,9 @@ export default function ReformAdvocates() {
             <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/50 to-transparent" />
           </div>
           <h3 className="mt-2 font-bold">{advocate.name}</h3>
-          <p className="text-sm text-muted-foreground">{advocate.title}</p>
+          <p className="text-sm text-muted-foreground">
+            {advocate.titles[descriptionIndex % advocate.titles.length]}
+          </p>
         </div>
       ))}
     </div>
