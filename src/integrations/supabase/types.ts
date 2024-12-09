@@ -30,6 +30,42 @@ export type Database = {
         }
         Relationships: []
       }
+      programs: {
+        Row: {
+          annual_budget: number
+          created_at: string
+          cut_amount: number | null
+          cut_date: string | null
+          department: string
+          description: string
+          id: string
+          is_cut: boolean | null
+          name: string
+        }
+        Insert: {
+          annual_budget: number
+          created_at?: string
+          cut_amount?: number | null
+          cut_date?: string | null
+          department: string
+          description: string
+          id?: string
+          is_cut?: boolean | null
+          name: string
+        }
+        Update: {
+          annual_budget?: number
+          created_at?: string
+          cut_amount?: number | null
+          cut_date?: string | null
+          department?: string
+          description?: string
+          id?: string
+          is_cut?: boolean | null
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
