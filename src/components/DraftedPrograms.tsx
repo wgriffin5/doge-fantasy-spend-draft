@@ -51,6 +51,7 @@ export default function DraftedPrograms({
     }
 
     setIsSubmitting(true);
+    console.log("Submitting draft picks...");
 
     try {
       // Save draft picks to database
@@ -61,7 +62,12 @@ export default function DraftedPrograms({
           program_ids: selectedPrograms.map((p) => p.id),
         });
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        console.error("Database error:", dbError);
+        throw dbError;
+      }
+
+      console.log("Draft picks saved to database, sending confirmation email...");
 
       // Send confirmation email
       const response = await fetch("/functions/v1/send-confirmation", {
@@ -77,7 +83,9 @@ export default function DraftedPrograms({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to send confirmation email");
+        const errorData = await response.json();
+        console.error("Email error:", errorData);
+        throw new Error(errorData.error || "Failed to send confirmation email");
       }
 
       toast.success(
@@ -86,7 +94,9 @@ export default function DraftedPrograms({
       setEmail("");
     } catch (error) {
       console.error("Error saving draft picks:", error);
-      toast.error("Failed to save draft picks. Please try again.");
+      toast.error(
+        error.message || "Failed to save draft picks. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -148,7 +158,7 @@ export default function DraftedPrograms({
             onClick={handleSubmit}
             disabled={isSubmitting}
           >
-            Save Draft Picks
+            {isSubmitting ? "Saving..." : "Save Draft Picks"}
           </Button>
         </div>
       </CardContent>
