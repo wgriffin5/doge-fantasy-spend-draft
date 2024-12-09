@@ -53,12 +53,31 @@ export default function DraftedPrograms({
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.from("draft_picks").insert({
+      // Save draft picks to database
+      const { error: dbError } = await supabase.from("draft_picks").insert({
         email,
         program_ids: selectedPrograms.map((p) => p.id),
       });
 
-      if (error) throw error;
+      if (dbError) throw dbError;
+
+      // Send confirmation email
+      const response = await fetch("/functions/v1/send-confirmation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${supabase.auth.session()?.access_token}`,
+        },
+        body: JSON.stringify({
+          to: email,
+          programNames: selectedPrograms.map((p) => p.name),
+          totalBudget,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send confirmation email");
+      }
 
       toast.success(
         "Draft picks saved! Check your email for a confirmation message."
