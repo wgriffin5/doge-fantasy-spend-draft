@@ -11,6 +11,9 @@ interface Program {
   description: string;
   annual_budget: number;
   department: string;
+  is_cut: boolean;
+  cut_date: string | null;
+  cut_amount: number | null;
 }
 
 export default function Index() {
