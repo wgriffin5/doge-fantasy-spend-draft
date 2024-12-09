@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Coins, Trophy, Users } from "lucide-react";
 import ProgramList from "@/components/ProgramList";
 import DraftedPrograms from "@/components/DraftedPrograms";
+import ScoreBoard from "@/components/ScoreBoard";
 
 interface Program {
   id: string;
@@ -93,11 +94,12 @@ export default function Index() {
                 onSelectProgram={handleSelectProgram}
               />
             </div>
-            <div>
+            <div className="space-y-8">
               <DraftedPrograms
                 selectedPrograms={selectedPrograms}
                 onRemoveProgram={handleSelectProgram}
               />
+              <ScoreBoard />
             </div>
           </div>
         </div>

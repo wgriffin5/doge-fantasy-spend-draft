@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Badge } from "@/components/ui/badge";
 
 interface Program {
   id: string;
@@ -19,6 +20,9 @@ interface Program {
   description: string;
   annual_budget: number;
   department: string;
+  is_cut: boolean;
+  cut_date: string | null;
+  cut_amount: number | null;
 }
 
 interface ProgramListProps {
@@ -83,13 +87,14 @@ export default function ProgramList({
               <TableHead>Program</TableHead>
               <TableHead>Department</TableHead>
               <TableHead>Annual Budget</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center">
+                <TableCell colSpan={5} className="text-center">
                   Loading programs...
                 </TableCell>
               </TableRow>
@@ -107,11 +112,19 @@ export default function ProgramList({
                   <TableCell>{program.department}</TableCell>
                   <TableCell>{formatBudget(program.annual_budget)}</TableCell>
                   <TableCell>
+                    {program.is_cut ? (
+                      <Badge variant="destructive">Cut</Badge>
+                    ) : (
+                      <Badge variant="secondary">Active</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <Button
                       variant={isSelected(program) ? "destructive" : "default"}
                       onClick={() => onSelectProgram(program)}
                       disabled={
-                        selectedPrograms.length >= 7 && !isSelected(program)
+                        (selectedPrograms.length >= 7 && !isSelected(program)) ||
+                        program.is_cut
                       }
                     >
                       {isSelected(program) ? "Remove" : "Draft"}
