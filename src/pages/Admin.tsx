@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface Program {
   id: string;
@@ -90,73 +91,75 @@ export default function Admin() {
   };
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="mb-8 text-4xl font-bold">Admin Dashboard</h1>
-      
-      <div className="rounded-lg border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Program</TableHead>
-              <TableHead>Department</TableHead>
-              <TableHead>Annual Budget</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Cut Amount</TableHead>
-              <TableHead>Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {programs?.map((program) => (
-              <TableRow key={program.id}>
-                <TableCell>
-                  <div>
-                    <div className="font-medium">{program.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {program.description}
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>{program.department}</TableCell>
-                <TableCell>{formatBudget(program.annual_budget)}</TableCell>
-                <TableCell>
-                  {program.is_cut ? (
-                    <Badge variant="destructive">Cut</Badge>
-                  ) : (
-                    <Badge variant="secondary">Active</Badge>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {!program.is_cut && (
-                    <Input
-                      type="number"
-                      placeholder="Cut amount"
-                      value={cutAmounts[program.id] || ""}
-                      onChange={(e) =>
-                        setCutAmounts({
-                          ...cutAmounts,
-                          [program.id]: e.target.value,
-                        })
-                      }
-                    />
-                  )}
-                  {program.is_cut && program.cut_amount && (
-                    <span>{formatBudget(program.cut_amount)}</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="destructive"
-                    onClick={() => handleCutProgram(program)}
-                    disabled={program.is_cut}
-                  >
-                    Cut Program
-                  </Button>
-                </TableCell>
+    <ProtectedRoute requireAdmin>
+      <div className="container mx-auto py-10">
+        <h1 className="mb-8 text-4xl font-bold">Admin Dashboard</h1>
+        
+        <div className="rounded-lg border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Program</TableHead>
+                <TableHead>Department</TableHead>
+                <TableHead>Annual Budget</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Cut Amount</TableHead>
+                <TableHead>Action</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {programs?.map((program) => (
+                <TableRow key={program.id}>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{program.name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {program.description}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>{program.department}</TableCell>
+                  <TableCell>{formatBudget(program.annual_budget)}</TableCell>
+                  <TableCell>
+                    {program.is_cut ? (
+                      <Badge variant="destructive">Cut</Badge>
+                    ) : (
+                      <Badge variant="secondary">Active</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {!program.is_cut && (
+                      <Input
+                        type="number"
+                        placeholder="Cut amount"
+                        value={cutAmounts[program.id] || ""}
+                        onChange={(e) =>
+                          setCutAmounts({
+                            ...cutAmounts,
+                            [program.id]: e.target.value,
+                          })
+                        }
+                      />
+                    )}
+                    {program.is_cut && program.cut_amount && (
+                      <span>{formatBudget(program.cut_amount)}</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleCutProgram(program)}
+                      disabled={program.is_cut}
+                    >
+                      Cut Program
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }
