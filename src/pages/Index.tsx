@@ -9,6 +9,7 @@ import ProgramTicker from "@/components/ProgramTicker";
 import ReformAdvocates from "@/components/ReformAdvocates";
 import SocialShare from "@/components/SocialShare";
 import ReformLogo from "@/components/ReformLogo";
+import LeagueSection from "@/components/league/LeagueSection";
 
 interface Program {
   id: string;
@@ -122,6 +123,7 @@ export default function Index() {
                 selectedPrograms={selectedPrograms}
                 onRemoveProgram={handleSelectProgram}
               />
+              <LeagueSection />
               <ScoreBoard />
             </div>
           </div>

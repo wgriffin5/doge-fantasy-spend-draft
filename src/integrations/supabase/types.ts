@@ -30,6 +30,59 @@ export type Database = {
         }
         Relationships: []
       }
+      league_members: {
+        Row: {
+          email: string
+          id: string
+          joined_at: string
+          league_id: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          joined_at?: string
+          league_id?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          joined_at?: string
+          league_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "league_members_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leagues: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string
+          id: string
+          name: string
+        }
+        Insert: {
+          code?: string
+          created_at?: string
+          created_by: string
+          id?: string
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
