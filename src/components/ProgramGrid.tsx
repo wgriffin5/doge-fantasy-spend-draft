@@ -1,25 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Skull, PartyPopper, DollarSign, Search, LayoutGrid, List } from "lucide-react";
-import { useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import SearchFilters from "./program/SearchFilters";
+import BudgetChart from "./program/BudgetChart";
+import ProgramCard from "./program/ProgramCard";
+import ProgramListItem from "./program/ProgramListItem";
 
 interface Program {
   id: string;
@@ -55,12 +40,6 @@ export default function ProgramGrid({
       return data;
     },
   });
-
-  const getFrivolityRating = (budget: number) => {
-    if (budget > 10000000000) return { icon: Skull, label: "Extremely Wasteful" };
-    if (budget > 1000000000) return { icon: PartyPopper, label: "Very Frivolous" };
-    return { icon: DollarSign, label: "Somewhat Wasteful" };
-  };
 
   const formatBudget = (budget: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -98,106 +77,25 @@ export default function ProgramGrid({
       }
     });
 
-  const totalBudget = filteredPrograms?.reduce(
-    (sum, program) => sum + program.annual_budget,
-    0
-  );
-
   if (isLoading) {
     return <div>Loading programs...</div>;
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search programs..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <div className="flex gap-2">
-          <Select value={department} onValueChange={setDepartment}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Departments" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All Departments</SelectItem>
-              {departments.map((dept) => (
-                <SelectItem key={dept} value={dept}>
-                  {dept}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="budget">Sort by Budget</SelectItem>
-              <SelectItem value="name">Sort by Name</SelectItem>
-              <SelectItem value="department">Sort by Department</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setView(view === "grid" ? "list" : "grid")}
-          >
-            {view === "grid" ? (
-              <List className="h-4 w-4" />
-            ) : (
-              <LayoutGrid className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      </div>
+      <SearchFilters
+        search={search}
+        setSearch={setSearch}
+        department={department}
+        setDepartment={setDepartment}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        view={view}
+        setView={setView}
+        departments={departments}
+      />
 
-      {/* Budget Overview Chart */}
-      <Card className="p-4">
-        <CardHeader>
-          <CardTitle>Budget Distribution</CardTitle>
-          <CardDescription>
-            Total Budget: {formatBudget(totalBudget || 0)}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[200px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={filteredPrograms?.map((program) => ({
-                    name: program.name,
-                    value: program.annual_budget,
-                  }))}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  paddingAngle={1}
-                  dataKey="value"
-                >
-                  {filteredPrograms?.map((_, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={`hsl(${(index * 360) / filteredPrograms.length}, 70%, 50%)`}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value: any) => formatBudget(value)}
-                  contentStyle={{ background: "hsl(var(--background))" }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+      <BudgetChart programs={filteredPrograms || []} formatBudget={formatBudget} />
 
       <div
         className={
@@ -206,99 +104,27 @@ export default function ProgramGrid({
             : "space-y-4"
         }
       >
-        {filteredPrograms?.map((program) => {
-          const frivolity = getFrivolityRating(program.annual_budget);
-          const FrivolityIcon = frivolity.icon;
-
-          return view === "grid" ? (
-            <Card
+        {filteredPrograms?.map((program) =>
+          view === "grid" ? (
+            <ProgramCard
               key={program.id}
-              className={`transform transition-all hover:scale-105 ${
-                isSelected(program) ? "border-doge-gold" : ""
-              }`}
-            >
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">{program.name}</CardTitle>
-                  <Badge
-                    variant={program.is_cut ? "destructive" : "secondary"}
-                    className="ml-2"
-                  >
-                    {program.is_cut ? "Cut" : "Active"}
-                  </Badge>
-                </div>
-                <CardDescription>{program.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FrivolityIcon className="h-5 w-5 text-doge-gold" />
-                      <span className="text-sm font-medium">
-                        {frivolity.label}
-                      </span>
-                    </div>
-                    <span className="font-bold text-doge-gold">
-                      {formatBudget(program.annual_budget)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <Badge variant="outline">{program.department}</Badge>
-                    <Button
-                      variant={isSelected(program) ? "destructive" : "default"}
-                      onClick={() => onSelectProgram(program)}
-                      disabled={
-                        (selectedPrograms.length >= 7 && !isSelected(program)) ||
-                        program.is_cut
-                      }
-                    >
-                      {isSelected(program) ? "Remove" : "Draft"}
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              program={program}
+              isSelected={isSelected(program)}
+              onSelect={() => onSelectProgram(program)}
+              selectedCount={selectedPrograms.length}
+              formatBudget={formatBudget}
+            />
           ) : (
-            <Card key={program.id}>
-              <div className="p-4 flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold">{program.name}</h3>
-                    <Badge
-                      variant={program.is_cut ? "destructive" : "secondary"}
-                      className="ml-2"
-                    >
-                      {program.is_cut ? "Cut" : "Active"}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {program.description}
-                  </p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <Badge variant="outline">{program.department}</Badge>
-                    <div className="flex items-center gap-2">
-                      <FrivolityIcon className="h-4 w-4 text-doge-gold" />
-                      <span className="text-sm">{frivolity.label}</span>
-                    </div>
-                    <span className="font-semibold text-doge-gold">
-                      {formatBudget(program.annual_budget)}
-                    </span>
-                  </div>
-                </div>
-                <Button
-                  variant={isSelected(program) ? "destructive" : "default"}
-                  onClick={() => onSelectProgram(program)}
-                  disabled={
-                    (selectedPrograms.length >= 7 && !isSelected(program)) ||
-                    program.is_cut
-                  }
-                >
-                  {isSelected(program) ? "Remove" : "Draft"}
-                </Button>
-              </div>
-            </Card>
-          );
-        })}
+            <ProgramListItem
+              key={program.id}
+              program={program}
+              isSelected={isSelected(program)}
+              onSelect={() => onSelectProgram(program)}
+              selectedCount={selectedPrograms.length}
+              formatBudget={formatBudget}
+            />
+          )
+        )}
       </div>
     </div>
   );
