@@ -1,82 +1,53 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { Resend } from "npm:resend";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface EmailRequest {
-  to: string;
-  programNames: string[];
-  totalBudget: number;
-}
-
-const formatBudget = (budget: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(budget);
-};
-
-const handler = async (req: Request): Promise<Response> => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { to, programNames, totalBudget } = await req.json() as EmailRequest;
+    const { to, programNames, totalBudget } = await req.json();
+    const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
-    const programList = programNames
-      .map((name) => `  • ${name}`)
-      .join("\n");
+    const formattedBudget = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    }).format(totalBudget);
 
-    const html = `
-      <h2>Your D.O.G.E. Draft Picks</h2>
-      <p>Thank you for participating in Fantasy D.O.G.E.! Here are your draft picks:</p>
-      <pre>${programList}</pre>
-      <p>Total potential budget cuts: ${formatBudget(totalBudget)}</p>
-      <p>We'll notify you when any of these programs get cut or modified!</p>
-    `;
+    const programList = programNames.map((name: string) => `• ${name}`).join('\n');
 
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "Fantasy DOGE <onboarding@resend.dev>",
-        to: [to],
-        subject: "Your Fantasy D.O.G.E. Draft Picks",
-        html: html,
-      }),
+    const { data, error } = await resend.emails.send({
+      from: 'Fantasy DOGE <doge@updates.beehiiv.com>',
+      to: [to],
+      subject: 'Your Fantasy D.O.G.E. Draft Picks',
+      html: `
+        <h1>Thanks for participating in Fantasy D.O.G.E.!</h1>
+        <p>Here are your draft picks for potential budget cuts:</p>
+        <pre>${programList}</pre>
+        <p>Total potential budget cuts: ${formattedBudget}</p>
+        <p>We'll notify you if any of your drafted programs get cut or streamlined!</p>
+      `,
     });
 
-    if (!res.ok) {
-      const error = await res.text();
-      throw new Error(error);
+    if (error) {
+      throw error;
     }
 
-    const data = await res.json();
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Error sending email:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to send confirmation email" }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
-};
-
-serve(handler);
+});
