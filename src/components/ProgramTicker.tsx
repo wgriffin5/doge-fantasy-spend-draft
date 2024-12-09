@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 
 export default function ProgramTicker() {
   const tickerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const { data: programs } = useQuery({
     queryKey: ["programs"],
@@ -19,19 +20,33 @@ export default function ProgramTicker() {
 
   useEffect(() => {
     const ticker = tickerRef.current;
-    if (!ticker) return;
+    const content = contentRef.current;
+    if (!ticker || !content || !programs?.length) return;
 
-    const scrollTicker = () => {
-      if (ticker.scrollLeft >= ticker.scrollWidth - ticker.clientWidth) {
-        ticker.scrollLeft = 0;
-      } else {
-        ticker.scrollLeft += 1;
+    // Clone the content for seamless scrolling
+    const clone = content.cloneNode(true) as HTMLDivElement;
+    ticker.appendChild(clone);
+
+    let progress = 0;
+    let animationFrameId: number;
+
+    const scroll = () => {
+      progress += 0.5;
+      if (progress >= content.offsetWidth) {
+        progress = 0;
       }
+      ticker.style.transform = `translateX(-${progress}px)`;
+      animationFrameId = requestAnimationFrame(scroll);
     };
 
-    const interval = setInterval(scrollTicker, 30);
-    return () => clearInterval(interval);
-  }, []);
+    scroll();
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [programs]);
 
   const formatBudget = (budget: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -42,15 +57,17 @@ export default function ProgramTicker() {
     }).format(budget);
   };
 
+  if (!programs?.length) return null;
+
   return (
     <div className="bg-black text-doge-gold py-2 overflow-hidden">
       <div
         ref={tickerRef}
-        className="whitespace-nowrap animate-scroll"
-        style={{ width: "100%", overflow: "hidden" }}
+        className="whitespace-nowrap inline-flex"
+        style={{ willChange: "transform" }}
       >
-        <div className="inline-block">
-          {programs?.map((program) => (
+        <div ref={contentRef} className="flex">
+          {programs.map((program) => (
             <span key={program.id} className="mx-4">
               {program.name} ({formatBudget(program.annual_budget)})
             </span>

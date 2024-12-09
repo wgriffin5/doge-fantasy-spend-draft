@@ -85,13 +85,18 @@ export default function DraftSubmissionForm({
       return;
     }
 
+    if (!email.includes("@")) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
     if (selectedPrograms.length === 0) {
       toast.error("Please draft at least one program");
       return;
     }
 
     setIsSubmitting(true);
-    console.log("Submitting draft picks...");
+    toast.loading("Submitting your draft picks...");
 
     try {
       const { error: dbError } = await supabase.from("draft_picks").insert({
@@ -103,8 +108,6 @@ export default function DraftSubmissionForm({
         console.error("Database error:", dbError);
         throw dbError;
       }
-
-      console.log("Draft picks saved to database, sending confirmation email...");
 
       const { error: emailError } = await supabase.functions.invoke(
         "send-confirmation",
@@ -123,7 +126,6 @@ export default function DraftSubmissionForm({
       }
 
       triggerCelebration();
-      
       toast.success(
         "Draft picks saved! Check your email for a confirmation message."
       );
@@ -145,13 +147,21 @@ export default function DraftSubmissionForm({
         placeholder="Enter your email to save picks"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        disabled={isSubmitting}
       />
       <Button
         className="w-full bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90"
         onClick={handleSubmit}
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Saving..." : "Save Draft Picks"}
+        {isSubmitting ? (
+          <div className="flex items-center gap-2">
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            <span>Saving...</span>
+          </div>
+        ) : (
+          "Save Draft Picks"
+        )}
       </Button>
     </div>
   );

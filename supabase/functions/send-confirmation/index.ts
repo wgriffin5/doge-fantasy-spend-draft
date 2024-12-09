@@ -1,28 +1,25 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { Resend } from "npm:resend";
-
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface EmailRequest {
+interface EmailData {
   to: string;
   programNames: string[];
   totalBudget: number;
 }
 
-const handler = async (req: Request): Promise<Response> => {
+serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const { to, programNames, totalBudget } = await req.json() as EmailRequest;
-    
+    const { to, programNames, totalBudget } = (await req.json()) as EmailData;
+
     const formattedBudget = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
@@ -30,46 +27,71 @@ const handler = async (req: Request): Promise<Response> => {
       maximumFractionDigits: 1,
     }).format(totalBudget);
 
-    const programList = programNames.map((name) => `• ${name}`).join("\n");
+    const programList = programNames
+      .map((name) => `  • ${name}`)
+      .join("\n");
 
-    const socialLinks = `
-      <div style="margin-top: 20px; text-align: center;">
-        <p style="margin-bottom: 10px;">Join our community and share your picks!</p>
-        <a href="https://www.reddit.com/r/FantasyDoge/" style="display: inline-block; margin: 0 10px; padding: 10px 20px; background-color: #FF4500; color: white; text-decoration: none; border-radius: 5px;">Join Reddit Community</a>
-        <a href="https://twitter.com/intent/tweet?text=Join%20Fantasy%20D.O.G.E.%20-%20The%20Government%20Efficiency%20Fantasy%20League!%20Draft%20federal%20spending%20programs%20and%20compete%20with%20friends%20to%20cut%20wasteful%20spending.%20🚀✂️💰&url=https://www.reddit.com/r/FantasyDoge/" style="display: inline-block; margin: 0 10px; padding: 10px 20px; background-color: #1DA1F2; color: white; text-decoration: none; border-radius: 5px;">Share on X</a>
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: linear-gradient(to right, #F2A900, #9B87F5); padding: 2px;">
+          <div style="background: white; padding: 20px;">
+            <h1 style="color: #333; margin-bottom: 20px;">Your Fantasy D.O.G.E. Draft Picks</h1>
+            
+            <p style="color: #666;">Thank you for participating in Fantasy D.O.G.E. - the Government Efficiency Fantasy League!</p>
+            
+            <div style="background: #f7f7f7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+              <h2 style="color: #333; margin-bottom: 15px;">Your Draft Summary:</h2>
+              <ul style="list-style: none; padding: 0; margin: 0;">
+                ${programNames.map(name => `
+                  <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    ${name}
+                  </li>
+                `).join('')}
+              </ul>
+              <p style="margin-top: 15px; font-weight: bold; color: #F2A900;">
+                Total Budget Impact: ${formattedBudget}
+              </p>
+            </div>
+            
+            <p style="color: #666; margin-top: 20px;">
+              Share your picks on social media and challenge your friends to make better cuts!
+            </p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.9em; color: #999;">
+              Fantasy D.O.G.E. - Draft Oversight & Government Efficiency
+            </div>
+          </div>
+        </div>
       </div>
     `;
 
-    const { data, error } = await resend.emails.send({
-      from: "Fantasy DOGE <onboarding@resend.dev>",
-      to: [to],
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+
+    const { error: emailError } = await supabase.auth.admin.sendRawEmail({
+      to,
       subject: "Your Fantasy D.O.G.E. Draft Picks",
-      html: `
-        <h1>Thanks for participating in Fantasy D.O.G.E.!</h1>
-        <p>Here are your draft picks for potential budget cuts:</p>
-        <pre>${programList}</pre>
-        <p>Total potential budget cuts: ${formattedBudget}</p>
-        <p>We'll notify you if any of your drafted programs get cut or streamlined!</p>
-        ${socialLinks}
-      `,
+      html: emailHtml,
     });
 
-    if (error) {
-      console.error("Resend API error:", error);
-      throw error;
-    }
+    if (emailError) throw emailError;
 
-    return new Response(JSON.stringify({ success: true, data }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-
-  } catch (error: any) {
-    console.error("Error in send-confirmation function:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ message: "Confirmation email sent successfully" }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      }
+    );
   }
-};
-
-serve(handler);
+});
