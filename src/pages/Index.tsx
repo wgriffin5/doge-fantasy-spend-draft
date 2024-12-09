@@ -7,6 +7,8 @@ import ScoreBoard from "@/components/ScoreBoard";
 import ActivePlayers from "@/components/ActivePlayers";
 import ProgramTicker from "@/components/ProgramTicker";
 import ReformAdvocates from "@/components/ReformAdvocates";
+import SocialShare from "@/components/SocialShare";
+import ReformLogo from "@/components/ReformLogo";
 
 interface Program {
   id: string;
@@ -38,6 +40,7 @@ export default function Index() {
       <section className="relative overflow-hidden py-20">
         <div className="container mx-auto px-4">
           <div className="text-center">
+            <ReformLogo />
             <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
               Fantasy{" "}
               <span className="doge-gradient bg-clip-text text-transparent">
@@ -49,6 +52,7 @@ export default function Index() {
               compete with friends in the ultimate government efficiency fantasy
               league!
             </p>
+            <SocialShare />
           </div>
         </div>
 
