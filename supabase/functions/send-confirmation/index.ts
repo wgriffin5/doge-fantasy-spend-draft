@@ -7,6 +7,7 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
@@ -25,7 +26,7 @@ serve(async (req) => {
     const programList = programNames.map((name: string) => `• ${name}`).join('\n');
 
     const { data, error } = await resend.emails.send({
-      from: 'Fantasy DOGE <doge@updates.beehiiv.com>',
+      from: 'Fantasy DOGE <onboarding@resend.dev>',
       to: [to],
       subject: 'Your Fantasy D.O.G.E. Draft Picks',
       html: `
@@ -38,6 +39,7 @@ serve(async (req) => {
     });
 
     if (error) {
+      console.error("Resend API error:", error);
       throw error;
     }
 
@@ -45,6 +47,7 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
+    console.error('Error in send-confirmation function:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
