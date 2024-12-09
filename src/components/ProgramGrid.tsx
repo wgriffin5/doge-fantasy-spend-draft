@@ -25,7 +25,7 @@ export default function ProgramGrid({
   onSelectProgram,
 }: ProgramGridProps) {
   const [search, setSearch] = useState("");
-  const [department, setDepartment] = useState<string>("");
+  const [department, setDepartment] = useState<string>("all");
   const [view, setView] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState<"budget" | "name" | "department">("budget");
 
@@ -62,7 +62,7 @@ export default function ProgramGrid({
       (program) =>
         (program.name.toLowerCase().includes(search.toLowerCase()) ||
           program.description.toLowerCase().includes(search.toLowerCase())) &&
-        (!department || program.department === department)
+        (department === "all" || program.department === department)
     )
     .sort((a, b) => {
       switch (sortBy) {
