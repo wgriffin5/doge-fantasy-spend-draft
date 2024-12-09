@@ -26,6 +26,31 @@ interface ProgramListProps {
   onSelectProgram: (program: Program) => void;
 }
 
+const MOCK_PROGRAMS: Program[] = [
+  {
+    id: "1",
+    name: "Agricultural Subsidies",
+    description: "Direct payments to farmers for crop price support",
+    annual_budget: 20000000000,
+    department: "Department of Agriculture",
+  },
+  {
+    id: "2",
+    name: "Space Launch System",
+    description: "Development of heavy-lift rocket systems",
+    annual_budget: 23000000000,
+    department: "NASA",
+  },
+  {
+    id: "3",
+    name: "Foreign Military Financing",
+    description: "Military aid to foreign allies",
+    annual_budget: 6000000000,
+    department: "Department of State",
+  },
+  // Add more mock programs as needed
+];
+
 export default function ProgramList({
   selectedPrograms,
   onSelectProgram,
@@ -35,13 +60,8 @@ export default function ProgramList({
   const { data: programs, isLoading } = useQuery({
     queryKey: ["programs"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("spending_programs")
-        .select("*")
-        .order("annual_budget", { ascending: false });
-
-      if (error) throw error;
-      return data as Program[];
+      // For now, return mock data since we don't have the actual table yet
+      return MOCK_PROGRAMS;
     },
   });
 
