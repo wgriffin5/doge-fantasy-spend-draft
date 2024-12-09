@@ -1,10 +1,27 @@
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
 import { Coins, Trophy, Users } from "lucide-react";
+import ProgramList from "@/components/ProgramList";
+import DraftedPrograms from "@/components/DraftedPrograms";
+
+interface Program {
+  id: string;
+  name: string;
+  description: string;
+  annual_budget: number;
+  department: string;
+}
 
 export default function Index() {
-  const navigate = useNavigate();
+  const [selectedPrograms, setSelectedPrograms] = useState<Program[]>([]);
+
+  const handleSelectProgram = (program: Program) => {
+    if (selectedPrograms.some((p) => p.id === program.id)) {
+      setSelectedPrograms(selectedPrograms.filter((p) => p.id !== program.id));
+    } else if (selectedPrograms.length < 7) {
+      setSelectedPrograms([...selectedPrograms, program]);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -19,24 +36,10 @@ export default function Index() {
               </span>
             </h1>
             <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-              Draft federal spending programs, earn points when they get cut, and compete with friends in the ultimate government efficiency fantasy league!
+              Draft federal spending programs, earn points when they get cut, and
+              compete with friends in the ultimate government efficiency fantasy
+              league!
             </p>
-            <div className="flex justify-center gap-4">
-              <Button
-                size="lg"
-                className="doge-button"
-                onClick={() => navigate("/signup")}
-              >
-                Start Playing
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => navigate("/learn")}
-              >
-                Learn More
-              </Button>
-            </div>
           </div>
         </div>
 
@@ -57,7 +60,8 @@ export default function Index() {
               <Coins className="mb-4 h-12 w-12 text-doge-gold" />
               <h3 className="mb-2 text-xl font-bold">Draft Programs</h3>
               <p className="text-muted-foreground">
-                Build your portfolio of government spending programs and watch for efficiency cuts.
+                Build your portfolio of government spending programs and watch for
+                efficiency cuts.
               </p>
             </Card>
             <Card className="doge-card">
@@ -71,9 +75,30 @@ export default function Index() {
               <Users className="mb-4 h-12 w-12 text-doge-blue" />
               <h3 className="mb-2 text-xl font-bold">Compete & Win</h3>
               <p className="text-muted-foreground">
-                Join leagues, climb the leaderboard, and become the ultimate efficiency champion.
+                Join leagues, climb the leaderboard, and become the ultimate
+                efficiency champion.
               </p>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Draft Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="grid gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <ProgramList
+                selectedPrograms={selectedPrograms}
+                onSelectProgram={handleSelectProgram}
+              />
+            </div>
+            <div>
+              <DraftedPrograms
+                selectedPrograms={selectedPrograms}
+                onRemoveProgram={handleSelectProgram}
+              />
+            </div>
           </div>
         </div>
       </section>
