@@ -4,6 +4,7 @@ import { Coins, Trophy, Users } from "lucide-react";
 import ProgramList from "@/components/ProgramList";
 import DraftedPrograms from "@/components/DraftedPrograms";
 import ScoreBoard from "@/components/ScoreBoard";
+import ActivePlayers from "@/components/ActivePlayers";
 
 interface Program {
   id: string;
@@ -98,6 +99,7 @@ export default function Index() {
               />
             </div>
             <div className="space-y-8">
+              <ActivePlayers />
               <DraftedPrograms
                 selectedPrograms={selectedPrograms}
                 onRemoveProgram={handleSelectProgram}

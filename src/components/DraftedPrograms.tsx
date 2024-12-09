@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import confetti from "canvas-confetti";
+import useSound from "use-sound";
 
 interface Program {
   id: string;
@@ -24,6 +26,10 @@ export default function DraftedPrograms({
 }: DraftedProgramsProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Sound effects
+  const [playSelect] = useSound("/sounds/select.mp3", { volume: 0.5 });
+  const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
   const totalBudget = selectedPrograms.reduce(
     (sum, program) => sum + program.annual_budget,
@@ -37,6 +43,58 @@ export default function DraftedPrograms({
       notation: "compact",
       maximumFractionDigits: 1,
     }).format(budget);
+  };
+
+  const triggerCelebration = () => {
+    // Play success sound
+    playSuccess();
+
+    // Launch confetti
+    const count = 200;
+    const defaults = {
+      origin: { y: 0.7 },
+      zIndex: 9999,
+    };
+
+    function fire(particleRatio: number, opts: any) {
+      confetti({
+        ...defaults,
+        ...opts,
+        particleCount: Math.floor(count * particleRatio),
+      });
+    }
+
+    fire(0.25, {
+      spread: 26,
+      startVelocity: 55,
+      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
+    });
+
+    fire(0.2, {
+      spread: 60,
+      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
+    });
+
+    fire(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8,
+      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
+    });
+
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2,
+      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
+    });
+
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 45,
+      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
+    });
   };
 
   const handleSubmit = async () => {
@@ -86,6 +144,8 @@ export default function DraftedPrograms({
         throw new Error(emailError.message || "Failed to send confirmation email");
       }
 
+      triggerCelebration();
+      
       toast.success(
         "Draft picks saved! Check your email for a confirmation message."
       );
@@ -116,7 +176,7 @@ export default function DraftedPrograms({
               {selectedPrograms.map((program) => (
                 <div
                   key={program.id}
-                  className="flex items-center justify-between rounded-lg border p-2"
+                  className="group flex items-center justify-between rounded-lg border bg-gradient-to-r from-transparent to-transparent p-2 transition-all hover:from-doge-gold/5 hover:to-transparent"
                 >
                   <div>
                     <div className="font-medium">{program.name}</div>
@@ -127,7 +187,11 @@ export default function DraftedPrograms({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => onRemoveProgram(program)}
+                    onClick={() => {
+                      playSelect();
+                      onRemoveProgram(program);
+                    }}
+                    className="opacity-0 group-hover:opacity-100"
                   >
                     Remove
                   </Button>
@@ -152,7 +216,7 @@ export default function DraftedPrograms({
             onChange={(e) => setEmail(e.target.value)}
           />
           <Button
-            className="w-full"
+            className="w-full bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90"
             onClick={handleSubmit}
             disabled={isSubmitting}
           >
