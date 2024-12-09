@@ -54,10 +54,12 @@ export default function DraftedPrograms({
 
     try {
       // Save draft picks to database
-      const { error: dbError } = await supabase.from("draft_picks").insert({
-        email,
-        program_ids: selectedPrograms.map((p) => p.id),
-      });
+      const { error: dbError } = await supabase
+        .from("draft_picks")
+        .insert({
+          email,
+          program_ids: selectedPrograms.map((p) => p.id),
+        });
 
       if (dbError) throw dbError;
 
@@ -66,7 +68,6 @@ export default function DraftedPrograms({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${supabase.auth.session()?.access_token}`,
         },
         body: JSON.stringify({
           to: email,
