@@ -69,23 +69,21 @@ export default function DraftedPrograms({
 
       console.log("Draft picks saved to database, sending confirmation email...");
 
-      // Send confirmation email
-      const response = await fetch("/functions/v1/send-confirmation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          to: email,
-          programNames: selectedPrograms.map((p) => p.name),
-          totalBudget,
-        }),
-      });
+      // Send confirmation email using Supabase Edge Function
+      const { data: emailData, error: emailError } = await supabase.functions.invoke(
+        "send-confirmation",
+        {
+          body: {
+            to: email,
+            programNames: selectedPrograms.map((p) => p.name),
+            totalBudget,
+          },
+        }
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Email error:", errorData);
-        throw new Error(errorData.error || "Failed to send confirmation email");
+      if (emailError) {
+        console.error("Email error:", emailError);
+        throw new Error(emailError.message || "Failed to send confirmation email");
       }
 
       toast.success(
