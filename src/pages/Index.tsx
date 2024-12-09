@@ -10,6 +10,8 @@ import ReformAdvocates from "@/components/ReformAdvocates";
 import SocialShare from "@/components/SocialShare";
 import ReformLogo from "@/components/ReformLogo";
 import LeagueSection from "@/components/league/LeagueSection";
+import FeedbackForm from "@/components/FeedbackForm";
+import InaugurationCountdown from "@/components/InaugurationCountdown";
 
 interface Program {
   id: string;
@@ -53,6 +55,9 @@ export default function Index() {
               compete with friends in the ultimate government efficiency fantasy
               league!
             </p>
+            <div className="mb-8">
+              <InaugurationCountdown />
+            </div>
             <SocialShare />
           </div>
         </div>
@@ -125,6 +130,10 @@ export default function Index() {
               />
               <LeagueSection />
               <ScoreBoard />
+              <Card className="p-6">
+                <h3 className="text-xl font-bold mb-4">Share Your Feedback</h3>
+                <FeedbackForm />
+              </Card>
             </div>
           </div>
         </div>
