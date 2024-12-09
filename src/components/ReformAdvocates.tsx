@@ -7,17 +7,17 @@ export default function ReformAdvocates() {
   const advocates = [
     {
       name: "Lonnie Rockets",
-      image: "/elon.png",
+      image: "/lovable-uploads/62d7ee9d-6255-45a7-9796-b404dd5b73bc.png",
       titles: ["Rocket Bro", "Mars Guy", "X Man", "Autistic African Immigrant", "Billionaire"],
     },
     {
       name: "Donny Fairways",
-      image: "/trump.png",
+      image: "/lovable-uploads/574113f5-dcac-411e-8a5a-d310e7d6805c.png",
       titles: ["Melania's Husband", "Baron's Dad", "Casino Owner", "Reality TV Star", "You're Fired", "Billionaire"],
     },
     {
       name: "V Brah",
-      image: "/vivek.png",
+      image: "/lovable-uploads/c673cccd-9961-42c2-9bc2-4d150ae3152d.png",
       titles: ["Bio Billionaire", "Hair Product Model"],
     },
   ];
