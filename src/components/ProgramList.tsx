@@ -39,12 +39,18 @@ export default function ProgramList({
   const { data: programs, isLoading } = useQuery({
     queryKey: ["programs"],
     queryFn: async () => {
+      console.log("Fetching programs...");
       const { data, error } = await supabase
         .from("programs")
         .select("*")
         .order("annual_budget", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching programs:", error);
+        throw error;
+      }
+      
+      console.log("Fetched programs:", data);
       return data;
     },
   });
