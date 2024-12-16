@@ -5,7 +5,6 @@ import ProgramGrid from "@/components/ProgramGrid";
 import DraftedPrograms from "@/components/DraftedPrograms";
 import ScoreBoard from "@/components/ScoreBoard";
 import ActivePlayers from "@/components/ActivePlayers";
-import ProgramTicker from "@/components/ProgramTicker";
 import ReformAdvocates from "@/components/ReformAdvocates";
 import SocialShare from "@/components/SocialShare";
 import ReformLogo from "@/components/ReformLogo";
@@ -45,7 +44,6 @@ export default function Index() {
   return (
     <div className="min-h-screen">
       <GuidedTour />
-      <ProgramTicker />
       
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20">
