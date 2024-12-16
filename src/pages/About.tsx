@@ -48,7 +48,7 @@ export default function About() {
 
       <TeamMember
         name="Ben McIntosh"
-        imageSrc="/lovable-uploads/62d7ee9d-6255-45a7-9796-b404dd5b73bc.png"
+        imageSrc="/lovable-uploads/8520f6b3-0b4d-4b17-be9d-4a3432bff9f7.png"
         role="Evangelist and First Outside Investor"
         description="Evangelist and First Outside Investor of Fantasy D.O.G.E., Ben McIntosh brings valuable experience and vision to our mission of promoting government efficiency."
         socials={[
