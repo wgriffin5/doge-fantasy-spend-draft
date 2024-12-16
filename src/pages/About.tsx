@@ -82,7 +82,7 @@ export default function About() {
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar className="h-24 w-24">
             <AvatarImage
-              src="/lovable-uploads/574113f5-dcac-411e-8a5a-d310e7d6805c.png"
+              src="/lovable-uploads/c673cccd-9961-42c2-9bc2-4d150ae3152d.png"
               alt="Ben McIntosh"
               className="object-cover"
             />
