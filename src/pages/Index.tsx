@@ -13,6 +13,7 @@ import LeagueSection from "@/components/league/LeagueSection";
 import FeedbackForm from "@/components/FeedbackForm";
 import InaugurationCountdown from "@/components/InaugurationCountdown";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
+import GuidedTour from "@/components/GuidedTour";
 
 interface Program {
   id: string;
@@ -38,6 +39,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen">
+      <GuidedTour />
       <ProgramTicker />
       
       {/* Hero Section */}
@@ -75,7 +77,7 @@ export default function Index() {
       </section>
 
       {/* How to Play Section */}
-      <section className="py-10 bg-secondary/50">
+      <section id="how-to-play" className="py-10 bg-secondary/50">
         <div className="container mx-auto px-4">
           <OnboardingTutorial />
         </div>
@@ -126,7 +128,7 @@ export default function Index() {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="grid gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2">
+            <div id="program-grid" className="lg:col-span-2">
               <ProgramGrid
                 selectedPrograms={selectedPrograms}
                 onSelectProgram={handleSelectProgram}
