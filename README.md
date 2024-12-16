@@ -1,6 +1,74 @@
-# Welcome to your Lovable project
+# Fantasy D.O.G.E. - The Government Efficiency Fantasy League
 
-## Project info
+## Our Vision: Empowering "We the People"
+
+Fantasy D.O.G.E. (Department of Government Efficiency) represents a revolutionary approach to civic engagement. We believe that:
+
+- **Government should be responsive to its citizens** - "We the People" deserve transparency and efficiency in how our tax dollars are spent
+- **Civic engagement should be accessible and fun** - Understanding government spending shouldn't require a degree in public policy
+- **Collective wisdom matters** - When citizens come together to analyze government programs, we create valuable insights for policymakers
+- **Change starts with awareness** - By gamifying government oversight, we make civic participation engaging and impactful
+
+## How Fantasy D.O.G.E. Works
+
+### The Basics
+1. **Draft Your Programs**: Select up to 7 federal programs you predict will be cut or streamlined
+2. **Earn Points**: Score points when your predictions come true - bigger budgets mean bigger potential points!
+3. **Compete & Collaborate**: Join leagues with friends or fellow reform advocates
+4. **Make an Impact**: Your picks help identify programs that need attention
+
+### Gameplay Elements
+
+#### Strategic Depth
+- **Research Programs**: Analyze federal spending data to make informed picks
+- **Risk vs. Reward**: Balance between high-budget moonshots and likely smaller cuts
+- **Portfolio Strategy**: Diversify your picks across different departments
+- **Coalition Building**: Form alliances in leagues to maximize impact
+
+#### Community Features
+- **Reform Leagues**: Create or join leagues with other players
+- **Leaderboards**: Compete for top positions in various categories
+- **Discussion Forums**: Share insights and strategies with fellow players
+- **Social Sharing**: Spread awareness about government efficiency
+
+#### Weekly Engagement
+- **Program Status Updates**: Regular updates on program changes
+- **Breaking News**: Real-time alerts about relevant policy changes
+- **League Challenges**: Special events and competitions
+- **Reform Rally Events**: Time-limited bonus point opportunities
+
+## Why It's Fun
+
+### Immediate Satisfaction
+- **Visual Celebrations**: Satisfying animations and sound effects for successful picks
+- **Achievement System**: Earn badges and titles as you progress
+- **Daily Rewards**: Regular incentives for staying engaged
+- **Real-time Feedback**: Instant updates when your predictions are right
+
+### Long-term Engagement
+- **Progressive Difficulty**: Start as a Rookie Reformer, advance to Master Efficiency Expert
+- **Unlockable Features**: Gain access to advanced tools and insights
+- **Seasonal Events**: Special drafting periods with unique themes
+- **Community Recognition**: Build reputation through successful predictions
+
+### Educational Value
+- **Learn While Playing**: Understand government spending through gameplay
+- **Strategy Guides**: Access tips from experienced players
+- **Expert Insights**: Regular content from real government efficiency experts
+- **Impact Tracking**: See how your participation influences real change
+
+## Join the Movement
+
+Fantasy D.O.G.E. is more than a game - it's a community of citizens who believe in making government work better for everyone. Whether you're a casual player or a dedicated reformer, there's a place for you in our community.
+
+### Getting Started
+1. Visit [Fantasy D.O.G.E.](https://fantasy-doge.com)
+2. Create your account
+3. Draft your first picks
+4. Join or create a league
+5. Start making an impact!
+
+## Project Info
 
 **URL**: https://lovable.dev/projects/9e614b96-dde3-415f-9b8e-3ee97be015b8
 
