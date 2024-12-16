@@ -47,8 +47,9 @@ export default function Index() {
             <ReformLogo />
             <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
               Fantasy{" "}
-              <span className="doge-gradient bg-clip-text text-transparent">
-                D.O.G.E.
+              <span className="relative">
+                <span className="relative z-10 doge-gradient-text">D.O.G.E.</span>
+                <span className="absolute inset-0 doge-gradient opacity-75 blur-sm" aria-hidden="true"></span>
               </span>
             </h1>
             <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">

@@ -49,6 +49,14 @@
   @apply bg-gradient-to-br from-doge-gold via-doge-purple to-doge-blue;
 }
 
+.doge-gradient-text {
+  @apply bg-gradient-to-br from-doge-gold via-doge-purple to-doge-blue inline-block;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  paint-order: stroke fill;
+}
+
 .doge-button {
   @apply inline-flex items-center justify-center rounded-lg bg-doge-gold px-6 py-3 font-semibold text-white transition-all hover:bg-doge-gold/90 hover:scale-105;
 }
