@@ -12,6 +12,7 @@ import ReformLogo from "@/components/ReformLogo";
 import LeagueSection from "@/components/league/LeagueSection";
 import FeedbackForm from "@/components/FeedbackForm";
 import InaugurationCountdown from "@/components/InaugurationCountdown";
+import OnboardingTutorial from "@/components/OnboardingTutorial";
 
 interface Program {
   id: string;
@@ -51,9 +52,10 @@ export default function Index() {
               </span>
             </h1>
             <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-              Draft federal spending programs, earn points when they get cut, and
-              compete with friends in the ultimate government efficiency fantasy
-              league!
+              Welcome to the Department of Government Efficiency Fantasy League!
+              Draft federal spending programs you think will be cut or streamlined,
+              earn points for successful predictions, and compete with other
+              efficiency advocates.
             </p>
             <div className="mb-8">
               <InaugurationCountdown />
@@ -68,6 +70,13 @@ export default function Index() {
         </div>
         <div className="absolute -bottom-40 right-0 h-96 w-96 animate-float opacity-10">
           <div className="doge-gradient h-full w-full rounded-full blur-3xl"></div>
+        </div>
+      </section>
+
+      {/* How to Play Section */}
+      <section className="py-10 bg-secondary/50">
+        <div className="container mx-auto px-4">
+          <OnboardingTutorial />
         </div>
       </section>
 
