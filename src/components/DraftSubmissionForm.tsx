@@ -1,10 +1,80 @@
-import DraftForm from "./draft/DraftForm";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
+import useSound from "use-sound";
 
-export default function DraftSubmissionForm() {
+interface Program {
+  id: string;
+  name: string;
+  description: string;
+  annual_budget: number;
+  department: string;
+}
+
+interface DraftSubmissionFormProps {
+  selectedPrograms: Program[];
+  totalBudget: number;
+  formatBudget: (budget: number) => string;
+  onEmailSubmit: (email: string) => void;
+}
+
+export default function DraftSubmissionForm({
+  selectedPrograms,
+  totalBudget,
+  formatBudget,
+  onEmailSubmit,
+}: DraftSubmissionFormProps) {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    try {
+      onEmailSubmit(email);
+      playSuccess();
+      toast.success("Your draft picks have been submitted!");
+      setEmail("");
+    } catch (error) {
+      toast.error("Failed to submit draft picks. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (selectedPrograms.length === 0) return null;
+
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">Submit Your Draft</h2>
-      <DraftForm />
-    </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Input
+          type="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full"
+        />
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Button
+            type="submit"
+            className="w-full bg-doge-gold hover:bg-doge-gold/90"
+            disabled={isSubmitting || selectedPrograms.length === 0}
+          >
+            {isSubmitting ? "Submitting..." : "Submit Draft Picks"}
+          </Button>
+        </motion.div>
+      </div>
+    </form>
   );
 }
