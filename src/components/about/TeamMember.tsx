@@ -38,11 +38,10 @@ export function TeamMember({ name, imageSrc, role, description, socials }: TeamM
     <Card className="mb-8">
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar 
-          className="h-24 w-24 ring-4 transition-transform hover:scale-105"
+          className={`h-24 w-24 ring-4 transition-transform hover:scale-105`}
           style={{
             backgroundColor: colors.bg,
-            borderColor: colors.border,
-            ringColor: colors.border
+            borderColor: colors.border
           }}
         >
           <AvatarImage
