@@ -12,10 +12,13 @@ import { Trophy, Bell, Share2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import useSound from "use-sound";
+import { triggerCelebration } from "./draft/ConfettiCelebration";
 
 export default function WelcomePopup() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -31,14 +34,31 @@ export default function WelcomePopup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { error } = await supabase
+      const { error: dbError } = await supabase
         .from("player_levels")
         .insert([{ email, level: "rookie" }]);
 
-      if (error) throw error;
+      if (dbError) throw dbError;
+
+      // Send welcome email
+      const { error: emailError } = await supabase.functions.invoke(
+        "send-confirmation",
+        {
+          body: {
+            to: email,
+            type: "welcome",
+            programNames: [],
+            totalBudget: 0,
+          },
+        }
+      );
+
+      if (emailError) throw emailError;
 
       localStorage.setItem("hasSeenWelcomePopup", "true");
-      toast.success("Welcome to Fantasy D.O.G.E.! You'll receive updates about your predictions.");
+      playSuccess();
+      triggerCelebration();
+      toast.success("Welcome to Fantasy D.O.G.E.! Check your email for next steps.");
       setOpen(false);
     } catch (error) {
       console.error("Error saving email:", error);
