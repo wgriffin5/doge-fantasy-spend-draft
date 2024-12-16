@@ -10,6 +10,7 @@ interface EmailSubmissionProps {
   onSuccess: (email: string) => void;
   type: "welcome" | "notification" | "draft";
   buttonText: string;
+  buttonIcon?: React.ReactNode;
   successMessage: string;
   className?: string;
 }
@@ -18,6 +19,7 @@ export default function EmailSubmission({
   onSuccess,
   type,
   buttonText,
+  buttonIcon,
   successMessage,
   className = "",
 }: EmailSubmissionProps) {
@@ -85,7 +87,10 @@ export default function EmailSubmission({
             <span>Saving...</span>
           </div>
         ) : (
-          buttonText
+          <div className="flex items-center">
+            {buttonIcon}
+            <span>{buttonText}</span>
+          </div>
         )}
       </Button>
     </form>
