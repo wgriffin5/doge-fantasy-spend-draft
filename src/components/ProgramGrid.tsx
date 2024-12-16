@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import SearchFilters from "./program/SearchFilters";
-import BudgetChart from "./program/BudgetChart";
+import StrategicInsights from "./program/StrategicInsights";
 import ProgramCard from "./program/ProgramCard";
 import ProgramListItem from "./program/ProgramListItem";
 
@@ -95,7 +95,12 @@ export default function ProgramGrid({
         departments={departments}
       />
 
-      <BudgetChart programs={filteredPrograms || []} formatBudget={formatBudget} />
+      {selectedPrograms.length > 0 && (
+        <StrategicInsights
+          programs={selectedPrograms}
+          formatBudget={formatBudget}
+        />
+      )}
 
       <div
         className={
