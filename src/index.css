@@ -50,10 +50,11 @@
 }
 
 .doge-gradient-text {
-  @apply bg-gradient-to-br from-doge-gold via-doge-purple to-doge-blue inline-block;
+  @apply bg-gradient-to-br from-[#F97316] via-[#8B5CF6] to-[#0EA5E9] font-bold inline-block;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   paint-order: stroke fill;
 }
 
