@@ -4,6 +4,7 @@ import FeaturesSection from "@/components/home/FeaturesSection";
 import DraftSection from "@/components/home/DraftSection";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
 import GuidedTour from "@/components/GuidedTour";
+import WelcomePopup from "@/components/WelcomePopup";
 
 interface Program {
   id: string;
@@ -34,6 +35,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen">
+      <WelcomePopup />
       <GuidedTour />
       <HeroSection />
       
