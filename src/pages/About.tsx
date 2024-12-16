@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Github, Linkedin, Twitter } from "lucide-react";
+import { Github, Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { FaTiktok } from "react-icons/fa";
 
 export default function About() {
   return (
@@ -45,10 +46,59 @@ export default function About() {
             <Button
               variant="outline"
               className="flex items-center gap-2"
+              onClick={() => window.open("https://www.tiktok.com/@realwilliamgriffin", "_blank")}
+            >
+              <FaTiktok className="h-4 w-4" />
+              Follow on TikTok
+            </Button>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={() => window.open("https://www.instagram.com/williamperringriffin/", "_blank")}
+            >
+              <Instagram className="h-4 w-4" />
+              Follow on Instagram
+            </Button>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={() => window.open("https://www.youtube.com/@williamgriffin61", "_blank")}
+            >
+              <Youtube className="h-4 w-4" />
+              Subscribe on YouTube
+            </Button>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
               onClick={() => window.open("https://www.reddit.com/r/FantasyDoge/", "_blank")}
             >
               <Github className="h-4 w-4" />
               Join our Reddit Community
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-8">
+        <CardHeader className="flex flex-row items-center gap-4">
+          <Avatar className="h-24 w-24">
+            <AvatarFallback>BM</AvatarFallback>
+          </Avatar>
+          <CardTitle>Ben McIntosh</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-lg text-muted-foreground">
+            Evangelist and First Outside Investor of Fantasy D.O.G.E., Ben McIntosh brings valuable experience and vision to our mission of promoting government efficiency.
+          </p>
+
+          <div className="flex flex-wrap gap-4">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={() => window.open("https://www.linkedin.com/in/ben-mcintosh-1443b725/", "_blank")}
+            >
+              <Linkedin className="h-4 w-4" />
+              Connect on LinkedIn
             </Button>
           </div>
         </CardContent>
