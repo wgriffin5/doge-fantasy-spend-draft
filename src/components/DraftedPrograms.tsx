@@ -14,11 +14,13 @@ interface Program {
 interface DraftedProgramsProps {
   selectedPrograms: Program[];
   onRemoveProgram: (program: Program) => void;
+  onEmailSubmit: (email: string) => void;
 }
 
 export default function DraftedPrograms({
   selectedPrograms,
   onRemoveProgram,
+  onEmailSubmit,
 }: DraftedProgramsProps) {
   const totalBudget = selectedPrograms.reduce(
     (sum, program) => sum + program.annual_budget,
@@ -107,6 +109,7 @@ export default function DraftedPrograms({
             selectedPrograms={selectedPrograms}
             totalBudget={totalBudget}
             formatBudget={formatBudget}
+            onEmailSubmit={onEmailSubmit}
           />
         </CardContent>
       </Card>

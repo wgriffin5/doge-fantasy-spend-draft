@@ -18,12 +18,14 @@ interface DraftSubmissionFormProps {
   selectedPrograms: Program[];
   totalBudget: number;
   formatBudget: (budget: number) => string;
+  onEmailSubmit: (email: string) => void;
 }
 
 export default function DraftSubmissionForm({
   selectedPrograms,
   totalBudget,
   formatBudget,
+  onEmailSubmit,
 }: DraftSubmissionFormProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -129,6 +131,7 @@ export default function DraftSubmissionForm({
       toast.success(
         "Draft picks saved! Check your email for a confirmation message."
       );
+      onEmailSubmit(email);
       setEmail("");
     } catch (error) {
       console.error("Error saving draft picks:", error);
