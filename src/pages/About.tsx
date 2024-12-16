@@ -20,7 +20,7 @@ export default function About() {
             <Button
               variant="outline"
               className="flex items-center gap-2"
-              onClick={() => window.open("https://twitter.com/WilliamGriffin", "_blank")}
+              onClick={() => window.open("https://x.com/WPG803", "_blank")}
             >
               <Twitter className="h-4 w-4" />
               Follow on X
@@ -28,7 +28,7 @@ export default function About() {
             <Button
               variant="outline"
               className="flex items-center gap-2"
-              onClick={() => window.open("https://www.linkedin.com/in/williamgriffin/", "_blank")}
+              onClick={() => window.open("https://www.linkedin.com/in/william-griffin-giraffe-laugh/", "_blank")}
             >
               <Linkedin className="h-4 w-4" />
               Connect on LinkedIn
@@ -39,7 +39,7 @@ export default function About() {
               onClick={() => window.open("https://www.reddit.com/r/FantasyDoge/", "_blank")}
             >
               <Github className="h-4 w-4" />
-              Join our Community
+              Join our Reddit Community
             </Button>
           </div>
         </CardContent>
