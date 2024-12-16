@@ -1,8 +1,15 @@
 import ReformLogo from "@/components/ReformLogo";
 import SocialShare from "@/components/SocialShare";
 import InaugurationCountdown from "@/components/InaugurationCountdown";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { ArrowDown } from "lucide-react";
 
 export default function HeroSection() {
+  const scrollToPrograms = () => {
+    document.getElementById("program-grid")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="relative overflow-hidden py-20">
       <div className="container mx-auto px-4">
@@ -19,14 +26,47 @@ export default function HeroSection() {
             </span>
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-            Welcome to the Department of Government Efficiency Fantasy League!
-            Draft federal spending programs you think will be cut or streamlined,
-            earn points for successful predictions, and compete with other
-            efficiency advocates.
+            Join thousands of players in the Department of Government Efficiency Fantasy League!
+            Draft federal spending programs you think will be cut, earn points for successful
+            predictions, and compete for the top spot on our leaderboard.
           </p>
-          <div className="mb-8">
+
+          <div className="mb-8 space-y-4">
             <InaugurationCountdown />
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex justify-center gap-4"
+            >
+              <Button
+                size="lg"
+                onClick={scrollToPrograms}
+                className="bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90"
+              >
+                Start Drafting Now
+                <ArrowDown className="ml-2 h-4 w-4" />
+              </Button>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="flex items-center justify-center gap-8 text-sm text-muted-foreground"
+            >
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                <span>1,000+ Active Players</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-doge-gold"></div>
+                <span>$50B+ Budget Cuts Predicted</span>
+              </div>
+            </motion.div>
           </div>
+
           <SocialShare />
         </div>
       </div>

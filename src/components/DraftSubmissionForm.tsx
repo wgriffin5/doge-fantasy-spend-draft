@@ -5,6 +5,8 @@ import useSound from "use-sound";
 import EmailInput from "./draft/EmailInput";
 import SubmitButton from "./draft/SubmitButton";
 import { triggerCelebration } from "./draft/ConfettiCelebration";
+import { motion } from "framer-motion";
+import { Trophy, Bell, Share2 } from "lucide-react";
 
 interface Program {
   id: string;
@@ -85,9 +87,41 @@ export default function DraftSubmissionForm({
   };
 
   return (
-    <div className="space-y-2 pt-4">
+    <div className="space-y-4 pt-4">
+      <div className="grid gap-4 rounded-lg border bg-card p-4">
+        <h3 className="font-semibold">Why Join Fantasy D.O.G.E?</h3>
+        <div className="grid gap-2">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2 text-sm"
+          >
+            <Trophy className="h-4 w-4 text-doge-gold" />
+            <span>Compete for the top spot on our leaderboard</span>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="flex items-center gap-2 text-sm"
+          >
+            <Bell className="h-4 w-4 text-doge-gold" />
+            <span>Get notified when your predictions come true</span>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center gap-2 text-sm"
+          >
+            <Share2 className="h-4 w-4 text-doge-gold" />
+            <span>Share your picks and challenge friends</span>
+          </motion.div>
+        </div>
+      </div>
+
       <EmailInput email={email} setEmail={setEmail} isSubmitting={isSubmitting} />
-      <SubmitButton isSubmitting={isSubmitting} />
+      <SubmitButton isSubmitting={isSubmitting} onClick={handleSubmit} />
     </div>
   );
 }
