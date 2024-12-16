@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Facebook, Twitter, Linkedin, Share2, Instagram, TikTok } from "lucide-react";
+import { Facebook, Twitter, Linkedin, Share2, Instagram, Video } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SocialShare() {
@@ -77,7 +77,7 @@ export default function SocialShare() {
         className="bg-black text-white hover:bg-black/90"
         onClick={() => handleShare("tiktok")}
       >
-        <TikTok className="mr-2 h-4 w-4" />
+        <Video className="mr-2 h-4 w-4" />
         Share
       </Button>
       <Button
