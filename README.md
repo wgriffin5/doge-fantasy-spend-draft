@@ -52,7 +52,7 @@ npm run dev
 
 ## What technologies are used for this project?
 
-This project is built with .
+This project is built with:
 
 - Vite
 - TypeScript
@@ -62,8 +62,30 @@ This project is built with .
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/9e614b96-dde3-415f-9b8e-3ee97be015b8) and click on Share -> Publish.
+There are several options for deploying your project:
 
-## I want to use a custom domain - is that possible?
+1. **Using Lovable's built-in deployment**:
+   - Open [Lovable](https://lovable.dev/projects/9e614b96-dde3-415f-9b8e-3ee97be015b8)
+   - Click on Share -> Publish
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+2. **Using Netlify (Recommended for custom domains)**:
+   - Export your project to GitHub using the "Export to GitHub" button in Lovable
+   - Connect your GitHub repository to Netlify
+   - Follow Netlify's domain management process to add your custom domain
+
+3. **Other platforms**:
+   - After exporting to GitHub, you can also deploy to platforms like:
+     - Vercel
+     - AWS Amplify
+     - GitHub Pages
+   - Each platform has its own process for custom domain setup
+
+## Custom Domain Setup
+
+While Lovable doesn't directly support custom domains yet, you can use your own domain by:
+
+1. Exporting your project to GitHub using the "Export to GitHub" button
+2. Deploying to Netlify or another hosting platform
+3. Following the platform's instructions for custom domain setup
+
+For detailed instructions, visit our [Custom Domain Setup Guide](https://docs.lovable.dev/tips-tricks/custom-domain/)
