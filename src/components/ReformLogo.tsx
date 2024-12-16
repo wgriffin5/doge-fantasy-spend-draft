@@ -11,12 +11,12 @@ export default function ReformLogo() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Lonnie with scissors */}
+          {/* Lonnie with rockets */}
           <motion.div 
             className="flex flex-col items-center"
             whileHover={{ 
-              scale: 1.1,
-              rotate: [0, -5, 5, -5, 0],
+              scale: 1.2,
+              rotate: [0, -10, 10, -10, 0],
               transition: { duration: 0.5 }
             }}
           >
@@ -25,11 +25,12 @@ export default function ReformLogo() {
               alt="Lonnie"
               className="w-10 h-10 rounded-full shadow-lg hover:ring-2 hover:ring-doge-gold transition-all"
               whileHover={{ 
-                boxShadow: "0 0 15px rgba(242, 169, 0, 0.5)",
+                boxShadow: "0 0 25px rgba(242, 169, 0, 0.7)",
               }}
             />
             <motion.div
-              whileHover={{ scale: 1.2 }}
+              whileHover={{ scale: 1.2, rotate: 360 }}
+              transition={{ duration: 0.5 }}
               className="mt-1"
             >
               <Scissors className="text-doge-gold w-4 h-4" />
@@ -40,8 +41,8 @@ export default function ReformLogo() {
           <motion.div 
             className="flex flex-col items-center"
             whileHover={{ 
-              scale: 1.1,
-              rotate: [0, -5, 5, -5, 0],
+              scale: 1.2,
+              rotate: [0, -10, 10, -10, 0],
               transition: { duration: 0.5 }
             }}
           >
@@ -50,11 +51,15 @@ export default function ReformLogo() {
               alt="Donny"
               className="w-10 h-10 rounded-full shadow-lg hover:ring-2 hover:ring-doge-purple transition-all"
               whileHover={{ 
-                boxShadow: "0 0 15px rgba(155, 135, 245, 0.5)",
+                boxShadow: "0 0 25px rgba(155, 135, 245, 0.7)",
               }}
             />
             <motion.div
-              whileHover={{ scale: 1.2 }}
+              whileHover={{ 
+                scale: 1.2,
+                rotate: [0, -45, 45, -45, 0],
+              }}
+              transition={{ duration: 0.5 }}
               className="mt-1"
             >
               <Flame className="text-doge-purple w-4 h-4" />
@@ -65,8 +70,8 @@ export default function ReformLogo() {
           <motion.div 
             className="flex flex-col items-center"
             whileHover={{ 
-              scale: 1.1,
-              rotate: [0, -5, 5, -5, 0],
+              scale: 1.2,
+              rotate: [0, -10, 10, -10, 0],
               transition: { duration: 0.5 }
             }}
           >
@@ -75,11 +80,15 @@ export default function ReformLogo() {
               alt="V"
               className="w-10 h-10 rounded-full shadow-lg hover:ring-2 hover:ring-doge-blue transition-all"
               whileHover={{ 
-                boxShadow: "0 0 15px rgba(40, 160, 240, 0.5)",
+                boxShadow: "0 0 25px rgba(40, 160, 240, 0.7)",
               }}
             />
             <motion.div
-              whileHover={{ scale: 1.2 }}
+              whileHover={{ 
+                scale: 1.2,
+                rotateY: 180
+              }}
+              transition={{ duration: 0.5 }}
               className="mt-1"
             >
               <Axe className="text-doge-blue w-4 h-4" />
