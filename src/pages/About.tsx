@@ -12,7 +12,7 @@ export default function About() {
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar className="h-24 w-24">
             <AvatarImage
-              src="/lovable-uploads/william-profile.jpg"
+              src="/lovable-uploads/8df60eec-b1aa-426f-8d5c-256945d7b7d0.png"
               alt="William Griffin"
               className="object-cover"
             />
