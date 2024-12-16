@@ -42,12 +42,12 @@ export default function ReformAdvocates() {
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-center gap-8 py-6">
+    <div className="flex flex-wrap justify-center gap-4 sm:gap-8 py-4 sm:py-6 px-2">
       <AnimatePresence>
         {advocates.map((advocate, index) => (
           <motion.div
             key={advocate.name}
-            className="text-center group cursor-pointer"
+            className="text-center group cursor-pointer w-24 sm:w-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -55,11 +55,11 @@ export default function ReformAdvocates() {
             onHoverStart={() => playHover()}
           >
             <motion.div 
-              className="relative"
+              className="relative mx-auto"
               whileHover={{ rotate: [0, -5, 5, -5, 0] }}
               transition={{ duration: 0.5 }}
             >
-              <div className={`relative w-24 h-24 rounded-full overflow-hidden border-4 border-${advocate.color} transition-all duration-300 group-hover:shadow-lg group-hover:shadow-${advocate.color}/30`}>
+              <div className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-${advocate.color} transition-all duration-300 group-hover:shadow-lg group-hover:shadow-${advocate.color}/30`}>
                 <motion.img 
                   src={advocate.image} 
                   alt={advocate.name}
@@ -71,7 +71,7 @@ export default function ReformAdvocates() {
             </motion.div>
             
             <motion.h3 
-              className={`mt-3 font-bold text-${advocate.color}`}
+              className={`mt-2 sm:mt-3 font-bold text-sm sm:text-base text-${advocate.color}`}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
             >
@@ -81,7 +81,7 @@ export default function ReformAdvocates() {
             <AnimatePresence mode="wait">
               <motion.p 
                 key={advocate.titles[descriptionIndex % advocate.titles.length]}
-                className="text-sm text-muted-foreground h-5"
+                className="text-xs sm:text-sm text-muted-foreground h-4 sm:h-5"
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -5 }}

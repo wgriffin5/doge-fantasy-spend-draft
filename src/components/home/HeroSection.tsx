@@ -11,11 +11,11 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative overflow-hidden py-20">
+    <section className="relative overflow-hidden py-12 md:py-20">
       <div className="container mx-auto px-4">
         <div className="text-center">
           <ReformLogo />
-          <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
+          <h1 className="mb-4 md:mb-6 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
             Fantasy{" "}
             <span className="relative">
               <span className="relative z-10 doge-gradient-text">D.O.G.E.</span>
@@ -25,13 +25,13 @@ export default function HeroSection() {
               ></span>
             </span>
           </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
+          <p className="mx-auto mb-6 md:mb-8 max-w-2xl text-base md:text-lg text-muted-foreground px-4">
             Join thousands of players in the Department of Government Efficiency Fantasy League!
             Draft federal spending programs you think will be cut, earn points for successful
             predictions, and compete for the top spot on our leaderboard.
           </p>
 
-          <div className="mb-8 space-y-4">
+          <div className="mb-6 md:mb-8 space-y-4">
             <InaugurationCountdown />
             
             <motion.div
@@ -43,7 +43,7 @@ export default function HeroSection() {
               <Button
                 size="lg"
                 onClick={scrollToPrograms}
-                className="bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90"
+                className="w-full sm:w-auto bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90"
               >
                 Start Drafting Now
                 <ArrowDown className="ml-2 h-4 w-4" />
@@ -54,7 +54,7 @@ export default function HeroSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="flex items-center justify-center gap-8 text-sm text-muted-foreground"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground"
             >
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-green-500"></div>

@@ -41,6 +41,7 @@ export default function DraftedPrograms({
       initial={{ scale: 0.95, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.3 }}
+      className="px-4 sm:px-0"
     >
       <Card id="draft-picks" className="relative overflow-hidden">
         <motion.div
@@ -52,7 +53,7 @@ export default function DraftedPrograms({
         />
         
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             Your Draft Picks
             <motion.div
               className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-doge-gold text-white text-sm font-medium"
@@ -73,7 +74,7 @@ export default function DraftedPrograms({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="text-muted-foreground"
+                className="text-sm sm:text-base text-muted-foreground"
               >
                 Draft up to 7 programs to cut from the federal budget.
               </motion.p>
@@ -89,7 +90,7 @@ export default function DraftedPrograms({
                   formatBudget={formatBudget}
                 />
                 <div className="pt-2">
-                  <div className="mb-2 font-medium">
+                  <div className="mb-2 text-sm sm:text-base font-medium">
                     Total Budget Cuts:{" "}
                     <motion.span
                       key={totalBudget}
