@@ -8,12 +8,36 @@
     <meta name="author" content="Lovable" />
     <meta property="og:image" content="/og-image.png" />
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4L1WJF17N8"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-4L1WJF17N8');
+      function gtag(){
+        try {
+          dataLayer.push(arguments);
+        } catch (e) {
+          console.debug('Analytics disabled or blocked');
+        }
+      }
+      
+      // Initialize analytics with error handling
+      function initializeAnalytics() {
+        try {
+          const script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4L1WJF17N8';
+          script.onerror = () => console.debug('Analytics blocked or failed to load');
+          document.head.appendChild(script);
+          
+          gtag('js', new Date());
+          gtag('config', 'G-4L1WJF17N8', {
+            send_page_view: false // We'll send page views manually
+          });
+        } catch (e) {
+          console.debug('Analytics initialization failed');
+        }
+      }
+
+      // Initialize analytics after a short delay to improve page load performance
+      setTimeout(initializeAnalytics, 1000);
     </script>
   </head>
 
