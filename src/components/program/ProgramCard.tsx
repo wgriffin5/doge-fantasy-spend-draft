@@ -48,10 +48,8 @@ export default function ProgramCard({
   const [showAdvancedDialog, setShowAdvancedDialog] = useState(false);
 
   const getFrivolityRating = (budget: number) => {
-    if (budget > 10000000000)
-      return { icon: Skull, label: "Extremely Wasteful" };
-    if (budget > 1000000000)
-      return { icon: PartyPopper, label: "Very Frivolous" };
+    if (budget > 10000000000) return { icon: Skull, label: "Extremely Wasteful" };
+    if (budget > 1000000000) return { icon: PartyPopper, label: "Very Frivolous" };
     return { icon: DollarSign, label: "Somewhat Wasteful" };
   };
 
@@ -60,18 +58,11 @@ export default function ProgramCard({
 
   return (
     <>
-      <Card
-        className={`transform transition-all hover:scale-105 ${
-          isSelected ? "border-doge-gold" : ""
-        }`}
-      >
+      <Card className={`transform transition-all hover:scale-105 ${isSelected ? "border-doge-gold" : ""}`}>
         <CardHeader>
           <div className="flex justify-between items-start">
             <CardTitle className="text-lg">{program.name}</CardTitle>
-            <Badge
-              variant={program.is_cut ? "destructive" : "secondary"}
-              className="ml-2"
-            >
+            <Badge variant={program.is_cut ? "destructive" : "secondary"}>
               {program.is_cut ? "Cut" : "Active"}
             </Badge>
           </div>
@@ -103,9 +94,7 @@ export default function ProgramCard({
                 <Button
                   variant={isSelected ? "destructive" : "default"}
                   onClick={onSelect}
-                  disabled={
-                    (selectedCount >= 7 && !isSelected) || program.is_cut
-                  }
+                  disabled={(selectedCount >= 7 && !isSelected) || program.is_cut}
                 >
                   {isSelected ? "Remove" : "Draft"}
                 </Button>

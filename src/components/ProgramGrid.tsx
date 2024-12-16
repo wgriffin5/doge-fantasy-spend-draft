@@ -102,10 +102,7 @@ export default function ProgramGrid({
       {showAdvancedFeatures && <AdvancedFeaturesTutorial />}
 
       {selectedPrograms.length > 0 && (
-        <StrategicInsights
-          programs={selectedPrograms}
-          formatBudget={formatBudget}
-        />
+        <StrategicInsights programs={selectedPrograms} formatBudget={formatBudget} />
       )}
 
       <div
