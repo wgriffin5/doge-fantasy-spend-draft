@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function About() {
   return (
@@ -8,7 +9,15 @@ export default function About() {
       <h1 className="mb-8 text-4xl font-bold">About Fantasy D.O.G.E.</h1>
 
       <Card className="mb-8">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center gap-4">
+          <Avatar className="h-24 w-24">
+            <AvatarImage
+              src="https://media.licdn.com/dms/image/D5603AQGp0neXBiVd9Q/profile-displayphoto-shrink_800_800/0/1696950317040?e=1716422400&v=beta&t=Hy4Hy_Oi_Hs_Hs_Hs_Hs_Hs_Hs_Hs_Hs_Hs_Hs"
+              alt="William Griffin"
+              className="object-cover"
+            />
+            <AvatarFallback>WG</AvatarFallback>
+          </Avatar>
           <CardTitle>William Griffin</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
