@@ -104,6 +104,39 @@ export type Database = {
         }
         Relationships: []
       }
+      player_levels: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          level: string | null
+          predictions_made: number | null
+          successful_predictions: number | null
+          total_points: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          level?: string | null
+          predictions_made?: number | null
+          successful_predictions?: number | null
+          total_points?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          level?: string | null
+          predictions_made?: number | null
+          successful_predictions?: number | null
+          total_points?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -164,6 +197,53 @@ export type Database = {
         }
         Relationships: []
       }
+      reform_predictions: {
+        Row: {
+          confidence_level: number | null
+          created_at: string
+          email: string
+          id: string
+          notes: string | null
+          points_earned: number | null
+          predicted_amount: number | null
+          prediction_type: string
+          program_id: string
+          status: string | null
+        }
+        Insert: {
+          confidence_level?: number | null
+          created_at?: string
+          email: string
+          id?: string
+          notes?: string | null
+          points_earned?: number | null
+          predicted_amount?: number | null
+          prediction_type: string
+          program_id: string
+          status?: string | null
+        }
+        Update: {
+          confidence_level?: number | null
+          created_at?: string
+          email?: string
+          id?: string
+          notes?: string | null
+          points_earned?: number | null
+          predicted_amount?: number | null
+          prediction_type?: string
+          program_id?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reform_predictions_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scores: {
         Row: {
           created_at: string
@@ -193,6 +273,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_advanced_score: {
+        Args: {
+          prediction_type: string
+          program_budget: number
+          predicted_amount?: number
+          confidence_level?: number
+        }
+        Returns: number
+      }
       calculate_score: {
         Args: {
           program_budget: number

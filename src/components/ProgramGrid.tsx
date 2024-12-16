@@ -5,6 +5,7 @@ import SearchFilters from "./program/SearchFilters";
 import StrategicInsights from "./program/StrategicInsights";
 import ProgramCard from "./program/ProgramCard";
 import ProgramListItem from "./program/ProgramListItem";
+import AdvancedFeaturesTutorial from "./program/AdvancedFeaturesTutorial";
 
 interface Program {
   id: string;
@@ -18,16 +19,19 @@ interface Program {
 interface ProgramGridProps {
   selectedPrograms: Program[];
   onSelectProgram: (program: Program) => void;
+  userEmail?: string;
 }
 
 export default function ProgramGrid({
   selectedPrograms,
   onSelectProgram,
+  userEmail,
 }: ProgramGridProps) {
   const [search, setSearch] = useState("");
   const [department, setDepartment] = useState<string>("all");
   const [view, setView] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState<"budget" | "name" | "department">("budget");
+  const [showAdvancedFeatures, setShowAdvancedFeatures] = useState(false);
 
   const { data: programs, isLoading } = useQuery({
     queryKey: ["programs"],
@@ -41,6 +45,13 @@ export default function ProgramGrid({
     },
   });
 
+  // Show advanced features after email is provided
+  useState(() => {
+    if (userEmail && !showAdvancedFeatures) {
+      setShowAdvancedFeatures(true);
+    }
+  });
+
   const formatBudget = (budget: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -49,13 +60,6 @@ export default function ProgramGrid({
       maximumFractionDigits: 1,
     }).format(budget);
   };
-
-  const isSelected = (program: Program) =>
-    selectedPrograms.some((p) => p.id === program.id);
-
-  const departments = programs
-    ? [...new Set(programs.map((p) => p.department))].sort()
-    : [];
 
   const filteredPrograms = programs
     ?.filter(
@@ -92,8 +96,10 @@ export default function ProgramGrid({
         setSortBy={setSortBy}
         view={view}
         setView={setView}
-        departments={departments}
+        departments={programs ? [...new Set(programs.map((p) => p.department))].sort() : []}
       />
+
+      {showAdvancedFeatures && <AdvancedFeaturesTutorial />}
 
       {selectedPrograms.length > 0 && (
         <StrategicInsights
@@ -114,16 +120,18 @@ export default function ProgramGrid({
             <ProgramCard
               key={program.id}
               program={program}
-              isSelected={isSelected(program)}
+              isSelected={selectedPrograms.some((p) => p.id === program.id)}
               onSelect={() => onSelectProgram(program)}
               selectedCount={selectedPrograms.length}
               formatBudget={formatBudget}
+              userEmail={userEmail}
+              showAdvancedFeatures={showAdvancedFeatures}
             />
           ) : (
             <ProgramListItem
               key={program.id}
               program={program}
-              isSelected={isSelected(program)}
+              isSelected={selectedPrograms.some((p) => p.id === program.id)}
               onSelect={() => onSelectProgram(program)}
               selectedCount={selectedPrograms.length}
               formatBudget={formatBudget}

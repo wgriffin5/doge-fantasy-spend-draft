@@ -8,6 +8,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skull, PartyPopper, DollarSign } from "lucide-react";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import AdvancedPredictionForm from "./AdvancedPredictionForm";
 
 interface Program {
   id: string;
@@ -24,6 +32,8 @@ interface ProgramCardProps {
   onSelect: () => void;
   selectedCount: number;
   formatBudget: (budget: number) => string;
+  userEmail?: string;
+  showAdvancedFeatures?: boolean;
 }
 
 export default function ProgramCard({
@@ -32,7 +42,11 @@ export default function ProgramCard({
   onSelect,
   selectedCount,
   formatBudget,
+  userEmail,
+  showAdvancedFeatures = false,
 }: ProgramCardProps) {
+  const [showAdvancedDialog, setShowAdvancedDialog] = useState(false);
+
   const getFrivolityRating = (budget: number) => {
     if (budget > 10000000000)
       return { icon: Skull, label: "Extremely Wasteful" };
@@ -45,48 +59,74 @@ export default function ProgramCard({
   const FrivolityIcon = frivolity.icon;
 
   return (
-    <Card
-      className={`transform transition-all hover:scale-105 ${
-        isSelected ? "border-doge-gold" : ""
-      }`}
-    >
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-lg">{program.name}</CardTitle>
-          <Badge
-            variant={program.is_cut ? "destructive" : "secondary"}
-            className="ml-2"
-          >
-            {program.is_cut ? "Cut" : "Active"}
-          </Badge>
-        </div>
-        <CardDescription>{program.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <FrivolityIcon className="h-5 w-5 text-doge-gold" />
-              <span className="text-sm font-medium">{frivolity.label}</span>
-            </div>
-            <span className="font-bold text-doge-gold">
-              {formatBudget(program.annual_budget)}
-            </span>
-          </div>
-          <div className="flex justify-between items-center">
-            <Badge variant="outline">{program.department}</Badge>
-            <Button
-              variant={isSelected ? "destructive" : "default"}
-              onClick={onSelect}
-              disabled={
-                (selectedCount >= 7 && !isSelected) || program.is_cut
-              }
+    <>
+      <Card
+        className={`transform transition-all hover:scale-105 ${
+          isSelected ? "border-doge-gold" : ""
+        }`}
+      >
+        <CardHeader>
+          <div className="flex justify-between items-start">
+            <CardTitle className="text-lg">{program.name}</CardTitle>
+            <Badge
+              variant={program.is_cut ? "destructive" : "secondary"}
+              className="ml-2"
             >
-              {isSelected ? "Remove" : "Draft"}
-            </Button>
+              {program.is_cut ? "Cut" : "Active"}
+            </Badge>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+          <CardDescription>{program.description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FrivolityIcon className="h-5 w-5 text-doge-gold" />
+                <span className="text-sm font-medium">{frivolity.label}</span>
+              </div>
+              <span className="font-bold text-doge-gold">
+                {formatBudget(program.annual_budget)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <Badge variant="outline">{program.department}</Badge>
+              <div className="space-x-2">
+                {showAdvancedFeatures && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowAdvancedDialog(true)}
+                    className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
+                  >
+                    Advanced
+                  </Button>
+                )}
+                <Button
+                  variant={isSelected ? "destructive" : "default"}
+                  onClick={onSelect}
+                  disabled={
+                    (selectedCount >= 7 && !isSelected) || program.is_cut
+                  }
+                >
+                  {isSelected ? "Remove" : "Draft"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Dialog open={showAdvancedDialog} onOpenChange={setShowAdvancedDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Advanced Prediction</DialogTitle>
+          </DialogHeader>
+          <AdvancedPredictionForm
+            program={program}
+            onClose={() => setShowAdvancedDialog(false)}
+            userEmail={userEmail || ""}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

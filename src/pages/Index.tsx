@@ -28,6 +28,7 @@ interface Program {
 
 export default function Index() {
   const [selectedPrograms, setSelectedPrograms] = useState<Program[]>([]);
+  const [userEmail, setUserEmail] = useState<string>("");
 
   const handleSelectProgram = (program: Program) => {
     if (selectedPrograms.some((p) => p.id === program.id)) {
@@ -35,6 +36,10 @@ export default function Index() {
     } else if (selectedPrograms.length < 7) {
       setSelectedPrograms([...selectedPrograms, program]);
     }
+  };
+
+  const handleEmailSubmit = (email: string) => {
+    setUserEmail(email);
   };
 
   return (
@@ -132,6 +137,7 @@ export default function Index() {
               <ProgramGrid
                 selectedPrograms={selectedPrograms}
                 onSelectProgram={handleSelectProgram}
+                userEmail={userEmail}
               />
             </div>
             <div className="space-y-8">
@@ -139,6 +145,7 @@ export default function Index() {
               <DraftedPrograms
                 selectedPrograms={selectedPrograms}
                 onRemoveProgram={handleSelectProgram}
+                onEmailSubmit={handleEmailSubmit}
               />
               <LeagueSection />
               <ScoreBoard />
