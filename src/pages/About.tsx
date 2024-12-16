@@ -1,8 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Github, Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
+import { Github, Instagram, Linkedin, Twitter, Youtube, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { FaTiktok } from "react-icons/fa";
 
 export default function About() {
   return (
@@ -48,7 +47,7 @@ export default function About() {
               className="flex items-center gap-2"
               onClick={() => window.open("https://www.tiktok.com/@realwilliamgriffin", "_blank")}
             >
-              <FaTiktok className="h-4 w-4" />
+              <MessageSquare className="h-4 w-4" />
               Follow on TikTok
             </Button>
             <Button
