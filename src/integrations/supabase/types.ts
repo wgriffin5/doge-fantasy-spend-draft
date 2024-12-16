@@ -30,6 +30,33 @@ export type Database = {
         }
         Relationships: []
       }
+      email_capture_analytics: {
+        Row: {
+          created_at: string
+          email: string | null
+          event_type: string
+          id: string
+          type: string
+          variant: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          event_type: string
+          id?: string
+          type: string
+          variant: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          event_type?: string
+          id?: string
+          type?: string
+          variant?: string
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           created_at: string
