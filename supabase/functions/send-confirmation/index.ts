@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
@@ -22,10 +21,14 @@ serve(async (req) => {
   }
 
   try {
-    console.log("Received request to send confirmation email");
+    console.log("Starting email confirmation process");
+    console.log("Checking RESEND_API_KEY:", RESEND_API_KEY ? "Present" : "Missing");
+    
     const { to, programNames, totalBudget }: EmailData = await req.json();
+    console.log("Received request data:", { to, programCount: programNames.length, totalBudget });
 
     if (!RESEND_API_KEY) {
+      console.error("Missing RESEND_API_KEY in environment variables");
       throw new Error("Missing RESEND_API_KEY");
     }
 
@@ -70,7 +73,7 @@ serve(async (req) => {
       </div>
     `;
 
-    console.log("Sending email to:", to);
+    console.log("Attempting to send email to:", to);
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -85,27 +88,26 @@ serve(async (req) => {
       }),
     });
 
-    if (!res.ok) {
-      const error = await res.text();
-      console.error("Error sending email:", error);
-      throw new Error(`Failed to send email: ${error}`);
-    }
-
-    const data = await res.json();
-    console.log("Email sent successfully:", data);
-
-    return new Response(JSON.stringify(data), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
-  } catch (error) {
-    console.error("Error in send-confirmation function:", error);
-    return new Response(
-      JSON.stringify({ error: error.message || "Failed to send email" }),
-      {
+    if (res.ok) {
+      const data = await res.json();
+      console.log("Email sent successfully:", data);
+      return new Response(JSON.stringify(data), {
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      }
-    );
+      });
+    } else {
+      const error = await res.text();
+      console.error("Resend API error:", error);
+      return new Response(JSON.stringify({ error }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+  } catch (error: any) {
+    console.error("Error in send-confirmation function:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
