@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import confetti from "canvas-confetti";
 import useSound from "use-sound";
+import EmailInput from "./draft/EmailInput";
+import SubmitButton from "./draft/SubmitButton";
+import { triggerCelebration } from "./draft/ConfettiCelebration";
 
 interface Program {
   id: string;
@@ -23,63 +23,11 @@ interface DraftSubmissionFormProps {
 
 export default function DraftSubmissionForm({
   selectedPrograms,
-  totalBudget,
-  formatBudget,
   onEmailSubmit,
 }: DraftSubmissionFormProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
-
-  const triggerCelebration = () => {
-    playSuccess();
-
-    const count = 200;
-    const defaults = {
-      origin: { y: 0.7 },
-      zIndex: 9999,
-    };
-
-    function fire(particleRatio: number, opts: any) {
-      confetti({
-        ...defaults,
-        ...opts,
-        particleCount: Math.floor(count * particleRatio),
-      });
-    }
-
-    fire(0.25, {
-      spread: 26,
-      startVelocity: 55,
-      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
-    });
-
-    fire(0.2, {
-      spread: 60,
-      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
-    });
-
-    fire(0.35, {
-      spread: 100,
-      decay: 0.91,
-      scalar: 0.8,
-      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
-    });
-
-    fire(0.1, {
-      spread: 120,
-      startVelocity: 25,
-      decay: 0.92,
-      scalar: 1.2,
-      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
-    });
-
-    fire(0.1, {
-      spread: 120,
-      startVelocity: 45,
-      colors: ["#F2A900", "#9B87F5", "#28A0F0"],
-    });
-  };
 
   const handleSubmit = async () => {
     if (!email) {
@@ -106,10 +54,7 @@ export default function DraftSubmissionForm({
         program_ids: selectedPrograms.map((p) => p.id),
       });
 
-      if (dbError) {
-        console.error("Database error:", dbError);
-        throw dbError;
-      }
+      if (dbError) throw dbError;
 
       const { error: emailError } = await supabase.functions.invoke(
         "send-confirmation",
@@ -117,27 +62,23 @@ export default function DraftSubmissionForm({
           body: {
             to: email,
             programNames: selectedPrograms.map((p) => p.name),
-            totalBudget,
+            totalBudget: selectedPrograms.reduce((sum, p) => sum + p.annual_budget, 0),
           },
         }
       );
 
       if (emailError) {
-        console.error("Email error:", emailError);
         throw new Error(emailError.message || "Failed to send confirmation email");
       }
 
+      playSuccess();
       triggerCelebration();
-      toast.success(
-        "Draft picks saved! Check your email for a confirmation message."
-      );
+      toast.success("Draft picks saved! Check your email for a confirmation message.");
       onEmailSubmit(email);
       setEmail("");
     } catch (error) {
       console.error("Error saving draft picks:", error);
-      toast.error(
-        error.message || "Failed to save draft picks. Please try again."
-      );
+      toast.error(error.message || "Failed to save draft picks. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -145,27 +86,8 @@ export default function DraftSubmissionForm({
 
   return (
     <div className="space-y-2 pt-4">
-      <Input
-        type="email"
-        placeholder="Enter your email to save picks"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        disabled={isSubmitting}
-      />
-      <Button
-        className="w-full bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90"
-        onClick={handleSubmit}
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? (
-          <div className="flex items-center gap-2">
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-            <span>Saving...</span>
-          </div>
-        ) : (
-          "Save Draft Picks"
-        )}
-      </Button>
+      <EmailInput email={email} setEmail={setEmail} isSubmitting={isSubmitting} />
+      <SubmitButton isSubmitting={isSubmitting} />
     </div>
   );
 }

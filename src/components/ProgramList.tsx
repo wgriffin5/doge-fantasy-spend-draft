@@ -1,18 +1,8 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Badge } from "@/components/ui/badge";
+import SearchBar from "./program/SearchBar";
+import ProgramTable from "./program/ProgramTable";
 
 interface Program {
   id: string;
@@ -21,8 +11,6 @@ interface Program {
   annual_budget: number;
   department: string;
   is_cut: boolean;
-  cut_date: string | null;
-  cut_amount: number | null;
 }
 
 interface ProgramListProps {
@@ -39,18 +27,12 @@ export default function ProgramList({
   const { data: programs, isLoading } = useQuery({
     queryKey: ["programs"],
     queryFn: async () => {
-      console.log("Fetching programs...");
       const { data, error } = await supabase
         .from("programs")
         .select("*")
         .order("annual_budget", { ascending: false });
 
-      if (error) {
-        console.error("Error fetching programs:", error);
-        throw error;
-      }
-      
-      console.log("Fetched programs:", data);
+      if (error) throw error;
       return data;
     },
   });
@@ -62,85 +44,16 @@ export default function ProgramList({
       program.department.toLowerCase().includes(search.toLowerCase())
   );
 
-  const formatBudget = (budget: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(budget);
-  };
-
-  const isSelected = (program: Program) =>
-    selectedPrograms.some((p) => p.id === program.id);
-
   return (
     <div className="space-y-4">
-      <div className="relative">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search programs..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-10"
-        />
-      </div>
-
+      <SearchBar search={search} setSearch={setSearch} />
       <div className="rounded-lg border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Program</TableHead>
-              <TableHead>Department</TableHead>
-              <TableHead>Annual Budget</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center">
-                  Loading programs...
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredPrograms?.map((program) => (
-                <TableRow key={program.id}>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{program.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {program.description}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{program.department}</TableCell>
-                  <TableCell>{formatBudget(program.annual_budget)}</TableCell>
-                  <TableCell>
-                    {program.is_cut ? (
-                      <Badge variant="destructive">Cut</Badge>
-                    ) : (
-                      <Badge variant="secondary">Active</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant={isSelected(program) ? "destructive" : "default"}
-                      onClick={() => onSelectProgram(program)}
-                      disabled={
-                        (selectedPrograms.length >= 7 && !isSelected(program)) ||
-                        program.is_cut
-                      }
-                    >
-                      {isSelected(program) ? "Remove" : "Draft"}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+        <ProgramTable
+          programs={filteredPrograms || []}
+          isLoading={isLoading}
+          selectedPrograms={selectedPrograms}
+          onSelectProgram={onSelectProgram}
+        />
       </div>
     </div>
   );
