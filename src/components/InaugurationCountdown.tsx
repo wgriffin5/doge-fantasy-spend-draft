@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card } from "./ui/card";
+import { Hourglass } from "lucide-react";
 
 export default function InaugurationCountdown() {
   const [timeLeft, setTimeLeft] = useState({
@@ -33,26 +34,33 @@ export default function InaugurationCountdown() {
   }, []);
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-doge-purple/10 to-doge-blue/10">
-      <h3 className="text-lg font-semibold mb-4 text-center">
-        Countdown to Inauguration Day
-      </h3>
-      <div className="grid grid-cols-4 gap-2 text-center">
-        <div className="space-y-1">
-          <div className="text-2xl font-bold">{timeLeft.days}</div>
-          <div className="text-xs text-muted-foreground">Days</div>
+    <Card className="p-4 bg-gradient-to-br from-doge-purple via-doge-gold to-doge-blue">
+      <div className="relative">
+        <div className="absolute -top-3 -right-3">
+          <div className="animate-pulse">
+            <Hourglass className="h-6 w-6 text-white" />
+          </div>
         </div>
-        <div className="space-y-1">
-          <div className="text-2xl font-bold">{timeLeft.hours}</div>
-          <div className="text-xs text-muted-foreground">Hours</div>
-        </div>
-        <div className="space-y-1">
-          <div className="text-2xl font-bold">{timeLeft.minutes}</div>
-          <div className="text-xs text-muted-foreground">Minutes</div>
-        </div>
-        <div className="space-y-1">
-          <div className="text-2xl font-bold">{timeLeft.seconds}</div>
-          <div className="text-xs text-muted-foreground">Seconds</div>
+        <h3 className="text-base font-bold mb-3 text-white text-center">
+          Time Until Reform
+        </h3>
+        <div className="grid grid-cols-4 gap-1 text-center">
+          {[
+            { label: "D", value: timeLeft.days },
+            { label: "H", value: timeLeft.hours },
+            { label: "M", value: timeLeft.minutes },
+            { label: "S", value: timeLeft.seconds },
+          ].map((item, index) => (
+            <div
+              key={item.label}
+              className="bg-white/10 backdrop-blur-sm rounded-lg p-2 hover:scale-105 transition-transform"
+            >
+              <div className="text-xl font-bold text-white animate-pulse">
+                {String(item.value).padStart(2, "0")}
+              </div>
+              <div className="text-xs text-white/80">{item.label}</div>
+            </div>
+          ))}
         </div>
       </div>
     </Card>
