@@ -1,28 +1,32 @@
 import { useState, useEffect } from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import useSound from "use-sound";
 
 export default function ReformAdvocates() {
   const [descriptionIndex, setDescriptionIndex] = useState(0);
+  const [playHover] = useSound('/sounds/select.mp3', { volume: 0.5 });
 
   const advocates = [
     {
       name: "Lonnie Rockets",
       image: "/lovable-uploads/62d7ee9d-6255-45a7-9796-b404dd5b73bc.png",
       titles: ["Rocket Bro", "Mars Guy", "X Man", "Autistic African Immigrant", "Billionaire"],
-      color: "doge-gold"
+      color: "doge-gold",
+      gradient: "from-doge-gold/20 to-transparent"
     },
     {
       name: "Donny Fairways",
       image: "/lovable-uploads/574113f5-dcac-411e-8a5a-d310e7d6805c.png",
       titles: ["Melania's Husband", "Baron's Dad", "Casino Owner", "Reality TV Star", "You're Fired", "Billionaire"],
-      color: "doge-purple"
+      color: "doge-purple",
+      gradient: "from-doge-purple/20 to-transparent"
     },
     {
       name: "V Brah",
       image: "/lovable-uploads/c673cccd-9961-42c2-9bc2-4d150ae3152d.png",
       titles: ["Bio Billionaire", "Hair Product Model"],
-      color: "doge-blue"
+      color: "doge-blue",
+      gradient: "from-doge-blue/20 to-transparent"
     },
   ];
 
@@ -38,50 +42,57 @@ export default function ReformAdvocates() {
   }, []);
 
   return (
-    <div className="flex justify-center gap-8 py-6">
-      {advocates.map((advocate) => (
-        <motion.div
-          key={advocate.name}
-          className="text-center group cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.div 
-            className="relative"
-            whileHover={{ rotate: [0, -5, 5, -5, 0] }}
-            transition={{ duration: 0.5 }}
-          >
-            <Avatar className={`w-24 h-24 border-4 border-${advocate.color} transition-all duration-300 group-hover:shadow-lg group-hover:shadow-${advocate.color}/30`}>
-              <AvatarImage 
-                src={advocate.image} 
-                alt={advocate.name}
-                className="transition-all duration-300"
-              />
-              <AvatarFallback>{advocate.name[0]}</AvatarFallback>
-            </Avatar>
-            <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/50 to-transparent rounded-b-full" />
-          </motion.div>
-          <motion.h3 
-            className="mt-2 font-bold"
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            {advocate.name}
-          </motion.h3>
-          <motion.p 
-            className="text-sm text-muted-foreground"
-            key={advocate.titles[descriptionIndex % advocate.titles.length]}
-            initial={{ opacity: 0, y: 5 }}
+    <div className="flex flex-wrap justify-center gap-8 py-6">
+      <AnimatePresence>
+        {advocates.map((advocate, index) => (
+          <motion.div
+            key={advocate.name}
+            className="text-center group cursor-pointer"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.5, delay: index * 0.2 }}
+            whileHover={{ scale: 1.05 }}
+            onHoverStart={() => playHover()}
           >
-            {advocate.titles[descriptionIndex % advocate.titles.length]}
-          </motion.p>
-        </motion.div>
-      ))}
+            <motion.div 
+              className="relative"
+              whileHover={{ rotate: [0, -5, 5, -5, 0] }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className={`relative w-24 h-24 rounded-full overflow-hidden border-4 border-${advocate.color} transition-all duration-300 group-hover:shadow-lg group-hover:shadow-${advocate.color}/30`}>
+                <motion.img 
+                  src={advocate.image} 
+                  alt={advocate.name}
+                  className="w-full h-full object-cover transition-all duration-300"
+                  whileHover={{ scale: 1.1 }}
+                />
+                <div className={`absolute inset-0 bg-gradient-to-t ${advocate.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+              </div>
+            </motion.div>
+            
+            <motion.h3 
+              className={`mt-3 font-bold text-${advocate.color}`}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {advocate.name}
+            </motion.h3>
+            
+            <AnimatePresence mode="wait">
+              <motion.p 
+                key={advocate.titles[descriptionIndex % advocate.titles.length]}
+                className="text-sm text-muted-foreground h-5"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                {advocate.titles[descriptionIndex % advocate.titles.length]}
+              </motion.p>
+            </AnimatePresence>
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 }
