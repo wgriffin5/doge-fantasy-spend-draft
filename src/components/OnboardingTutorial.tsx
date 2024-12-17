@@ -11,9 +11,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Check, Trophy, Users, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Check, Trophy, Users, ArrowDown } from "lucide-react";
 
 export default function OnboardingTutorial() {
+  const scrollToPrograms = () => {
+    document.getElementById("program-grid")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -32,9 +37,9 @@ export default function OnboardingTutorial() {
             <div>
               <h3 className="font-semibold">1. Browse Programs</h3>
               <p className="text-muted-foreground">
-                Explore federal spending programs and their annual budgets. Use
-                filters to find programs you think should be cut or made more
-                efficient.
+                Explore federal spending programs below. Use filters to find programs 
+                you think should be cut or made more efficient. Look for high-budget 
+                programs for maximum points!
               </p>
             </div>
           </div>
@@ -46,8 +51,9 @@ export default function OnboardingTutorial() {
             <div>
               <h3 className="font-semibold">2. Draft Your Picks</h3>
               <p className="text-muted-foreground">
-                Select up to 7 programs you predict will be cut or streamlined.
-                Choose wisely - bigger budgets mean bigger potential points!
+                Click on programs to add them to your draft picks. You can select up 
+                to 7 programs. Remember: bigger budgets mean bigger potential points, 
+                but also consider which cuts are most likely to happen!
               </p>
             </div>
           </div>
@@ -57,11 +63,11 @@ export default function OnboardingTutorial() {
               <Users className="h-5 w-5 text-purple-600" />
             </div>
             <div>
-              <h3 className="font-semibold">3. Join the Movement</h3>
+              <h3 className="font-semibold">3. Submit & Track</h3>
               <p className="text-muted-foreground">
-                Save your picks by entering your email. You'll receive updates when
-                your predicted cuts happen and see your score climb the
-                leaderboard!
+                Enter your email to save your picks and join the community. You'll 
+                receive updates when your predictions come true and see your score 
+                climb the leaderboard!
               </p>
             </div>
           </div>
@@ -72,8 +78,8 @@ export default function OnboardingTutorial() {
               <AccordionContent>
                 Points are awarded based on the size of budget cuts you correctly predict. 
                 Each billion dollars in cuts equals one point, with a minimum of 1 point 
-                per correct prediction. Bonus points are awarded for higher confidence 
-                predictions that come true!
+                per correct prediction. Advanced players can earn bonus points through 
+                detailed predictions!
               </AccordionContent>
             </AccordionItem>
 
@@ -99,12 +105,13 @@ export default function OnboardingTutorial() {
           </Accordion>
 
           <div className="mt-4 rounded-lg bg-secondary p-4">
-            <div className="flex items-center gap-2">
-              <ArrowRight className="h-5 w-5 text-doge-gold" />
-              <p className="font-medium text-doge-gold">
-                Ready to make a difference? Start drafting your picks below!
-              </p>
-            </div>
+            <Button
+              onClick={scrollToPrograms}
+              className="w-full bg-doge-gold hover:bg-doge-gold/90 text-base"
+            >
+              Start Drafting
+              <ArrowDown className="ml-2 h-4 w-4" />
+            </Button>
           </div>
         </CardContent>
       </Card>
