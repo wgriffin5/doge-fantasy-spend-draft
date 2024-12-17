@@ -5,6 +5,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Check, Trophy, Users, ArrowRight } from "lucide-react";
 
 export default function OnboardingTutorial() {
@@ -59,6 +65,38 @@ export default function OnboardingTutorial() {
               </p>
             </div>
           </div>
+
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="scoring">
+              <AccordionTrigger>How do I earn points?</AccordionTrigger>
+              <AccordionContent>
+                Points are awarded based on the size of budget cuts you correctly predict. 
+                Each billion dollars in cuts equals one point, with a minimum of 1 point 
+                per correct prediction. Bonus points are awarded for higher confidence 
+                predictions that come true!
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="wrong-predictions">
+              <AccordionTrigger>What if my prediction is wrong?</AccordionTrigger>
+              <AccordionContent>
+                Don't worry! There are no penalties for incorrect predictions. 
+                This game is about learning and engaging with government spending - 
+                you only gain points, never lose them. Use the community discussions 
+                to learn from others and improve your predictions.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="timeframe">
+              <AccordionTrigger>How long until I see results?</AccordionTrigger>
+              <AccordionContent>
+                Government budget decisions can take time. We track real-world budget 
+                changes daily and notify you immediately when one of your predictions 
+                comes true. Most budget changes occur during the annual budget cycle, 
+                but reforms can happen year-round.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
 
           <div className="mt-4 rounded-lg bg-secondary p-4">
             <div className="flex items-center gap-2">

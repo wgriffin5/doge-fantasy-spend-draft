@@ -196,6 +196,7 @@ export type Database = {
           id: string
           is_meme: boolean | null
           likes: number | null
+          parent_id: string | null
           program_id: string
         }
         Insert: {
@@ -205,6 +206,7 @@ export type Database = {
           id?: string
           is_meme?: boolean | null
           likes?: number | null
+          parent_id?: string | null
           program_id: string
         }
         Update: {
@@ -214,6 +216,7 @@ export type Database = {
           id?: string
           is_meme?: boolean | null
           likes?: number | null
+          parent_id?: string | null
           program_id?: string
         }
         Relationships: [
@@ -222,6 +225,13 @@ export type Database = {
             columns: ["program_id"]
             isOneToOne: false
             referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "program_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "program_comments"
             referencedColumns: ["id"]
           },
           {
