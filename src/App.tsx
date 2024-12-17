@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Vision from "./pages/Vision";
 import About from "./pages/About";
 import Community from "./pages/Community";
+import HowToPlay from "./pages/HowToPlay";
 import Navbar from "./components/layout/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -19,6 +20,7 @@ function App() {
         <Route path="/vision" element={<Vision />} />
         <Route path="/about" element={<About />} />
         <Route path="/community" element={<Community />} />
+        <Route path="/how-to-play" element={<HowToPlay />} />
       </Routes>
       <Toaster />
     </Router>
