@@ -188,6 +188,51 @@ export type Database = {
         }
         Relationships: []
       }
+      program_comments: {
+        Row: {
+          content: string
+          created_at: string
+          email: string | null
+          id: string
+          is_meme: boolean | null
+          likes: number | null
+          program_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_meme?: boolean | null
+          likes?: number | null
+          program_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_meme?: boolean | null
+          likes?: number | null
+          program_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_program"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "program_comments_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       programs: {
         Row: {
           annual_budget: number

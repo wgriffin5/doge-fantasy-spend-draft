@@ -4,6 +4,7 @@ import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import Vision from "./pages/Vision";
 import About from "./pages/About";
+import Community from "./pages/Community";
 import Navbar from "./components/layout/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/vision" element={<Vision />} />
         <Route path="/about" element={<About />} />
+        <Route path="/community" element={<Community />} />
       </Routes>
       <Toaster />
     </Router>

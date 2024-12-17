@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, Info, Lightbulb, Navigation2 } from "lucide-react";
+import { Home, Info, Lightbulb, Navigation2, Users } from "lucide-react";
 
 export default function Navbar() {
   return (
@@ -18,6 +18,12 @@ export default function Navbar() {
               <Button variant="ghost" className="flex items-center gap-2 hover:bg-doge-gold/10">
                 <Home className="h-4 w-4" />
                 Home
+              </Button>
+            </Link>
+            <Link to="/community" className="transition-colors hover:text-foreground/80">
+              <Button variant="ghost" className="flex items-center gap-2 hover:bg-doge-gold/10">
+                <Users className="h-4 w-4" />
+                Community
               </Button>
             </Link>
             <Link to="/vision" className="transition-colors hover:text-foreground/80">
