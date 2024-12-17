@@ -8,19 +8,47 @@ import {
 } from "@/components/ui/dialog";
 import WelcomeFeatures from "./welcome/WelcomeFeatures";
 import WelcomeForm from "./welcome/WelcomeForm";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function WelcomePopup() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const checkUserStatus = async () => {
+      // Check localStorage first
       const hasSeenPopup = localStorage.getItem("hasSeenWelcomePopup");
-      if (!hasSeenPopup) {
-        setOpen(true);
+      if (hasSeenPopup) {
+        return;
       }
-    }, 30000);
 
-    return () => clearTimeout(timer);
+      // Get user's email if they're logged in
+      const { data: { session } } = await supabase.auth.getSession();
+      const userEmail = session?.user?.email;
+
+      if (userEmail) {
+        // Check if user already exists in player_levels
+        const { data: playerLevel } = await supabase
+          .from("player_levels")
+          .select("id")
+          .eq("email", userEmail)
+          .single();
+
+        // If user exists in player_levels, don't show popup
+        if (playerLevel) {
+          localStorage.setItem("hasSeenWelcomePopup", "true");
+          return;
+        }
+      }
+
+      // Show popup after delay if user hasn't seen it and hasn't signed up
+      const timer = setTimeout(() => {
+        setOpen(true);
+      }, 30000);
+
+      return () => clearTimeout(timer);
+    };
+
+    checkUserStatus();
   }, []);
 
   return (
