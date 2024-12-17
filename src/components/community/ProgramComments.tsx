@@ -11,6 +11,7 @@ interface Comment {
   created_at: string;
   is_meme: boolean;
   likes: number;
+  program_id: string;
   programs: {
     name: string;
   };
@@ -24,7 +25,7 @@ export default function ProgramComments() {
         .from("program_comments")
         .select(`
           *,
-          programs (
+          programs!program_comments_program_id_fkey (
             name
           )
         `)
