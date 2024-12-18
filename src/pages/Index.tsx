@@ -5,6 +5,7 @@ import DraftSection from "@/components/home/DraftSection";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
 import GuidedTour from "@/components/GuidedTour";
 import WelcomePopup from "@/components/WelcomePopup";
+import TopEmailCapture from "@/components/home/TopEmailCapture";
 
 interface Program {
   id: string;
@@ -37,6 +38,7 @@ export default function Index() {
     <div className="min-h-screen">
       <WelcomePopup />
       <GuidedTour />
+      <TopEmailCapture />
       <HeroSection />
       
       <section id="how-to-play" className="py-10 bg-secondary/50">
