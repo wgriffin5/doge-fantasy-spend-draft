@@ -1,4 +1,3 @@
-import ReformLogo from "@/components/ReformLogo";
 import SocialShare from "@/components/SocialShare";
 import InaugurationCountdown from "@/components/InaugurationCountdown";
 import { Button } from "@/components/ui/button";
@@ -27,7 +26,6 @@ export default function HeroSection() {
             />
           </motion.div>
           
-          <ReformLogo />
           <h1 className="mb-4 md:mb-6 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
             Fantasy{" "}
             <span className="relative">
