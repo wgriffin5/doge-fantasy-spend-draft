@@ -7,7 +7,7 @@ export default function MemeContest() {
 
   useEffect(() => {
     const initializeMemeContest = async () => {
-      // First, get the first program to associate the comment with
+      // First, get the first program to associate the comments with
       const { data: programs } = await supabase
         .from("programs")
         .select("id")
@@ -30,24 +30,47 @@ export default function MemeContest() {
         return; // Meme contest already exists
       }
 
-      // Create the meme contest comment
-      const { error } = await supabase
-        .from("program_comments")
-        .insert([
-          {
-            program_id: programs.id,
-            content: "🏆 Welcome to the Fantasy D.O.G.E. Meme Contest! 🏆\n\nKicking off with Uncle Elon calling for YOU to join the mission! Share your best government efficiency memes below.\n\n#DOGEMemeContest",
-            is_meme: true,
-            email: "admin@fantasydoge.com",
-          },
-        ]);
+      // Create the initial contest announcement and meme submissions
+      const memeSubmissions = [
+        {
+          program_id: programs.id,
+          content: "🏆 Welcome to the Fantasy D.O.G.E. Meme Contest! 🏆\n\nKicking off with Uncle Elon calling for YOU to join the mission! Share your best government efficiency memes below.\n\n#DOGEMemeContest",
+          is_meme: true,
+          email: "admin@fantasydoge.com",
+        },
+        {
+          program_id: programs.id,
+          content: "![Uncle Sam DOGE](/lovable-uploads/32972977-961c-4a5e-84ce-927a29b3db5e.png)\n\nUncle Sam wants YOU for Fantasy DOGE! 🎩🐕\n\n#DOGEMemeContest",
+          is_meme: true,
+          email: "memer1@fantasydoge.com",
+        },
+        {
+          program_id: programs.id,
+          content: "![We Need You](/lovable-uploads/876b68a2-ab22-4adb-a7e3-217ffb6bc07a.png)\n\nWe need YOU to join the efficiency revolution! 🚀\n\n#DOGEMemeContest",
+          is_meme: true,
+          email: "memer2@fantasydoge.com",
+        },
+        {
+          program_id: programs.id,
+          content: "![Uncle Elon](/lovable-uploads/9c39ad15-0e9f-4c73-9080-39984776ef76.png)\n\nUncle Elon's calling all efficiency warriors! 🎖️\n\n#DOGEMemeContest",
+          is_meme: true,
+          email: "memer3@fantasydoge.com",
+        }
+      ];
 
-      if (error) {
-        toast({
-          title: "Error creating meme contest",
-          description: "Please try again later",
-          variant: "destructive",
-        });
+      for (const submission of memeSubmissions) {
+        const { error } = await supabase
+          .from("program_comments")
+          .insert([submission]);
+
+        if (error) {
+          toast({
+            title: "Error creating meme submission",
+            description: "Please try again later",
+            variant: "destructive",
+          });
+          console.error("Error creating meme submission:", error);
+        }
       }
     };
 
