@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProgramComments from "@/components/community/ProgramComments";
 import LeaderboardSection from "@/components/community/LeaderboardSection";
 import LeagueRecruitment from "@/components/community/LeagueRecruitment";
+import MemeContest from "@/components/community/MemeContest";
 
 export default function Community() {
   const { data: commentStats } = useQuery({
@@ -65,6 +66,7 @@ export default function Community() {
           <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
         </TabsList>
         <TabsContent value="discussions">
+          <MemeContest />
           <ProgramComments />
         </TabsContent>
         <TabsContent value="leagues">

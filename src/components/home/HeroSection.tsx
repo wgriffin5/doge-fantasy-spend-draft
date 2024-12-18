@@ -14,6 +14,19 @@ export default function HeroSection() {
     <section className="relative overflow-hidden py-12 md:py-20">
       <div className="container mx-auto px-4">
         <div className="text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8"
+          >
+            <img
+              src="/lovable-uploads/bdbfdeaa-9954-4832-b038-ef022726e8c4.png"
+              alt="Uncle Elon Needs You"
+              className="mx-auto max-w-md rounded-lg shadow-lg"
+            />
+          </motion.div>
+          
           <ReformLogo />
           <h1 className="mb-4 md:mb-6 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
             Fantasy{" "}
