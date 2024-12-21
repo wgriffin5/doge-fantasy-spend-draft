@@ -71,27 +71,58 @@ serve(async (req) => {
         break;
 
       case "welcome":
-        emailSubject = "Welcome to Fantasy D.O.G.E.!";
+        emailSubject = "🎮 Welcome to Fantasy D.O.G.E. - Let's Make Government Efficient!";
         emailContent = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="background: linear-gradient(to right, #F2A900, #9B87F5); padding: 2px;">
               <div style="background: white; padding: 20px;">
-                <h1 style="color: #333; margin-bottom: 20px;">Welcome to Fantasy D.O.G.E.!</h1>
+                <h1 style="color: #333; margin-bottom: 20px;">Welcome to the Game of Government Efficiency! 🎯</h1>
                 
-                <p style="color: #666;">Thank you for joining the Department of Government Efficiency Fantasy League!</p>
+                <p style="color: #666; font-size: 16px; line-height: 1.6;">
+                  You've just joined an exciting community of over 1,000 players who are revolutionizing how we think about government spending. Get ready for an adventure in fiscal responsibility!
+                </p>
                 
-                <div style="background: #f7f7f7; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                  <h2 style="color: #333; margin-bottom: 15px;">What's Next?</h2>
-                  <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="padding: 8px 0; border-bottom: 1px solid #eee;">Browse federal programs and their budgets</li>
-                    <li style="padding: 8px 0; border-bottom: 1px solid #eee;">Make predictions about potential budget cuts</li>
-                    <li style="padding: 8px 0; border-bottom: 1px solid #eee;">Compete with other players on the leaderboard</li>
-                    <li style="padding: 8px 0;">Get notified when your predictions come true!</li>
+                <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <h2 style="color: #333; margin-bottom: 15px;">🚀 Your Next Steps:</h2>
+                  <ol style="color: #666; padding-left: 20px; margin: 0;">
+                    <li style="margin-bottom: 10px;">Browse through federal programs and their budgets</li>
+                    <li style="margin-bottom: 10px;">Make your first prediction about potential budget cuts</li>
+                    <li style="margin-bottom: 10px;">Join the leaderboard and compete with other reform advocates</li>
+                    <li style="margin-bottom: 10px;">Share your insights with our growing community</li>
+                  </ol>
+                </div>
+
+                <div style="background: #FFF3E0; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                  <h3 style="color: #F2A900; margin-bottom: 10px;">🏆 Did You Know?</h3>
+                  <p style="color: #666; margin: 0;">
+                    Our top players have identified over $50B in potential savings! Your predictions could be next to make headlines.
+                  </p>
+                </div>
+
+                <div style="background: #F3F0FF; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                  <h3 style="color: #9B87F5; margin-bottom: 10px;">📅 What's Coming Up</h3>
+                  <ul style="color: #666; padding-left: 20px; margin: 0;">
+                    <li style="margin-bottom: 5px;">Weekly leaderboard updates</li>
+                    <li style="margin-bottom: 5px;">New program releases</li>
+                    <li style="margin-bottom: 5px;">Community challenges</li>
+                    <li>Special events and competitions</li>
                   </ul>
                 </div>
                 
-                <p style="color: #666; margin-top: 20px;">
-                  Start making your predictions now and help identify government inefficiencies!
+                <p style="color: #666; margin-top: 20px; font-style: italic;">
+                  "The best way to predict the future is to create it." - Start making your predictions today!
+                </p>
+
+                <div style="text-align: center; margin-top: 30px;">
+                  <a href="https://fantasy-doge.com" 
+                     style="background: #F2A900; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                    Start Making Predictions
+                  </a>
+                </div>
+
+                <p style="color: #999; font-size: 12px; margin-top: 30px; text-align: center;">
+                  You're receiving this email because you joined Fantasy D.O.G.E. - the Department of Government Efficiency Fantasy League.
+                  <br>Stay tuned for weekly updates on government efficiency and reform!
                 </p>
               </div>
             </div>
