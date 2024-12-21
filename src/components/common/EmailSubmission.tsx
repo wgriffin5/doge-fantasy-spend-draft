@@ -57,6 +57,7 @@ export default function EmailSubmission({
             type,
             programNames: [],
             totalBudget: 0,
+            variant,
           },
         }
       );
