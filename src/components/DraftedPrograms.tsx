@@ -76,7 +76,7 @@ export default function DraftedPrograms({
                 exit={{ opacity: 0, y: -10 }}
                 className="text-sm sm:text-base text-muted-foreground"
               >
-                Draft up to 7 programs to cut from the federal budget.
+                Draft 7 programs to cut from the federal budget.
               </motion.p>
             ) : (
               <motion.div

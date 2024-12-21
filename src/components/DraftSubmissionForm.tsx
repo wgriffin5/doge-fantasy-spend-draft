@@ -37,6 +37,11 @@ export default function DraftSubmissionForm({
       return;
     }
     
+    if (selectedPrograms.length !== 7) {
+      toast.error("Please select exactly 7 programs before submitting");
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
       onEmailSubmit(email);
@@ -55,6 +60,11 @@ export default function DraftSubmissionForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
+        {selectedPrograms.length < 7 && (
+          <div className="text-sm text-muted-foreground">
+            Select {7 - selectedPrograms.length} more program{selectedPrograms.length === 6 ? '' : 's'} to complete your draft
+          </div>
+        )}
         <Input
           type="email"
           placeholder="Enter your email"
@@ -69,7 +79,7 @@ export default function DraftSubmissionForm({
           <Button
             type="submit"
             className="w-full bg-doge-gold hover:bg-doge-gold/90"
-            disabled={isSubmitting || selectedPrograms.length === 0}
+            disabled={isSubmitting || selectedPrograms.length !== 7}
           >
             {isSubmitting ? "Submitting..." : "Submit Draft Picks"}
           </Button>
