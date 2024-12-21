@@ -1,19 +1,34 @@
 interface WelcomeEmailData {
-  variant: "A" | "B" | "C";
+  variant: "A" | "B" | "C" | "D";
+  userLevel?: string;
+  predictionsCount?: number;
 }
 
-export const getWelcomeEmailContent = ({ variant }: WelcomeEmailData) => {
+export const getWelcomeEmailContent = ({ variant, userLevel = "rookie", predictionsCount = 0 }: WelcomeEmailData) => {
   const subjects = {
     A: "🎮 Welcome to Fantasy D.O.G.E. - Let's Make Government Efficient!",
     B: "🚀 Your Journey to Government Reform Starts Now!",
-    C: "🎯 Join the Government Efficiency Revolution!"
+    C: "🎯 Join the Government Efficiency Revolution!",
+    D: "💡 Ready to Transform Government? Let's Begin!"
+  };
+
+  // Dynamic content based on user level
+  const getLevelBasedContent = (level: string) => {
+    switch (level) {
+      case "expert":
+        return "As an experienced reformer, you'll have access to advanced features and exclusive insights.";
+      case "intermediate":
+        return "You're making great progress! Keep making predictions to unlock more features.";
+      default:
+        return "Start your journey by making your first prediction!";
+    }
   };
 
   const templates = {
     A: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(to right, #F2A900, #9B87F5); padding: 2px;">
-          <div style="background: white; padding: 20px;">
+          <div style="background: white; padding: 20px; border-radius: 8px;">
             <h1 style="color: #333; margin-bottom: 20px;">Welcome to the Game of Government Efficiency! 🎯</h1>
             
             <p style="color: #666; font-size: 16px; line-height: 1.6;">
@@ -114,6 +129,33 @@ export const getWelcomeEmailContent = ({ variant }: WelcomeEmailData) => {
               <a href="https://fantasy-doge.com" 
                  style="display: inline-block; background: linear-gradient(to right, #F2A900, #9B87F5); color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">
                 Start Your Reform Journey
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `,
+    D: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #6366F1, #4F46E5); padding: 2px;">
+          <div style="background: white; padding: 30px; border-radius: 8px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #4F46E5; font-size: 28px; margin-bottom: 15px;">Welcome to the Future of Government! 💡</h1>
+              <p style="color: #666; font-size: 16px;">Innovation Meets Efficiency</p>
+            </div>
+
+            <div style="background: #F3F4F6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h2 style="color: #4F46E5; margin-bottom: 15px;">🌟 Your Reform Journey</h2>
+              <p style="color: #666; line-height: 1.6;">
+                ${getLevelBasedContent(userLevel)}
+                ${predictionsCount > 0 ? `You've already made ${predictionsCount} predictions!` : ''}
+              </p>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+              <a href="https://fantasy-doge.com" 
+                 style="display: inline-block; background: linear-gradient(to right, #6366F1, #4F46E5); color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">
+                Start Innovating
               </a>
             </div>
           </div>

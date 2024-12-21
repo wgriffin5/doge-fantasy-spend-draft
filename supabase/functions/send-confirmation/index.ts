@@ -2,8 +2,11 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getWelcomeEmailContent } from "./templates/welcome.ts";
 import { getDraftEmailContent } from "./templates/draft.ts";
 import { getNotificationEmailContent } from "./templates/notification.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,7 +19,7 @@ interface EmailData {
   type: "draft" | "welcome" | "notification";
   programNames: string[];
   totalBudget: number;
-  variant?: "A" | "B" | "C";
+  variant?: "A" | "B" | "C" | "D";
 }
 
 serve(async (req) => {
@@ -25,37 +28,70 @@ serve(async (req) => {
   }
 
   try {
+    const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
     const { to, type, programNames, totalBudget, variant: requestedVariant }: EmailData = await req.json();
 
+    // Get user data for dynamic content
+    const { data: playerLevel } = await supabase
+      .from('player_levels')
+      .select('level, predictions_made')
+      .eq('email', to)
+      .single();
+
+    const { data: predictions } = await supabase
+      .from('reform_predictions')
+      .select('id')
+      .eq('email', to);
+
+    const userEngagement = {
+      predictionsCount: predictions?.length || 0,
+      lastVisit: new Date(), // You might want to track this in a separate table
+    };
+
     // Randomly assign a variant if none is specified
-    const getRandomVariant = (options: string[]): any => 
-      options[Math.floor(Math.random() * options.length)];
+    const variants = ["A", "B", "C", "D"];
+    const variant = requestedVariant || variants[Math.floor(Math.random() * variants.length)] as "A" | "B" | "C" | "D";
+
+    console.log(`Sending ${type} email (variant ${variant}) to ${to}`);
 
     let emailContent;
-    let variant;
-
     switch (type) {
       case "welcome":
-        variant = requestedVariant || getRandomVariant(["A", "B", "C"]);
-        emailContent = getWelcomeEmailContent({ variant });
+        emailContent = getWelcomeEmailContent({ 
+          variant,
+          userLevel: playerLevel?.level,
+          predictionsCount: playerLevel?.predictions_made
+        });
         break;
       case "draft":
-        variant = requestedVariant || getRandomVariant(["A", "B"]);
         emailContent = getDraftEmailContent({ 
           variant, 
           programNames, 
-          totalBudget 
+          totalBudget,
+          predictionsCount: predictions?.length || 0
         });
         break;
       case "notification":
-        variant = requestedVariant || getRandomVariant(["A", "B"]);
-        emailContent = getNotificationEmailContent({ variant });
+        emailContent = getNotificationEmailContent({ 
+          variant,
+          userEngagement
+        });
         break;
       default:
         throw new Error("Invalid email type");
     }
 
-    console.log(`Sending ${type} email (variant ${variant}) to ${to}`);
+    // Track which variant was sent
+    await supabase
+      .from('email_capture_analytics')
+      .insert([
+        {
+          variant,
+          type,
+          event_type: 'sent',
+          email: to
+        }
+      ]);
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
