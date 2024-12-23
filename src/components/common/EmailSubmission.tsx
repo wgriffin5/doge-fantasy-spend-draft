@@ -33,22 +33,30 @@ export default function EmailSubmission({
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
   useEffect(() => {
+    console.log("Tracking impression for variant:", variant, "type:", type);
     trackEmailEvent(variant, type, "impression");
   }, [variant, type]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Starting email submission process...");
     setIsSubmitting(true);
 
     try {
+      console.log("Tracking attempt event...");
       await trackEmailEvent(variant, type, "attempt", email);
 
+      console.log("Inserting into player_levels...");
       const { error: dbError } = await supabase
         .from("player_levels")
         .insert([{ email, level: "rookie" }]);
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        console.error("Database error:", dbError);
+        throw dbError;
+      }
 
+      console.log("Sending confirmation email...");
       const { error: emailError } = await supabase.functions.invoke(
         "send-confirmation",
         {
@@ -62,20 +70,26 @@ export default function EmailSubmission({
         }
       );
 
-      if (emailError) throw emailError;
+      if (emailError) {
+        console.error("Email error:", emailError);
+        throw emailError;
+      }
 
+      console.log("Tracking success event...");
       await trackEmailEvent(variant, type, "success", email);
 
+      console.log("Playing success sound and triggering celebration...");
       playSuccess();
       triggerCelebration();
       toast.success(successMessage);
       onSuccess(email);
       setEmail("");
     } catch (error) {
-      console.error("Error saving email:", error);
+      console.error("Error in email submission:", error);
       toast.error("Failed to save your email. Please try again.");
     } finally {
       setIsSubmitting(false);
+      console.log("Email submission process completed");
     }
   };
 
