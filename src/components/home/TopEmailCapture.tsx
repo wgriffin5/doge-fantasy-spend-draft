@@ -1,14 +1,30 @@
 import EmailSubmission from "../common/EmailSubmission";
 import { useToast } from "@/components/ui/use-toast";
+import { ArrowDown } from "lucide-react";
 
 export default function TopEmailCapture() {
   const { toast } = useToast();
 
   const handleSuccess = (email: string) => {
+    // Scroll to program grid
+    document.getElementById("program-grid")?.scrollIntoView({ 
+      behavior: "smooth",
+      block: "start"
+    });
+
     toast({
       title: "Welcome aboard!",
-      description: "Check your email for next steps.",
+      description: (
+        <div className="space-y-2">
+          <p>Check your email for next steps.</p>
+          <p className="flex items-center gap-2 font-medium text-doge-gold">
+            Now, let's draft your programs! <ArrowDown className="h-4 w-4 animate-bounce" />
+          </p>
+        </div>
+      ),
+      duration: 5000, // Show for 5 seconds to ensure user sees the guidance
     });
+    
     console.log("Email submission successful:", email);
   };
 
