@@ -44,8 +44,6 @@ export default function DraftedPrograms({
       className="px-4 sm:px-0"
     >
       <Card id="draft-picks" className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-doge-gold/3 via-transparent to-transparent" />
-        
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             Your Draft Picks
