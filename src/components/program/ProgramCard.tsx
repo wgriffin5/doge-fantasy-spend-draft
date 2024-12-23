@@ -10,11 +10,10 @@ import {
 import { Skull, PartyPopper, DollarSign } from "lucide-react";
 import { useState } from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import AdvancedPredictionForm from "./AdvancedPredictionForm";
 
 interface Program {
@@ -57,69 +56,63 @@ export default function ProgramCard({
   const FrivolityIcon = frivolity.icon;
 
   return (
-    <>
-      <Card className={`transform transition-all hover:scale-105 ${isSelected ? "border-doge-gold" : ""}`}>
-        <CardHeader>
-          <div className="flex justify-between items-start">
-            <CardTitle className="text-lg">{program.name}</CardTitle>
-            <Badge variant={program.is_cut ? "destructive" : "secondary"}>
-              {program.is_cut ? "Cut" : "Active"}
-            </Badge>
-          </div>
-          <CardDescription>{program.description}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FrivolityIcon className="h-5 w-5 text-doge-gold" />
-                <span className="text-sm font-medium">{frivolity.label}</span>
-              </div>
-              <span className="font-bold text-doge-gold">
-                {formatBudget(program.annual_budget)}
-              </span>
+    <Card className={`transform transition-all hover:scale-105 ${isSelected ? "border-doge-gold" : ""}`}>
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-lg">{program.name}</CardTitle>
+          <Badge variant={program.is_cut ? "destructive" : "secondary"}>
+            {program.is_cut ? "Cut" : "Active"}
+          </Badge>
+        </div>
+        <CardDescription>{program.description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FrivolityIcon className="h-5 w-5 text-doge-gold" />
+              <span className="text-sm font-medium">{frivolity.label}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <Badge variant="outline">{program.department}</Badge>
-              <div className="space-x-2">
-                {showAdvancedFeatures && (
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowAdvancedDialog(true)}
-                    className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
-                  >
-                    Advanced
-                  </Button>
-                )}
-                <Button
-                  variant={isSelected ? "destructive" : "default"}
-                  onClick={onSelect}
-                  disabled={(selectedCount >= 7 && !isSelected) || program.is_cut}
-                >
-                  {isSelected ? "Remove" : "Draft"}
-                </Button>
-              </div>
+            <span className="font-bold text-doge-gold">
+              {formatBudget(program.annual_budget)}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <Badge variant="outline">{program.department}</Badge>
+            <div className="space-x-2">
+              {showAdvancedFeatures && (
+                <Popover open={showAdvancedDialog} onOpenChange={setShowAdvancedDialog}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
+                    >
+                      Advanced
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 p-4">
+                    <div className="space-y-4">
+                      <h4 className="font-medium leading-none">Advanced Prediction</h4>
+                      <AdvancedPredictionForm
+                        program={program}
+                        onClose={() => setShowAdvancedDialog(false)}
+                        userEmail={userEmail || ""}
+                      />
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              )}
+              <Button
+                variant={isSelected ? "destructive" : "default"}
+                onClick={onSelect}
+                disabled={(selectedCount >= 7 && !isSelected) || program.is_cut}
+              >
+                {isSelected ? "Remove" : "Draft"}
+              </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      <Dialog 
-        open={showAdvancedDialog} 
-        onOpenChange={setShowAdvancedDialog} 
-        modal={false}
-      >
-        <DialogContent className="fixed bg-white shadow-none border-none">
-          <DialogHeader>
-            <DialogTitle>Advanced Prediction</DialogTitle>
-          </DialogHeader>
-          <AdvancedPredictionForm
-            program={program}
-            onClose={() => setShowAdvancedDialog(false)}
-            userEmail={userEmail || ""}
-          />
-        </DialogContent>
-      </Dialog>
-    </>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
