@@ -32,26 +32,36 @@ export default function DraftSubmissionForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submitted with email:", email);
+    
     if (!email) {
+      console.log("Email validation failed - empty email");
       toast.error("Please enter your email address");
       return;
     }
     
     if (selectedPrograms.length !== 7) {
+      console.log("Program count validation failed:", selectedPrograms.length);
       toast.error("Please select exactly 7 programs before submitting");
       return;
     }
     
     setIsSubmitting(true);
+    console.log("Starting submission process...");
+    
     try {
-      onEmailSubmit(email);
+      console.log("Calling onEmailSubmit with programs:", selectedPrograms);
+      await onEmailSubmit(email);
+      console.log("Email submission successful");
       playSuccess();
       toast.success("Your draft picks have been submitted!");
       setEmail("");
     } catch (error) {
+      console.error("Email submission failed:", error);
       toast.error("Failed to submit draft picks. Please try again.");
     } finally {
       setIsSubmitting(false);
+      console.log("Submission process completed");
     }
   };
 
