@@ -41,7 +41,6 @@ export default function ProgramCard({
 }: ProgramCardProps) {
   const [showAdvancedForm, setShowAdvancedForm] = useState(false);
 
-  // Add debug logs for component state changes
   useEffect(() => {
     console.log('ProgramCard state changed:', {
       programId: program.id,
