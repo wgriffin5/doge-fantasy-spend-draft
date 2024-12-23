@@ -40,9 +40,34 @@ export default function WelcomePopup() {
         }
       }
 
-      // Show popup after delay if user hasn't seen it and hasn't signed up
+      // Function to check if user is actively engaged
+      const isUserEngaged = () => {
+        // Check if user has selected any programs
+        const draftPicks = document.querySelector("#draft-picks");
+        if (draftPicks) {
+          const selectedPrograms = draftPicks.querySelectorAll("[data-selected='true']");
+          if (selectedPrograms.length > 0) {
+            return true;
+          }
+        }
+
+        // Check if user is typing in any input
+        const activeElement = document.activeElement;
+        if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+          return true;
+        }
+
+        return false;
+      };
+
+      // Show popup after delay if user hasn't seen it and isn't engaged
       const timer = setTimeout(() => {
-        setOpen(true);
+        if (!isUserEngaged()) {
+          setOpen(true);
+        } else {
+          // If user is engaged, try again in 30 seconds
+          localStorage.setItem("hasSeenWelcomePopup", "true");
+        }
       }, 30000);
 
       return () => clearTimeout(timer);

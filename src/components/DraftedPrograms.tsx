@@ -44,13 +44,7 @@ export default function DraftedPrograms({
       className="px-4 sm:px-0"
     >
       <Card id="draft-picks" className="relative overflow-hidden">
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-doge-gold/5 via-transparent to-transparent"
-          animate={{
-            opacity: selectedPrograms.length > 0 ? 1 : 0.3,
-          }}
-          transition={{ duration: 0.3 }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-r from-doge-gold/3 via-transparent to-transparent" />
         
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
