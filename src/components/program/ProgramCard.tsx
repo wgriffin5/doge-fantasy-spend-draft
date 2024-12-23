@@ -41,22 +41,26 @@ export default function ProgramCard({
 }: ProgramCardProps) {
   const [showAdvancedForm, setShowAdvancedForm] = useState(false);
 
+  // Add debug logging
   useEffect(() => {
-    console.log('ProgramCard state changed:', {
-      programId: program.id,
+    console.log('ProgramCard state:', {
+      showAdvancedForm,
       isSelected,
-      selectedCount,
-      showAdvancedForm
+      programId: program.id,
+      selectedCount
     });
-  }, [program.id, isSelected, selectedCount, showAdvancedForm]);
+  }, [showAdvancedForm, isSelected, program.id, selectedCount]);
 
-  const handleDraftClick = () => {
+  const handleDraftClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     console.log('Draft button clicked:', {
       programId: program.id,
       isSelected,
       selectedCount
     });
     onSelect();
+    // Ensure we're not accidentally showing the advanced form
+    setShowAdvancedForm(false);
   };
 
   const getFrivolityRating = (budget: number) => {
