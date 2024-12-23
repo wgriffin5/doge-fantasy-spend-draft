@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import useSound from "use-sound";
+import { supabase } from "@/integrations/supabase/client";
+import { trackEmailEvent } from "@/utils/analytics";
 
 interface Program {
   id: string;
@@ -50,9 +52,34 @@ export default function DraftSubmissionForm({
     console.log("Starting submission process...");
     
     try {
+      // Track the attempt
+      await trackEmailEvent("A", "draft", "attempt", email);
+      console.log("Tracked draft attempt");
+
+      // Insert draft picks into database
+      const { error: draftError } = await supabase
+        .from("draft_picks")
+        .insert([
+          {
+            email,
+            program_ids: selectedPrograms.map(p => p.id)
+          }
+        ]);
+
+      if (draftError) {
+        console.error("Draft submission failed:", draftError);
+        throw draftError;
+      }
+      console.log("Draft picks saved to database");
+
       console.log("Calling onEmailSubmit with programs:", selectedPrograms);
       await onEmailSubmit(email);
       console.log("Email submission successful");
+
+      // Track the success
+      await trackEmailEvent("A", "draft", "success", email);
+      console.log("Tracked draft success");
+
       playSuccess();
       toast.success("Your draft picks have been submitted!");
       setEmail("");
