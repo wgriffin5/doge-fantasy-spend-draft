@@ -9,11 +9,6 @@ import {
 } from "@/components/ui/card";
 import { Skull, PartyPopper, DollarSign } from "lucide-react";
 import { useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import AdvancedPredictionForm from "./AdvancedPredictionForm";
 
 interface Program {
@@ -44,7 +39,7 @@ export default function ProgramCard({
   userEmail,
   showAdvancedFeatures = false,
 }: ProgramCardProps) {
-  const [showAdvancedDialog, setShowAdvancedDialog] = useState(false);
+  const [showAdvancedForm, setShowAdvancedForm] = useState(false);
 
   const getFrivolityRating = (budget: number) => {
     if (budget > 10000000000) return { icon: Skull, label: "Extremely Wasteful" };
@@ -81,26 +76,13 @@ export default function ProgramCard({
             <Badge variant="outline">{program.department}</Badge>
             <div className="space-x-2">
               {showAdvancedFeatures && (
-                <Popover open={showAdvancedDialog} onOpenChange={setShowAdvancedDialog}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
-                    >
-                      Advanced
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80 p-4">
-                    <div className="space-y-4">
-                      <h4 className="font-medium leading-none">Advanced Prediction</h4>
-                      <AdvancedPredictionForm
-                        program={program}
-                        onClose={() => setShowAdvancedDialog(false)}
-                        userEmail={userEmail || ""}
-                      />
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <Button
+                  variant="outline"
+                  className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
+                  onClick={() => setShowAdvancedForm(!showAdvancedForm)}
+                >
+                  Advanced
+                </Button>
               )}
               <Button
                 variant={isSelected ? "destructive" : "default"}
@@ -111,6 +93,15 @@ export default function ProgramCard({
               </Button>
             </div>
           </div>
+          {showAdvancedFeatures && showAdvancedForm && (
+            <div className="mt-4 p-4 border rounded-lg bg-white">
+              <AdvancedPredictionForm
+                program={program}
+                onClose={() => setShowAdvancedForm(false)}
+                userEmail={userEmail || ""}
+              />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
