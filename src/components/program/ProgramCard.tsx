@@ -104,8 +104,12 @@ export default function ProgramCard({
         </CardContent>
       </Card>
 
-      <Dialog open={showAdvancedDialog} onOpenChange={setShowAdvancedDialog} modal={false}>
-        <DialogContent className="relative bg-white">
+      <Dialog 
+        open={showAdvancedDialog} 
+        onOpenChange={setShowAdvancedDialog} 
+        modal={false}
+      >
+        <DialogContent className="fixed bg-white shadow-none border-none">
           <DialogHeader>
             <DialogTitle>Advanced Prediction</DialogTitle>
           </DialogHeader>
