@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skull, PartyPopper, DollarSign } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdvancedPredictionForm from "./AdvancedPredictionForm";
 
 interface Program {
@@ -40,6 +40,25 @@ export default function ProgramCard({
   showAdvancedFeatures = false,
 }: ProgramCardProps) {
   const [showAdvancedForm, setShowAdvancedForm] = useState(false);
+
+  // Add debug logs for component state changes
+  useEffect(() => {
+    console.log('ProgramCard state changed:', {
+      programId: program.id,
+      isSelected,
+      selectedCount,
+      showAdvancedForm
+    });
+  }, [program.id, isSelected, selectedCount, showAdvancedForm]);
+
+  const handleDraftClick = () => {
+    console.log('Draft button clicked:', {
+      programId: program.id,
+      isSelected,
+      selectedCount
+    });
+    onSelect();
+  };
 
   const getFrivolityRating = (budget: number) => {
     if (budget > 10000000000) return { icon: Skull, label: "Extremely Wasteful" };
@@ -86,7 +105,7 @@ export default function ProgramCard({
               )}
               <Button
                 variant={isSelected ? "destructive" : "default"}
-                onClick={onSelect}
+                onClick={handleDraftClick}
                 disabled={(selectedCount >= 7 && !isSelected) || program.is_cut}
               >
                 {isSelected ? "Remove" : "Draft"}
