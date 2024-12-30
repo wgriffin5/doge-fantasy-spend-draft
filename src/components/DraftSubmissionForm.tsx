@@ -33,34 +33,13 @@ export default function DraftSubmissionForm({
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
+  // Cleanup effect
   useEffect(() => {
-    console.log("DraftSubmissionForm mounted");
-    console.log("Initial state:", {
-      email,
-      isSubmitting,
-      showConfirmation,
-      selectedProgramsCount: selectedPrograms.length,
-    });
-
     return () => {
-      console.log("DraftSubmissionForm unmounting", {
-        email,
-        isSubmitting,
-        showConfirmation,
-        selectedProgramsCount: selectedPrograms.length,
-      });
       setShowConfirmation(false);
       setIsSubmitting(false);
     };
   }, []);
-
-  useEffect(() => {
-    console.log("State updated:", {
-      showConfirmation,
-      isSubmitting,
-      selectedProgramsCount: selectedPrograms.length,
-    });
-  }, [showConfirmation, isSubmitting, selectedPrograms]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,6 +118,12 @@ export default function DraftSubmissionForm({
     }
   };
 
+  const handleCancel = () => {
+    console.log("Canceling confirmation");
+    setShowConfirmation(false);
+    setIsSubmitting(false);
+  };
+
   if (selectedPrograms.length === 0) return null;
 
   return (
@@ -168,10 +153,7 @@ export default function DraftSubmissionForm({
 
       {showConfirmation && (
         <DraftConfirmationDialog
-          onCancel={() => {
-            console.log("Canceling confirmation");
-            setShowConfirmation(false);
-          }}
+          onCancel={handleCancel}
           onConfirm={confirmSubmission}
           isSubmitting={isSubmitting}
           programCount={selectedPrograms.length}
