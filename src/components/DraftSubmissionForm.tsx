@@ -30,13 +30,25 @@ export default function DraftSubmissionForm({
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
   const handleFormSubmit = async (email: string) => {
-    if (isSubmitting) return;
+    console.log("[DraftSubmissionForm] Form submission started", {
+      email,
+      selectedProgramsCount: selectedPrograms.length,
+      isSubmitting
+    });
+
+    if (isSubmitting) {
+      console.log("[DraftSubmissionForm] Submission already in progress");
+      return;
+    }
 
     setIsSubmitting(true);
+    console.log("[DraftSubmissionForm] isSubmitting set to true");
     
     try {
+      console.log("[DraftSubmissionForm] Tracking email event");
       await trackEmailEvent("A", "draft", "attempt", email);
 
+      console.log("[DraftSubmissionForm] Inserting draft picks");
       const { error: draftError } = await supabase.from("draft_picks").insert([
         {
           email: email,
@@ -46,15 +58,18 @@ export default function DraftSubmissionForm({
 
       if (draftError) throw draftError;
 
+      console.log("[DraftSubmissionForm] Draft picks inserted successfully");
       await onEmailSubmit(email);
       await trackEmailEvent("A", "draft", "success", email);
       playSuccess();
       
+      console.log("[DraftSubmissionForm] Showing success toast");
       toast.success("Your draft picks have been submitted!");
     } catch (error) {
-      console.error("Submission process failed:", error);
+      console.error("[DraftSubmissionForm] Submission process failed:", error);
       toast.error("Failed to submit draft picks. Please try again.");
     } finally {
+      console.log("[DraftSubmissionForm] Setting isSubmitting to false");
       setIsSubmitting(false);
     }
   };

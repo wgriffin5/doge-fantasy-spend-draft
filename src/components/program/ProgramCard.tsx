@@ -47,6 +47,15 @@ export default function ProgramCard({
     return { icon: DollarSign, label: "Somewhat Wasteful" };
   };
 
+  const handleDraftClick = () => {
+    console.log("[ProgramCard] Draft button clicked", {
+      programId: program.id,
+      isSelected,
+      selectedCount
+    });
+    onSelect();
+  };
+
   const frivolity = getFrivolityRating(program.annual_budget);
   const FrivolityIcon = frivolity.icon;
 
@@ -79,14 +88,17 @@ export default function ProgramCard({
                 <Button
                   variant="outline"
                   className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
-                  onClick={() => setShowAdvancedForm(!showAdvancedForm)}
+                  onClick={() => {
+                    console.log("[ProgramCard] Advanced button clicked");
+                    setShowAdvancedForm(!showAdvancedForm);
+                  }}
                 >
                   Advanced
                 </Button>
               )}
               <Button
                 variant={isSelected ? "destructive" : "default"}
-                onClick={onSelect}
+                onClick={handleDraftClick}
                 disabled={(selectedCount >= 7 && !isSelected) || program.is_cut}
               >
                 {isSelected ? "Remove" : "Draft"}
