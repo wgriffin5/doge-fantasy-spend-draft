@@ -15,6 +15,7 @@ interface DraftConfirmationDialogProps {
   programCount: number;
   totalBudget: number;
   formatBudget: (budget: number) => string;
+  open: boolean;
 }
 
 export default function DraftConfirmationDialog({
@@ -24,9 +25,10 @@ export default function DraftConfirmationDialog({
   programCount,
   totalBudget,
   formatBudget,
+  open,
 }: DraftConfirmationDialogProps) {
   return (
-    <Dialog defaultOpen onOpenChange={(open) => !open && onCancel()}>
+    <Dialog open={open} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Confirm Your Draft Submission</DialogTitle>

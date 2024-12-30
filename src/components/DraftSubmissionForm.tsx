@@ -37,6 +37,12 @@ export default function DraftSubmissionForm({
     setShowConfirmation(true);
   };
 
+  const handleCancel = () => {
+    setShowConfirmation(false);
+    setIsSubmitting(false);
+    setPendingEmail("");
+  };
+
   const confirmSubmission = async () => {
     setIsSubmitting(true);
 
@@ -57,21 +63,13 @@ export default function DraftSubmissionForm({
 
       playSuccess();
       toast.success("Your draft picks have been submitted!");
-
-      setPendingEmail("");
-      setShowConfirmation(false);
+      
+      handleCancel();
     } catch (error) {
       console.error("Submission process failed:", error);
       toast.error("Failed to submit draft picks. Please try again.");
-    } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleCancel = () => {
-    setShowConfirmation(false);
-    setIsSubmitting(false);
-    setPendingEmail("");
   };
 
   if (selectedPrograms.length === 0) return null;
@@ -84,16 +82,15 @@ export default function DraftSubmissionForm({
         disabled={isSubmitting}
       />
 
-      {showConfirmation && (
-        <DraftConfirmationDialog
-          onCancel={handleCancel}
-          onConfirm={confirmSubmission}
-          isSubmitting={isSubmitting}
-          programCount={selectedPrograms.length}
-          totalBudget={totalBudget}
-          formatBudget={formatBudget}
-        />
-      )}
+      <DraftConfirmationDialog
+        open={showConfirmation}
+        onCancel={handleCancel}
+        onConfirm={confirmSubmission}
+        isSubmitting={isSubmitting}
+        programCount={selectedPrograms.length}
+        totalBudget={totalBudget}
+        formatBudget={formatBudget}
+      />
     </div>
   );
 }
