@@ -59,7 +59,6 @@ export default function ProgramCard({
       selectedCount
     });
     onSelect();
-    setShowAdvancedForm(false);
   };
 
   const handleAdvancedClick = (e: React.MouseEvent) => {
