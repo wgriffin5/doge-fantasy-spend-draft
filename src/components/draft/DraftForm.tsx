@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import DraftEmailInput from "./DraftEmailInput";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 interface DraftFormProps {
   selectedProgramsCount: number;
@@ -47,7 +48,14 @@ export default function DraftForm({ selectedProgramsCount, onSubmit, disabled }:
           className="w-full bg-doge-gold hover:bg-doge-gold/90"
           disabled={disabled || selectedProgramsCount !== 7}
         >
-          {disabled ? "Submitting..." : "Submit Draft Picks"}
+          {disabled ? (
+            <div className="flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Submitting...</span>
+            </div>
+          ) : (
+            <span>Submit Draft Picks</span>
+          )}
         </Button>
       </div>
     </form>
