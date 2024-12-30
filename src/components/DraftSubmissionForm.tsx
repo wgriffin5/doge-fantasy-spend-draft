@@ -32,11 +32,24 @@ export default function DraftSubmissionForm({
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
-  // Debug: Track component lifecycle
+  // Debug: Track component lifecycle and state changes
   useEffect(() => {
     console.log("DraftSubmissionForm mounted");
+    console.log("Initial state:", {
+      email,
+      isSubmitting,
+      showConfirmation,
+      selectedProgramsCount: selectedPrograms.length
+    });
+
     return () => {
-      console.log("DraftSubmissionForm unmounted");
+      console.log("DraftSubmissionForm unmounting");
+      console.log("Final state:", {
+        email,
+        isSubmitting,
+        showConfirmation,
+        selectedProgramsCount: selectedPrograms.length
+      });
       // Ensure cleanup of any pending states
       setShowConfirmation(false);
       setIsSubmitting(false);
@@ -45,16 +58,20 @@ export default function DraftSubmissionForm({
 
   // Debug: Track state changes
   useEffect(() => {
-    console.log("Confirmation state changed:", showConfirmation);
-  }, [showConfirmation]);
-
-  useEffect(() => {
-    console.log("Submission state changed:", isSubmitting);
-  }, [isSubmitting]);
+    console.log("Confirmation dialog state changed:", {
+      showConfirmation,
+      isSubmitting,
+      selectedProgramsCount: selectedPrograms.length
+    });
+  }, [showConfirmation, isSubmitting, selectedPrograms]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submit handler triggered");
+    console.log("Submit handler triggered", {
+      email,
+      selectedProgramsCount: selectedPrograms.length,
+      showConfirmation
+    });
     
     if (!email) {
       console.log("Email validation failed - empty email");
@@ -63,7 +80,10 @@ export default function DraftSubmissionForm({
     }
     
     if (selectedPrograms.length !== 7) {
-      console.log("Program count validation failed:", selectedPrograms.length);
+      console.log("Program count validation failed:", {
+        count: selectedPrograms.length,
+        required: 7
+      });
       toast.error("Please select exactly 7 programs before submitting");
       return;
     }
@@ -73,7 +93,10 @@ export default function DraftSubmissionForm({
   };
 
   const confirmSubmission = async () => {
-    console.log("Starting confirmation process");
+    console.log("Starting confirmation process", {
+      email,
+      selectedProgramsCount: selectedPrograms.length
+    });
     setIsSubmitting(true);
     
     try {
@@ -114,7 +137,11 @@ export default function DraftSubmissionForm({
       toast.error("Failed to submit draft picks. Please try again.");
     } finally {
       setIsSubmitting(false);
-      console.log("Submission process completed");
+      console.log("Submission process completed", {
+        email,
+        showConfirmation,
+        isSubmitting: false
+      });
     }
   };
 
@@ -133,13 +160,20 @@ export default function DraftSubmissionForm({
             type="email"
             placeholder="Enter your email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              console.log("Email input changed:", e.target.value);
+              setEmail(e.target.value);
+            }}
             className="w-full"
           />
           <Button
             type="submit"
             className="w-full bg-doge-gold hover:bg-doge-gold/90"
             disabled={isSubmitting || selectedPrograms.length !== 7}
+            onClick={() => console.log("Submit button clicked", {
+              isSubmitting,
+              selectedProgramsCount: selectedPrograms.length
+            })}
           >
             {isSubmitting ? "Submitting..." : "Submit Draft Picks"}
           </Button>
@@ -164,7 +198,10 @@ export default function DraftSubmissionForm({
               Cancel
             </Button>
             <Button
-              onClick={confirmSubmission}
+              onClick={() => {
+                console.log("Confirm button clicked");
+                confirmSubmission();
+              }}
               disabled={isSubmitting}
               className="bg-doge-gold hover:bg-doge-gold/90"
             >
