@@ -52,7 +52,6 @@ export default function ProgramCard({
 
   const handleDraftClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     console.log('Draft button clicked:', {
       programId: program.id,
       isSelected,
@@ -63,7 +62,6 @@ export default function ProgramCard({
 
   const handleAdvancedClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     setShowAdvancedForm(!showAdvancedForm);
   };
 
@@ -77,61 +75,59 @@ export default function ProgramCard({
   const FrivolityIcon = frivolity.icon;
 
   return (
-    <div className="relative" onClick={(e) => e.stopPropagation()}>
-      <Card className={`transform transition-all hover:scale-105 ${isSelected ? "border-doge-gold" : ""}`}>
-        <CardHeader>
-          <div className="flex justify-between items-start">
-            <CardTitle className="text-lg">{program.name}</CardTitle>
-            <Badge variant={program.is_cut ? "destructive" : "secondary"}>
-              {program.is_cut ? "Cut" : "Active"}
-            </Badge>
-          </div>
-          <CardDescription>{program.description}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FrivolityIcon className="h-5 w-5 text-doge-gold" />
-                <span className="text-sm font-medium">{frivolity.label}</span>
-              </div>
-              <span className="font-bold text-doge-gold">
-                {formatBudget(program.annual_budget)}
-              </span>
+    <Card className={`transform transition-all hover:scale-105 ${isSelected ? "border-doge-gold" : ""}`}>
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-lg">{program.name}</CardTitle>
+          <Badge variant={program.is_cut ? "destructive" : "secondary"}>
+            {program.is_cut ? "Cut" : "Active"}
+          </Badge>
+        </div>
+        <CardDescription>{program.description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FrivolityIcon className="h-5 w-5 text-doge-gold" />
+              <span className="text-sm font-medium">{frivolity.label}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <Badge variant="outline">{program.department}</Badge>
-              <div className="space-x-2">
-                {showAdvancedFeatures && (
-                  <Button
-                    variant="outline"
-                    className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
-                    onClick={handleAdvancedClick}
-                  >
-                    Advanced
-                  </Button>
-                )}
+            <span className="font-bold text-doge-gold">
+              {formatBudget(program.annual_budget)}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <Badge variant="outline">{program.department}</Badge>
+            <div className="space-x-2">
+              {showAdvancedFeatures && (
                 <Button
-                  variant={isSelected ? "destructive" : "default"}
-                  onClick={handleDraftClick}
-                  disabled={(selectedCount >= 7 && !isSelected) || program.is_cut}
+                  variant="outline"
+                  className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
+                  onClick={handleAdvancedClick}
                 >
-                  {isSelected ? "Remove" : "Draft"}
+                  Advanced
                 </Button>
-              </div>
+              )}
+              <Button
+                variant={isSelected ? "destructive" : "default"}
+                onClick={handleDraftClick}
+                disabled={(selectedCount >= 7 && !isSelected) || program.is_cut}
+              >
+                {isSelected ? "Remove" : "Draft"}
+              </Button>
             </div>
-            {showAdvancedFeatures && showAdvancedForm && (
-              <div className="mt-4 p-4 border rounded-lg bg-white">
-                <AdvancedPredictionForm
-                  program={program}
-                  onClose={() => setShowAdvancedForm(false)}
-                  userEmail={userEmail || ""}
-                />
-              </div>
-            )}
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          {showAdvancedFeatures && showAdvancedForm && (
+            <div className="mt-4 p-4 border rounded-lg bg-background">
+              <AdvancedPredictionForm
+                program={program}
+                onClose={() => setShowAdvancedForm(false)}
+                userEmail={userEmail || ""}
+              />
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
