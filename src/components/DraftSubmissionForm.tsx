@@ -63,7 +63,6 @@ export default function DraftSubmissionForm({
 
       playSuccess();
       toast.success("Your draft picks have been submitted!");
-      
       handleCancel();
     } catch (error) {
       console.error("Submission process failed:", error);

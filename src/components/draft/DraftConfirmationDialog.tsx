@@ -1,11 +1,11 @@
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
 interface DraftConfirmationDialogProps {
@@ -28,16 +28,16 @@ export default function DraftConfirmationDialog({
   open,
 }: DraftConfirmationDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Confirm Your Draft Submission</DialogTitle>
-          <DialogDescription>
+    <AlertDialog open={open} onOpenChange={(open) => !open && onCancel()}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Confirm Your Draft Submission</AlertDialogTitle>
+          <AlertDialogDescription>
             You are about to submit {programCount} programs with a total budget cut of{" "}
             {formatBudget(totalBudget)}. This action cannot be undone.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="flex justify-end gap-2">
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="flex justify-end gap-2">
           <Button variant="outline" onClick={onCancel} disabled={isSubmitting}>
             Cancel
           </Button>
@@ -48,8 +48,8 @@ export default function DraftConfirmationDialog({
           >
             {isSubmitting ? "Submitting..." : "Confirm Submission"}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
