@@ -32,7 +32,7 @@ export default function DraftSubmissionForm({
   const handleFormSubmit = async (email: string) => {
     if (isSubmitting) return;
     
-    const promise = new Promise(async (resolve, reject) => {
+    const promise = new Promise<string>(async (resolve, reject) => {
       setIsSubmitting(true);
       try {
         await trackEmailEvent("A", "draft", "attempt", email);
@@ -60,8 +60,8 @@ export default function DraftSubmissionForm({
 
     toast.promise(promise, {
       loading: `Submitting ${selectedPrograms.length} programs...`,
-      success: (message) => message,
-      error: (error) => error,
+      success: (message: string) => message,
+      error: (error: string) => error,
     });
   };
 
