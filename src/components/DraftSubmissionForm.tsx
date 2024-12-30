@@ -6,6 +6,14 @@ import { motion } from "framer-motion";
 import useSound from "use-sound";
 import { supabase } from "@/integrations/supabase/client";
 import { trackEmailEvent } from "@/utils/analytics";
+import {
+  CustomDialog,
+  CustomDialogContent,
+  CustomDialogHeader,
+  CustomDialogTitle,
+  CustomDialogDescription,
+  CustomDialogFooter,
+} from "@/components/ui/custom-dialog";
 
 interface Program {
   id: string;
@@ -31,10 +39,10 @@ export default function DraftSubmissionForm({
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted with email:", email);
     
     if (!email) {
       console.log("Email validation failed - empty email");
@@ -47,7 +55,11 @@ export default function DraftSubmissionForm({
       toast.error("Please select exactly 7 programs before submitting");
       return;
     }
-    
+
+    setShowConfirmDialog(true);
+  };
+
+  const confirmSubmission = async () => {
     setIsSubmitting(true);
     console.log("Starting submission process...");
     
@@ -83,6 +95,7 @@ export default function DraftSubmissionForm({
       playSuccess();
       toast.success("Your draft picks have been submitted!");
       setEmail("");
+      setShowConfirmDialog(false);
     } catch (error) {
       console.error("Email submission failed:", error);
       toast.error("Failed to submit draft picks. Please try again.");
@@ -95,33 +108,62 @@ export default function DraftSubmissionForm({
   if (selectedPrograms.length === 0) return null;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        {selectedPrograms.length < 7 && (
-          <div className="text-sm text-muted-foreground">
-            Select {7 - selectedPrograms.length} more program{selectedPrograms.length === 6 ? '' : 's'} to complete your draft
-          </div>
-        )}
-        <Input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full"
-        />
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <Button
-            type="submit"
-            className="w-full bg-doge-gold hover:bg-doge-gold/90"
-            disabled={isSubmitting || selectedPrograms.length !== 7}
+    <>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          {selectedPrograms.length < 7 && (
+            <div className="text-sm text-muted-foreground">
+              Select {7 - selectedPrograms.length} more program{selectedPrograms.length === 6 ? '' : 's'} to complete your draft
+            </div>
+          )}
+          <Input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full"
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
           >
-            {isSubmitting ? "Submitting..." : "Submit Draft Picks"}
-          </Button>
-        </motion.div>
-      </div>
-    </form>
+            <Button
+              type="submit"
+              className="w-full bg-doge-gold hover:bg-doge-gold/90"
+              disabled={isSubmitting || selectedPrograms.length !== 7}
+            >
+              {isSubmitting ? "Submitting..." : "Submit Draft Picks"}
+            </Button>
+          </motion.div>
+        </div>
+      </form>
+
+      <CustomDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <CustomDialogContent>
+          <CustomDialogHeader>
+            <CustomDialogTitle>Confirm Your Draft Submission</CustomDialogTitle>
+            <CustomDialogDescription>
+              You are about to submit {selectedPrograms.length} programs with a total budget cut of {formatBudget(totalBudget)}. This action cannot be undone.
+            </CustomDialogDescription>
+          </CustomDialogHeader>
+          <CustomDialogFooter className="mt-4">
+            <Button
+              variant="outline"
+              onClick={() => setShowConfirmDialog(false)}
+              className="mr-2"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmSubmission}
+              disabled={isSubmitting}
+              className="bg-doge-gold hover:bg-doge-gold/90"
+            >
+              {isSubmitting ? "Submitting..." : "Confirm Submission"}
+            </Button>
+          </CustomDialogFooter>
+        </CustomDialogContent>
+      </CustomDialog>
+    </>
   );
 }
