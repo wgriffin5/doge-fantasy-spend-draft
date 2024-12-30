@@ -7,7 +7,7 @@ import About from "./pages/About";
 import Community from "./pages/Community";
 import HowToPlay from "./pages/HowToPlay";
 import Navbar from "./components/layout/Navbar";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -22,7 +22,13 @@ function App() {
         <Route path="/community" element={<Community />} />
         <Route path="/how-to-play" element={<HowToPlay />} />
       </Routes>
-      <Toaster />
+      <Toaster 
+        position="top-center"
+        expand={false}
+        richColors
+        closeButton
+        style={{ background: 'transparent', border: 'none' }}
+      />
     </Router>
   );
 }

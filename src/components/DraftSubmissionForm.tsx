@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { trackEmailEvent } from "@/utils/analytics";
@@ -28,6 +28,17 @@ export default function DraftSubmissionForm({
 }: DraftSubmissionFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
+
+  // Remove any potential overlay elements
+  useEffect(() => {
+    const cleanup = () => {
+      const overlays = document.querySelectorAll('[class*="overlay"], [class*="backdrop"]');
+      overlays.forEach(overlay => overlay.remove());
+    };
+    
+    cleanup();
+    return cleanup;
+  }, []);
 
   const handleFormSubmit = async (email: string) => {
     console.log("[DraftSubmissionForm] Form submission started", {
@@ -64,10 +75,16 @@ export default function DraftSubmissionForm({
       playSuccess();
       
       console.log("[DraftSubmissionForm] Showing success toast");
-      toast.success("Your draft picks have been submitted!");
+      toast.success("Your draft picks have been submitted!", {
+        duration: 3000,
+        style: { background: 'var(--background)', border: '1px solid var(--border)' }
+      });
     } catch (error) {
       console.error("[DraftSubmissionForm] Submission process failed:", error);
-      toast.error("Failed to submit draft picks. Please try again.");
+      toast.error("Failed to submit draft picks. Please try again.", {
+        duration: 3000,
+        style: { background: 'var(--background)', border: '1px solid var(--border)' }
+      });
     } finally {
       console.log("[DraftSubmissionForm] Setting isSubmitting to false");
       setIsSubmitting(false);
