@@ -31,38 +31,32 @@ export default function DraftSubmissionForm({
 
   const handleFormSubmit = async (email: string) => {
     if (isSubmitting) return;
+
+    setIsSubmitting(true);
     
-    const promise = new Promise<string>(async (resolve, reject) => {
-      setIsSubmitting(true);
-      try {
-        await trackEmailEvent("A", "draft", "attempt", email);
+    try {
+      await trackEmailEvent("A", "draft", "attempt", email);
 
-        const { error: draftError } = await supabase.from("draft_picks").insert([
-          {
-            email: email,
-            program_ids: selectedPrograms.map((p) => p.id),
-          },
-        ]);
+      const { error: draftError } = await supabase.from("draft_picks").insert([
+        {
+          email: email,
+          program_ids: selectedPrograms.map((p) => p.id),
+        },
+      ]);
 
-        if (draftError) throw draftError;
+      if (draftError) throw draftError;
 
-        await onEmailSubmit(email);
-        await trackEmailEvent("A", "draft", "success", email);
-        playSuccess();
-        resolve("Your draft picks have been submitted!");
-      } catch (error) {
-        console.error("Submission process failed:", error);
-        reject("Failed to submit draft picks. Please try again.");
-      } finally {
-        setIsSubmitting(false);
-      }
-    });
-
-    toast.promise(promise, {
-      loading: `Submitting ${selectedPrograms.length} programs...`,
-      success: (message: string) => message,
-      error: (error: string) => error,
-    });
+      await onEmailSubmit(email);
+      await trackEmailEvent("A", "draft", "success", email);
+      playSuccess();
+      
+      toast.success("Your draft picks have been submitted!");
+    } catch (error) {
+      console.error("Submission process failed:", error);
+      toast.error("Failed to submit draft picks. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (selectedPrograms.length === 0) return null;
