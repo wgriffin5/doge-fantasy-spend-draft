@@ -52,7 +52,7 @@ export default function ProgramCard({
 
   const handleDraftClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
     console.log('Draft button clicked:', {
       programId: program.id,
       isSelected,
@@ -60,6 +60,12 @@ export default function ProgramCard({
     });
     onSelect();
     setShowAdvancedForm(false);
+  };
+
+  const handleAdvancedClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowAdvancedForm(!showAdvancedForm);
   };
 
   const getFrivolityRating = (budget: number) => {
@@ -72,7 +78,10 @@ export default function ProgramCard({
   const FrivolityIcon = frivolity.icon;
 
   return (
-    <Card className={`transform transition-all hover:scale-105 ${isSelected ? "border-doge-gold" : ""}`}>
+    <Card 
+      className={`transform transition-all hover:scale-105 ${isSelected ? "border-doge-gold" : ""}`}
+      onClick={(e) => e.stopPropagation()}
+    >
       <CardHeader>
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg">{program.name}</CardTitle>
@@ -100,7 +109,7 @@ export default function ProgramCard({
                 <Button
                   variant="outline"
                   className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
-                  onClick={() => setShowAdvancedForm(!showAdvancedForm)}
+                  onClick={handleAdvancedClick}
                 >
                   Advanced
                 </Button>
