@@ -1,120 +1,55 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
+import DraftEmailInput from "./DraftEmailInput";
 import { toast } from "sonner";
-import useSound from "use-sound";
-import { triggerCelebration } from "./ConfettiCelebration";
-import ProgramSelection from "./ProgramSelection";
-import { useNavigate } from "react-router-dom";
 
-const formSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  programIds: z.array(z.string()).min(1, "Please select at least one program"),
-});
+interface DraftFormProps {
+  selectedProgramsCount: number;
+  onSubmit: (email: string) => void;
+  disabled?: boolean;
+}
 
-export default function DraftForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
-  const navigate = useNavigate();
+export default function DraftForm({ selectedProgramsCount, onSubmit, disabled }: DraftFormProps) {
+  const [email, setEmail] = useState("");
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      programIds: [],
-    },
-  });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsSubmitting(true);
-    try {
-      const { error: dbError } = await supabase
-        .from("draft_picks")
-        .insert([{ email: values.email, program_ids: values.programIds }]);
-
-      if (dbError) throw dbError;
-
-      const { data: programs } = await supabase
-        .from("programs")
-        .select("name, annual_budget")
-        .in("id", values.programIds);
-
-      const programNames = programs?.map((p) => p.name) || [];
-      const totalBudget = programs?.reduce((sum, p) => sum + p.annual_budget, 0) || 0;
-
-      const { error: emailError } = await supabase.functions.invoke("send-confirmation", {
-        body: {
-          to: values.email,
-          type: "draft",
-          programNames,
-          totalBudget,
-        },
-      });
-
-      if (emailError) throw emailError;
-
-      playSuccess();
-      triggerCelebration();
-      toast.success("Draft submitted successfully! Check your email for confirmation.");
-      navigate("/");
-    } catch (error) {
-      console.error("Error submitting draft:", error);
-      toast.error("Failed to submit draft. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
     }
+
+    if (selectedProgramsCount !== 7) {
+      toast.error("Please select exactly 7 programs before submitting");
+      return;
+    }
+
+    onSubmit(email);
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  placeholder="Enter your email"
-                  type="email"
-                  {...field}
-                  className="w-full"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        {selectedProgramsCount < 7 && (
+          <div className="text-sm text-muted-foreground">
+            Select {7 - selectedProgramsCount} more program
+            {selectedProgramsCount === 6 ? "" : "s"} to complete your draft
+          </div>
+        )}
+        <DraftEmailInput
+          email={email}
+          setEmail={setEmail}
+          disabled={disabled}
         />
-
-        <FormField
-          control={form.control}
-          name="programIds"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <ProgramSelection
-                  selectedIds={field.value}
-                  onChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <Button
           type="submit"
-          className="w-full bg-gradient-to-r from-doge-gold to-doge-purple"
-          disabled={isSubmitting}
+          className="w-full bg-doge-gold hover:bg-doge-gold/90"
+          disabled={disabled || selectedProgramsCount !== 7}
         >
-          {isSubmitting ? "Submitting..." : "Submit Draft"}
+          {disabled ? "Submitting..." : "Submit Draft Picks"}
         </Button>
-      </form>
-    </Form>
+      </div>
+    </form>
   );
 }

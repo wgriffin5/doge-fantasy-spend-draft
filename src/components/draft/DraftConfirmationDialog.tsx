@@ -26,7 +26,7 @@ export default function DraftConfirmationDialog({
   formatBudget,
 }: DraftConfirmationDialogProps) {
   return (
-    <Dialog open={true} onOpenChange={(open) => !open && onCancel()}>
+    <Dialog defaultOpen onOpenChange={(open) => !open && onCancel()}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Confirm Your Draft Submission</DialogTitle>
@@ -40,10 +40,7 @@ export default function DraftConfirmationDialog({
             Cancel
           </Button>
           <Button
-            onClick={() => {
-              console.log("Confirm button clicked in dialog");
-              onConfirm();
-            }}
+            onClick={onConfirm}
             disabled={isSubmitting}
             className="bg-doge-gold hover:bg-doge-gold/90"
           >
