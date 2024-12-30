@@ -60,7 +60,7 @@ export default function AdvancedPredictionForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 bg-background p-4 rounded-lg border">
       <div className="space-y-2">
         <Label>Prediction Type</Label>
         <select
