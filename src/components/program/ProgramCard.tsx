@@ -41,7 +41,6 @@ export default function ProgramCard({
 }: ProgramCardProps) {
   const [showAdvancedForm, setShowAdvancedForm] = useState(false);
 
-  // Add debug logging
   useEffect(() => {
     console.log('ProgramCard state:', {
       showAdvancedForm,
@@ -53,13 +52,13 @@ export default function ProgramCard({
 
   const handleDraftClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling
     console.log('Draft button clicked:', {
       programId: program.id,
       isSelected,
       selectedCount
     });
     onSelect();
-    // Ensure we're not accidentally showing the advanced form
     setShowAdvancedForm(false);
   };
 
