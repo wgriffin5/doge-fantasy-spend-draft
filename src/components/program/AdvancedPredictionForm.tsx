@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Trophy, ArrowUp, Combine, Zap } from "lucide-react";
 
 interface Program {
   id: string;
@@ -32,118 +25,97 @@ export default function AdvancedPredictionForm({
   onClose,
   userEmail,
 }: AdvancedPredictionFormProps) {
-  const [predictionType, setPredictionType] = useState<string>("cut");
-  const [predictedAmount, setPredictedAmount] = useState<string>("");
-  const [confidenceLevel, setConfidenceLevel] = useState<string>("1");
-  const [notes, setNotes] = useState<string>("");
+  const [predictionType, setPredictionType] = useState("cut");
+  const [predictedAmount, setPredictedAmount] = useState(0);
+  const [confidenceLevel, setConfidenceLevel] = useState(50);
+  const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const getPredictionIcon = (type: string) => {
-    switch (type) {
-      case "cut":
-        return Trophy;
-      case "reduction":
-        return ArrowUp;
-      case "merger":
-        return Combine;
-      case "efficiency":
-        return Zap;
-      default:
-        return Trophy;
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (!userEmail) {
-      toast.error("Please provide your email first");
-      return;
-    }
-
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsSubmitting(true);
-    const PredictionIcon = getPredictionIcon(predictionType);
 
     try {
-      const { error } = await supabase.from("reform_predictions").insert({
-        email: userEmail,
-        program_id: program.id,
-        prediction_type: predictionType,
-        predicted_amount:
-          predictionType !== "cut" ? Number(predictedAmount) : null,
-        confidence_level: Number(confidenceLevel),
-        notes,
-      });
+      const { error } = await supabase.from("reform_predictions").insert([
+        {
+          email: userEmail,
+          program_id: program.id,
+          prediction_type: predictionType,
+          predicted_amount: predictedAmount,
+          confidence_level: confidenceLevel,
+          notes,
+        },
+      ]);
 
       if (error) throw error;
 
-      toast.success(
-        <div className="flex items-center gap-2">
-          <PredictionIcon className="h-5 w-5" />
-          <span>Prediction submitted successfully!</span>
-        </div>
-      );
+      toast.success("Prediction submitted successfully!");
       onClose();
     } catch (error) {
       console.error("Error submitting prediction:", error);
-      toast.error("Failed to submit prediction. Please try again.");
+      toast.error("Failed to submit prediction");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="space-y-4">
-      <Select value={predictionType} onValueChange={setPredictionType}>
-        <SelectTrigger>
-          <SelectValue placeholder="Select prediction type" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="cut">Full Program Cut</SelectItem>
-          <SelectItem value="reduction">Partial Budget Reduction</SelectItem>
-          <SelectItem value="merger">Program Merger</SelectItem>
-          <SelectItem value="efficiency">Efficiency Improvement</SelectItem>
-        </SelectContent>
-      </Select>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label>Prediction Type</Label>
+        <select
+          value={predictionType}
+          onChange={(e) => setPredictionType(e.target.value)}
+          className="w-full p-2 border rounded-md"
+        >
+          <option value="cut">Complete Cut</option>
+          <option value="reduction">Budget Reduction</option>
+          <option value="merger">Program Merger</option>
+          <option value="efficiency">Efficiency Improvement</option>
+        </select>
+      </div>
 
-      {predictionType !== "cut" && predictionType !== "efficiency" && (
-        <Input
-          type="number"
-          placeholder="Predicted amount ($)"
-          value={predictedAmount}
-          onChange={(e) => setPredictedAmount(e.target.value)}
-        />
+      {predictionType !== "cut" && (
+        <div className="space-y-2">
+          <Label>Predicted Amount ($)</Label>
+          <Input
+            type="number"
+            value={predictedAmount}
+            onChange={(e) => setPredictedAmount(Number(e.target.value))}
+            min={0}
+            max={program.annual_budget}
+          />
+        </div>
       )}
 
-      <Select value={confidenceLevel} onValueChange={setConfidenceLevel}>
-        <SelectTrigger>
-          <SelectValue placeholder="Select confidence level" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="1">Low Confidence (1x)</SelectItem>
-          <SelectItem value="2">Medium Confidence (2x)</SelectItem>
-          <SelectItem value="3">High Confidence (3x)</SelectItem>
-          <SelectItem value="4">Very High Confidence (4x)</SelectItem>
-          <SelectItem value="5">Extremely Confident (5x)</SelectItem>
-        </SelectContent>
-      </Select>
+      <div className="space-y-2">
+        <Label>Confidence Level: {confidenceLevel}%</Label>
+        <Slider
+          value={[confidenceLevel]}
+          onValueChange={(value) => setConfidenceLevel(value[0])}
+          min={0}
+          max={100}
+          step={1}
+        />
+      </div>
 
-      <Textarea
-        placeholder="Add notes or justification for your prediction..."
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-      />
+      <div className="space-y-2">
+        <Label>Notes</Label>
+        <Input
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Add any additional notes..."
+        />
+      </div>
 
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" onClick={onClose}>
+      <div className="flex justify-end space-x-2">
+        <Button type="button" variant="outline" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          className="bg-doge-gold hover:bg-doge-gold/90"
-        >
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Submit Prediction"}
         </Button>
       </div>
-    </div>
+    </form>
   );
 }
