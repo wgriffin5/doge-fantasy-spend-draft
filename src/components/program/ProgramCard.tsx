@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skull, PartyPopper, DollarSign } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import AdvancedPredictionForm from "./AdvancedPredictionForm";
 
 interface Program {
@@ -40,30 +40,6 @@ export default function ProgramCard({
   showAdvancedFeatures = false,
 }: ProgramCardProps) {
   const [showAdvancedForm, setShowAdvancedForm] = useState(false);
-
-  useEffect(() => {
-    console.log('ProgramCard state:', {
-      showAdvancedForm,
-      isSelected,
-      programId: program.id,
-      selectedCount
-    });
-  }, [showAdvancedForm, isSelected, program.id, selectedCount]);
-
-  const handleDraftClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    console.log('Draft button clicked:', {
-      programId: program.id,
-      isSelected,
-      selectedCount
-    });
-    onSelect();
-  };
-
-  const handleAdvancedClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setShowAdvancedForm(!showAdvancedForm);
-  };
 
   const getFrivolityRating = (budget: number) => {
     if (budget > 10000000000) return { icon: Skull, label: "Extremely Wasteful" };
@@ -103,14 +79,14 @@ export default function ProgramCard({
                 <Button
                   variant="outline"
                   className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
-                  onClick={handleAdvancedClick}
+                  onClick={() => setShowAdvancedForm(!showAdvancedForm)}
                 >
                   Advanced
                 </Button>
               )}
               <Button
                 variant={isSelected ? "destructive" : "default"}
-                onClick={handleDraftClick}
+                onClick={onSelect}
                 disabled={(selectedCount >= 7 && !isSelected) || program.is_cut}
               >
                 {isSelected ? "Remove" : "Draft"}
@@ -118,7 +94,7 @@ export default function ProgramCard({
             </div>
           </div>
           {showAdvancedFeatures && showAdvancedForm && (
-            <div className="mt-4 p-4 border rounded-lg bg-background">
+            <div className="mt-4 p-4 border rounded-lg">
               <AdvancedPredictionForm
                 program={program}
                 onClose={() => setShowAdvancedForm(false)}
