@@ -6,14 +6,6 @@ import { motion } from "framer-motion";
 import useSound from "use-sound";
 import { supabase } from "@/integrations/supabase/client";
 import { trackEmailEvent } from "@/utils/analytics";
-import {
-  CustomDialog,
-  CustomDialogContent,
-  CustomDialogHeader,
-  CustomDialogTitle,
-  CustomDialogDescription,
-  CustomDialogFooter,
-} from "@/components/ui/custom-dialog";
 
 interface Program {
   id: string;
@@ -38,8 +30,8 @@ export default function DraftSubmissionForm({
 }: DraftSubmissionFormProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,7 +48,7 @@ export default function DraftSubmissionForm({
       return;
     }
 
-    setShowConfirmDialog(true);
+    setShowConfirmation(true);
   };
 
   const confirmSubmission = async () => {
@@ -95,7 +87,7 @@ export default function DraftSubmissionForm({
       playSuccess();
       toast.success("Your draft picks have been submitted!");
       setEmail("");
-      setShowConfirmDialog(false);
+      setShowConfirmation(false);
     } catch (error) {
       console.error("Email submission failed:", error);
       toast.error("Failed to submit draft picks. Please try again.");
@@ -108,7 +100,7 @@ export default function DraftSubmissionForm({
   if (selectedPrograms.length === 0) return null;
 
   return (
-    <>
+    <div className="space-y-4">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           {selectedPrograms.length < 7 && (
@@ -138,19 +130,21 @@ export default function DraftSubmissionForm({
         </div>
       </form>
 
-      <CustomDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <CustomDialogContent>
-          <CustomDialogHeader>
-            <CustomDialogTitle>Confirm Your Draft Submission</CustomDialogTitle>
-            <CustomDialogDescription>
-              You are about to submit {selectedPrograms.length} programs with a total budget cut of {formatBudget(totalBudget)}. This action cannot be undone.
-            </CustomDialogDescription>
-          </CustomDialogHeader>
-          <CustomDialogFooter className="mt-4">
+      {showConfirmation && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="border rounded-lg p-4 bg-card"
+        >
+          <h3 className="font-semibold mb-2">Confirm Your Draft Submission</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            You are about to submit {selectedPrograms.length} programs with a total budget cut of {formatBudget(totalBudget)}. This action cannot be undone.
+          </p>
+          <div className="flex justify-end gap-2">
             <Button
               variant="outline"
-              onClick={() => setShowConfirmDialog(false)}
-              className="mr-2"
+              onClick={() => setShowConfirmation(false)}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
@@ -161,9 +155,9 @@ export default function DraftSubmissionForm({
             >
               {isSubmitting ? "Submitting..." : "Confirm Submission"}
             </Button>
-          </CustomDialogFooter>
-        </CustomDialogContent>
-      </CustomDialog>
-    </>
+          </div>
+        </motion.div>
+      )}
+    </div>
   );
 }
