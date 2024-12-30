@@ -29,71 +29,86 @@ export default function DraftSubmissionForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
-  // Debug logging for body classes
+  // Enhanced DOM monitoring and cleanup
   useEffect(() => {
-    const logBodyClasses = () => {
-      console.log("[DraftSubmissionForm] Body classes:", document.body.className);
-      console.log("[DraftSubmissionForm] HTML classes:", document.documentElement.className);
+    console.log("[DraftSubmissionForm] Initial mount - Setting up DOM monitoring");
+    
+    const removeOverlays = () => {
+      console.log("[DraftSubmissionForm] Running aggressive overlay cleanup");
+      
+      // Query for potential overlay elements
+      const overlayElements = document.querySelectorAll(`
+        .overlay, 
+        .backdrop, 
+        [class*="dialog"],
+        [class*="modal"],
+        [style*="position: fixed"],
+        [style*="z-index: 50"]
+      `);
+
+      console.log("[DraftSubmissionForm] Found overlay candidates:", overlayElements.length);
+      
+      overlayElements.forEach((element) => {
+        if (element instanceof HTMLElement) {
+          console.log("[DraftSubmissionForm] Removing element:", {
+            classes: element.className,
+            styles: element.style.cssText,
+            tagName: element.tagName
+          });
+          element.remove();
+        }
+      });
+
+      // Reset body styles
+      document.body.style.removeProperty('position');
+      document.body.style.removeProperty('overflow');
+      document.documentElement.style.removeProperty('overflow');
+      
+      console.log("[DraftSubmissionForm] Body styles after cleanup:", {
+        position: document.body.style.position,
+        overflow: document.body.style.overflow,
+        htmlOverflow: document.documentElement.style.overflow
+      });
     };
 
-    // Log initial classes
-    logBodyClasses();
-
-    // Create MutationObserver to watch for class changes
+    // Set up mutation observer for dynamic elements
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          console.log("[DraftSubmissionForm] Class mutation detected:");
-          logBodyClasses();
+        if (mutation.type === 'childList' || mutation.type === 'attributes') {
+          console.log("[DraftSubmissionForm] DOM mutation detected:", {
+            type: mutation.type,
+            target: mutation.target
+          });
+          removeOverlays();
         }
       });
     });
 
-    // Start observing
-    observer.observe(document.body, { attributes: true });
-    observer.observe(document.documentElement, { attributes: true });
+    // Start observing with comprehensive options
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'style']
+    });
 
-    return () => observer.disconnect();
-  }, []);
+    // Initial cleanup
+    removeOverlays();
 
-  // Cleanup function to remove any overlay elements
-  useEffect(() => {
-    const cleanup = () => {
-      console.log("[DraftSubmissionForm] Running overlay cleanup");
-      const overlaySelectors = [
-        '[class*="overlay"]',
-        '[class*="backdrop"]',
-        '[class*="dialog"]',
-        '[style*="position: fixed"]',
-        '[style*="z-index"]'
-      ];
-
-      overlaySelectors.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(element => {
-          console.log("[DraftSubmissionForm] Removing overlay element:", element);
-          if (element instanceof HTMLElement && 
-              element.style.position === 'fixed' && 
-              element.style.zIndex !== '') {
-            element.remove();
-          }
-        });
-      });
-
-      // Remove any fixed positioning from body
-      document.body.style.position = '';
-      document.body.style.overflow = '';
+    return () => {
+      console.log("[DraftSubmissionForm] Cleaning up - disconnecting observer");
+      observer.disconnect();
+      removeOverlays();
     };
-    
-    cleanup();
-    return cleanup;
   }, []);
 
   const handleFormSubmit = async (email: string) => {
     console.log("[DraftSubmissionForm] Form submission started", {
       email,
       selectedProgramsCount: selectedPrograms.length,
-      isSubmitting
+      isSubmitting,
+      bodyClasses: document.body.className,
+      htmlClasses: document.documentElement.className
     });
 
     if (isSubmitting) {
