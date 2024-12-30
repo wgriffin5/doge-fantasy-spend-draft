@@ -43,43 +43,26 @@ export default function DraftSubmissionForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submit handler triggered", {
-      email,
-      selectedProgramsCount: selectedPrograms.length,
-      showConfirmation,
-    });
 
     if (!email) {
-      console.log("Email validation failed - empty email");
       toast.error("Please enter your email address");
       return;
     }
 
     if (selectedPrograms.length !== 7) {
-      console.log("Program count validation failed:", {
-        count: selectedPrograms.length,
-        required: 7,
-      });
       toast.error("Please select exactly 7 programs before submitting");
       return;
     }
 
-    console.log("Showing confirmation dialog");
     setShowConfirmation(true);
   };
 
   const confirmSubmission = async () => {
-    console.log("Starting confirmation process", {
-      email,
-      selectedProgramsCount: selectedPrograms.length,
-    });
     setIsSubmitting(true);
 
     try {
-      console.log("Tracking draft attempt");
       await trackEmailEvent("A", "draft", "attempt", email);
 
-      console.log("Saving draft picks to database");
       const { error: draftError } = await supabase.from("draft_picks").insert([
         {
           email,
@@ -88,15 +71,10 @@ export default function DraftSubmissionForm({
       ]);
 
       if (draftError) {
-        console.error("Draft submission failed:", draftError);
         throw draftError;
       }
 
-      console.log("Draft picks saved successfully");
-      console.log("Calling onEmailSubmit");
       await onEmailSubmit(email);
-
-      console.log("Tracking draft success");
       await trackEmailEvent("A", "draft", "success", email);
 
       playSuccess();
@@ -104,22 +82,15 @@ export default function DraftSubmissionForm({
 
       setEmail("");
       setShowConfirmation(false);
-      console.log("States reset after successful submission");
     } catch (error) {
       console.error("Submission process failed:", error);
       toast.error("Failed to submit draft picks. Please try again.");
     } finally {
       setIsSubmitting(false);
-      console.log("Submission process completed", {
-        email,
-        showConfirmation,
-        isSubmitting: false,
-      });
     }
   };
 
   const handleCancel = () => {
-    console.log("Canceling confirmation");
     setShowConfirmation(false);
     setIsSubmitting(false);
   };
