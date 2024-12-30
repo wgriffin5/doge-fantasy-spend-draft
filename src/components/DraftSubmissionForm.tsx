@@ -29,11 +29,60 @@ export default function DraftSubmissionForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
-  // Remove any potential overlay elements
+  // Debug logging for body classes
+  useEffect(() => {
+    const logBodyClasses = () => {
+      console.log("[DraftSubmissionForm] Body classes:", document.body.className);
+      console.log("[DraftSubmissionForm] HTML classes:", document.documentElement.className);
+    };
+
+    // Log initial classes
+    logBodyClasses();
+
+    // Create MutationObserver to watch for class changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          console.log("[DraftSubmissionForm] Class mutation detected:");
+          logBodyClasses();
+        }
+      });
+    });
+
+    // Start observing
+    observer.observe(document.body, { attributes: true });
+    observer.observe(document.documentElement, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Cleanup function to remove any overlay elements
   useEffect(() => {
     const cleanup = () => {
-      const overlays = document.querySelectorAll('[class*="overlay"], [class*="backdrop"]');
-      overlays.forEach(overlay => overlay.remove());
+      console.log("[DraftSubmissionForm] Running overlay cleanup");
+      const overlaySelectors = [
+        '[class*="overlay"]',
+        '[class*="backdrop"]',
+        '[class*="dialog"]',
+        '[style*="position: fixed"]',
+        '[style*="z-index"]'
+      ];
+
+      overlaySelectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+          console.log("[DraftSubmissionForm] Removing overlay element:", element);
+          if (element instanceof HTMLElement && 
+              element.style.position === 'fixed' && 
+              element.style.zIndex !== '') {
+            element.remove();
+          }
+        });
+      });
+
+      // Remove any fixed positioning from body
+      document.body.style.position = '';
+      document.body.style.overflow = '';
     };
     
     cleanup();
@@ -77,13 +126,23 @@ export default function DraftSubmissionForm({
       console.log("[DraftSubmissionForm] Showing success toast");
       toast.success("Your draft picks have been submitted!", {
         duration: 3000,
-        style: { background: 'var(--background)', border: '1px solid var(--border)' }
+        style: { 
+          background: 'var(--background)', 
+          border: '1px solid var(--border)',
+          position: 'relative',
+          zIndex: 50
+        }
       });
     } catch (error) {
       console.error("[DraftSubmissionForm] Submission process failed:", error);
       toast.error("Failed to submit draft picks. Please try again.", {
         duration: 3000,
-        style: { background: 'var(--background)', border: '1px solid var(--border)' }
+        style: { 
+          background: 'var(--background)', 
+          border: '1px solid var(--border)',
+          position: 'relative',
+          zIndex: 50
+        }
       });
     } finally {
       console.log("[DraftSubmissionForm] Setting isSubmitting to false");
