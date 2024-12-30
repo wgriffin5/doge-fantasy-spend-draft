@@ -4,7 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { trackEmailEvent } from "@/utils/analytics";
 import useSound from "use-sound";
 import DraftForm from "./draft/DraftForm";
-import DraftConfirmationDialog from "./draft/DraftConfirmationDialog";
 
 interface Program {
   id: string;
@@ -28,47 +27,42 @@ export default function DraftSubmissionForm({
   onEmailSubmit,
 }: DraftSubmissionFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [pendingEmail, setPendingEmail] = useState("");
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
-  const handleFormSubmit = (email: string) => {
-    setPendingEmail(email);
-    setShowConfirmation(true);
-  };
+  const handleFormSubmit = async (email: string) => {
+    if (isSubmitting) return;
+    
+    const promise = new Promise(async (resolve, reject) => {
+      setIsSubmitting(true);
+      try {
+        await trackEmailEvent("A", "draft", "attempt", email);
 
-  const handleCancel = () => {
-    setShowConfirmation(false);
-    setIsSubmitting(false);
-    setPendingEmail("");
-  };
+        const { error: draftError } = await supabase.from("draft_picks").insert([
+          {
+            email: email,
+            program_ids: selectedPrograms.map((p) => p.id),
+          },
+        ]);
 
-  const confirmSubmission = async () => {
-    setIsSubmitting(true);
+        if (draftError) throw draftError;
 
-    try {
-      await trackEmailEvent("A", "draft", "attempt", pendingEmail);
+        await onEmailSubmit(email);
+        await trackEmailEvent("A", "draft", "success", email);
+        playSuccess();
+        resolve("Your draft picks have been submitted!");
+      } catch (error) {
+        console.error("Submission process failed:", error);
+        reject("Failed to submit draft picks. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    });
 
-      const { error: draftError } = await supabase.from("draft_picks").insert([
-        {
-          email: pendingEmail,
-          program_ids: selectedPrograms.map((p) => p.id),
-        },
-      ]);
-
-      if (draftError) throw draftError;
-
-      await onEmailSubmit(pendingEmail);
-      await trackEmailEvent("A", "draft", "success", pendingEmail);
-
-      playSuccess();
-      toast.success("Your draft picks have been submitted!");
-      handleCancel();
-    } catch (error) {
-      console.error("Submission process failed:", error);
-      toast.error("Failed to submit draft picks. Please try again.");
-      setIsSubmitting(false);
-    }
+    toast.promise(promise, {
+      loading: `Submitting ${selectedPrograms.length} programs...`,
+      success: (message) => message,
+      error: (error) => error,
+    });
   };
 
   if (selectedPrograms.length === 0) return null;
@@ -79,16 +73,6 @@ export default function DraftSubmissionForm({
         selectedProgramsCount={selectedPrograms.length}
         onSubmit={handleFormSubmit}
         disabled={isSubmitting}
-      />
-
-      <DraftConfirmationDialog
-        open={showConfirmation}
-        onCancel={handleCancel}
-        onConfirm={confirmSubmission}
-        isSubmitting={isSubmitting}
-        programCount={selectedPrograms.length}
-        totalBudget={totalBudget}
-        formatBudget={formatBudget}
       />
     </div>
   );
