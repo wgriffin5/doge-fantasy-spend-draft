@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
-import useSound from "use-sound";
 import { supabase } from "@/integrations/supabase/client";
 import { trackEmailEvent } from "@/utils/analytics";
+import useSound from "use-sound";
 
 interface Program {
   id: string;
@@ -33,8 +32,29 @@ export default function DraftSubmissionForm({
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
 
+  // Debug: Track component lifecycle
+  useEffect(() => {
+    console.log("DraftSubmissionForm mounted");
+    return () => {
+      console.log("DraftSubmissionForm unmounted");
+      // Ensure cleanup of any pending states
+      setShowConfirmation(false);
+      setIsSubmitting(false);
+    };
+  }, []);
+
+  // Debug: Track state changes
+  useEffect(() => {
+    console.log("Confirmation state changed:", showConfirmation);
+  }, [showConfirmation]);
+
+  useEffect(() => {
+    console.log("Submission state changed:", isSubmitting);
+  }, [isSubmitting]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submit handler triggered");
     
     if (!email) {
       console.log("Email validation failed - empty email");
@@ -48,19 +68,19 @@ export default function DraftSubmissionForm({
       return;
     }
 
+    console.log("Showing confirmation dialog");
     setShowConfirmation(true);
   };
 
   const confirmSubmission = async () => {
+    console.log("Starting confirmation process");
     setIsSubmitting(true);
-    console.log("Starting submission process...");
     
     try {
-      // Track the attempt
+      console.log("Tracking draft attempt");
       await trackEmailEvent("A", "draft", "attempt", email);
-      console.log("Tracked draft attempt");
 
-      // Insert draft picks into database
+      console.log("Saving draft picks to database");
       const { error: draftError } = await supabase
         .from("draft_picks")
         .insert([
@@ -74,22 +94,23 @@ export default function DraftSubmissionForm({
         console.error("Draft submission failed:", draftError);
         throw draftError;
       }
-      console.log("Draft picks saved to database");
 
-      console.log("Calling onEmailSubmit with programs:", selectedPrograms);
+      console.log("Draft picks saved successfully");
+      console.log("Calling onEmailSubmit");
       await onEmailSubmit(email);
-      console.log("Email submission successful");
 
-      // Track the success
+      console.log("Tracking draft success");
       await trackEmailEvent("A", "draft", "success", email);
-      console.log("Tracked draft success");
 
       playSuccess();
       toast.success("Your draft picks have been submitted!");
+      
+      // Clean up states
       setEmail("");
       setShowConfirmation(false);
+      console.log("States reset after successful submission");
     } catch (error) {
-      console.error("Email submission failed:", error);
+      console.error("Submission process failed:", error);
       toast.error("Failed to submit draft picks. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -115,27 +136,18 @@ export default function DraftSubmissionForm({
             onChange={(e) => setEmail(e.target.value)}
             className="w-full"
           />
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <Button
+            type="submit"
+            className="w-full bg-doge-gold hover:bg-doge-gold/90"
+            disabled={isSubmitting || selectedPrograms.length !== 7}
           >
-            <Button
-              type="submit"
-              className="w-full bg-doge-gold hover:bg-doge-gold/90"
-              disabled={isSubmitting || selectedPrograms.length !== 7}
-            >
-              {isSubmitting ? "Submitting..." : "Submit Draft Picks"}
-            </Button>
-          </motion.div>
+            {isSubmitting ? "Submitting..." : "Submit Draft Picks"}
+          </Button>
         </div>
       </form>
 
       {showConfirmation && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          className="border rounded-lg p-4 bg-card"
-        >
+        <div className="border rounded-lg p-4 bg-card">
           <h3 className="font-semibold mb-2">Confirm Your Draft Submission</h3>
           <p className="text-sm text-muted-foreground mb-4">
             You are about to submit {selectedPrograms.length} programs with a total budget cut of {formatBudget(totalBudget)}. This action cannot be undone.
@@ -143,7 +155,10 @@ export default function DraftSubmissionForm({
           <div className="flex justify-end gap-2">
             <Button
               variant="outline"
-              onClick={() => setShowConfirmation(false)}
+              onClick={() => {
+                console.log("Canceling confirmation");
+                setShowConfirmation(false);
+              }}
               disabled={isSubmitting}
             >
               Cancel
@@ -156,7 +171,7 @@ export default function DraftSubmissionForm({
               {isSubmitting ? "Submitting..." : "Confirm Submission"}
             </Button>
           </div>
-        </motion.div>
+        </div>
       )}
     </div>
   );
