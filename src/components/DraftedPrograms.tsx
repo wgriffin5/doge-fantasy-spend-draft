@@ -61,6 +61,8 @@ export default function DraftedPrograms({
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    console.log("[DraftedPrograms] Drop event received");
+    
     const card = document.getElementById("draft-picks");
     if (card) {
       card.style.transform = "scale(1)";
@@ -68,27 +70,41 @@ export default function DraftedPrograms({
     }
     
     const programId = e.dataTransfer.getData("programId");
+    console.log("[DraftedPrograms] Program ID from drop:", programId);
+    
+    // Find the program in the selected programs
     const program = selectedPrograms.find(p => p.id === programId);
-    if (program) {
-      // Play success sound
+    
+    if (!program) {
+      console.log("[DraftedPrograms] Program not found in selected programs, must be a new draft");
+      // This means it's a new program being drafted
+      // We should NOT call onRemoveProgram here as that would remove it
+      // Instead, we celebrate the successful draft
       playSuccess();
-      
-      // Trigger confetti
       triggerCelebration();
       
-      // Show toast notification with remaining drafts
       const remainingDrafts = 7 - (selectedPrograms.length + 1);
       const draftMessage = remainingDrafts > 0 
         ? `${remainingDrafts} draft${remainingDrafts === 1 ? '' : 's'} remaining!`
         : "All draft picks complete! 🎉";
         
       toast({
-        title: `${program.name} Drafted! 🎯`,
+        title: "Program Drafted! 🎯",
         description: draftMessage,
         duration: 3000,
       });
-      
+    } else {
+      console.log("[DraftedPrograms] Program found in selected programs, removing");
+      // If the program is already drafted, we remove it
       onRemoveProgram(program);
+      playSuccess();
+      
+      const remainingDrafts = 7 - (selectedPrograms.length - 1);
+      toast({
+        title: "Program Removed",
+        description: `${remainingDrafts} draft${remainingDrafts === 1 ? '' : 's'} remaining`,
+        duration: 3000,
+      });
     }
   };
 
