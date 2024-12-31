@@ -4,7 +4,7 @@ export const triggerCelebration = () => {
   const count = 200;
   const defaults = {
     origin: { y: 0.7 },
-    zIndex: 9999,
+    disableForReducedMotion: true,
   };
 
   function fire(particleRatio: number, opts: any) {
@@ -12,6 +12,7 @@ export const triggerCelebration = () => {
       ...defaults,
       ...opts,
       particleCount: Math.floor(count * particleRatio),
+      zIndex: 1, // Ensure confetti appears below any other UI elements
     });
   }
 

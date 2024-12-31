@@ -97,10 +97,7 @@ export default function DraftedPrograms({
         onRemoveProgram(programToDraft);
         playSuccess();
         
-        // Call celebration without any overlay
-        window.requestAnimationFrame(() => {
-          triggerCelebration();
-        });
+        triggerCelebration();
         
         const remainingDrafts = 7 - (selectedPrograms.length + 1);
         const draftMessage = remainingDrafts > 0 
@@ -154,14 +151,9 @@ export default function DraftedPrograms({
               <div className="pt-2">
                 <div className="mb-2 text-sm sm:text-base font-medium">
                   Total Budget Cuts:{" "}
-                  <motion.span
-                    key={totalBudget}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-doge-gold"
-                  >
+                  <span className="text-doge-gold">
                     {formatBudget(totalBudget)}
-                  </motion.span>
+                  </span>
                 </div>
               </div>
             </div>
