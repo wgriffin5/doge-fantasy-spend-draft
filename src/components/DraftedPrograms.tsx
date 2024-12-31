@@ -76,10 +76,15 @@ export default function DraftedPrograms({
       // Trigger confetti
       triggerCelebration();
       
-      // Show toast notification
+      // Show toast notification with remaining drafts
+      const remainingDrafts = 7 - (selectedPrograms.length + 1);
+      const draftMessage = remainingDrafts > 0 
+        ? `${remainingDrafts} draft${remainingDrafts === 1 ? '' : 's'} remaining!`
+        : "All draft picks complete! 🎉";
+        
       toast({
-        title: "Program Drafted! 🎉",
-        description: `${program.name} has been added to your draft picks.`,
+        title: `${program.name} Drafted! 🎯`,
+        description: draftMessage,
         duration: 3000,
       });
       
@@ -96,23 +101,43 @@ export default function DraftedPrograms({
     >
       <Card 
         id="draft-picks" 
-        className="relative overflow-hidden transition-all duration-200 border-2 hover:border-doge-gold/50"
+        className={`relative overflow-hidden transition-all duration-200 border-2 ${
+          selectedPrograms.length === 7 
+            ? "border-green-500/50 bg-green-50/10" 
+            : "hover:border-doge-gold/50"
+        }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-            Your Draft Picks
-            <motion.div
-              className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-doge-gold text-white text-sm font-medium"
-              animate={{
-                scale: selectedPrograms.length > 0 ? [1, 1.2, 1] : 1,
-              }}
-              transition={{ duration: 0.3 }}
-            >
-              {selectedPrograms.length}
-            </motion.div>
+          <CardTitle className="flex items-center justify-between text-lg sm:text-xl">
+            <div className="flex items-center gap-2">
+              Your Draft Picks
+              <motion.div
+                className={`inline-flex items-center justify-center w-6 h-6 rounded-full ${
+                  selectedPrograms.length === 7 
+                    ? "bg-green-500" 
+                    : "bg-doge-gold"
+                } text-white text-sm font-medium`}
+                animate={{
+                  scale: selectedPrograms.length > 0 ? [1, 1.2, 1] : 1,
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                {selectedPrograms.length}
+              </motion.div>
+            </div>
+            {selectedPrograms.length < 7 && (
+              <motion.span 
+                className="text-sm text-muted-foreground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                {7 - selectedPrograms.length} more to go
+              </motion.span>
+            )}
           </CardTitle>
         </CardHeader>
 
