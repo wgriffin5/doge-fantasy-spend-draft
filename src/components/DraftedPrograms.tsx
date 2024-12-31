@@ -46,32 +46,39 @@ export default function DraftedPrograms({
     }).format(budget);
   };
 
+  // Reset card styles to their default state
+  const resetCardStyles = () => {
+    const card = document.getElementById("draft-picks");
+    if (card) {
+      card.style.transform = "";
+      card.style.borderColor = "";
+      card.style.transition = "all 0.2s ease";
+    }
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     const card = document.getElementById("draft-picks");
     if (card) {
+      card.style.transition = "all 0.2s ease";
       card.style.transform = "scale(1.02)";
       card.style.borderColor = "var(--doge-gold)";
     }
   };
 
-  const handleDragLeave = () => {
-    const card = document.getElementById("draft-picks");
-    if (card) {
-      card.style.transform = "scale(1)";
-      card.style.borderColor = "";
+  const handleDragLeave = (e: React.DragEvent) => {
+    // Only reset if we're actually leaving the card (not entering a child element)
+    if (e.currentTarget.contains(e.relatedTarget as Node)) {
+      return;
     }
+    resetCardStyles();
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     console.log("[DraftedPrograms] Drop event received");
     
-    const card = document.getElementById("draft-picks");
-    if (card) {
-      card.style.transform = "scale(1)";
-      card.style.borderColor = "";
-    }
+    resetCardStyles();
     
     const programId = e.dataTransfer.getData("programId");
     console.log("[DraftedPrograms] Program ID from drop:", programId);
@@ -112,6 +119,13 @@ export default function DraftedPrograms({
       }
     }
   };
+
+  // Clean up any lingering styles when component unmounts
+  React.useEffect(() => {
+    return () => {
+      resetCardStyles();
+    };
+  }, []);
 
   return (
     <motion.div
