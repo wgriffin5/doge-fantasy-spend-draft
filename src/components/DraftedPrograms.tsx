@@ -1,10 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import useSound from "use-sound";
 import { triggerCelebration } from "./draft/ConfettiCelebration";
 import DraftedProgramsList from "./DraftedProgramsList";
 import DraftSubmissionForm from "./DraftSubmissionForm";
+import DraftHeader from "./draft/DraftHeader";
+import EmptyDraftState from "./draft/EmptyDraftState";
 
 interface Program {
   id: string;
@@ -74,7 +76,6 @@ export default function DraftedPrograms({
     const programId = e.dataTransfer.getData("programId");
     console.log("[DraftedPrograms] Program ID from drop:", programId);
     
-    // First check if program is already selected
     const existingProgram = selectedPrograms.find(p => p.id === programId);
     
     if (existingProgram) {
@@ -89,12 +90,11 @@ export default function DraftedPrograms({
         duration: 3000,
       });
     } else {
-      // Find the program in allPrograms
       const programToDraft = allPrograms.find(p => p.id === programId);
       
       if (programToDraft && selectedPrograms.length < 7) {
         console.log("[DraftedPrograms] Adding new program:", programToDraft.name);
-        onRemoveProgram(programToDraft); // This actually adds the program since it's not in selectedPrograms
+        onRemoveProgram(programToDraft);
         playSuccess();
         triggerCelebration();
         
@@ -131,51 +131,16 @@ export default function DraftedPrograms({
         onDrop={handleDrop}
       >
         <CardHeader>
-          <CardTitle className="flex items-center justify-between text-lg sm:text-xl">
-            <div className="flex items-center gap-2">
-              Your Draft Picks
-              <motion.div
-                className={`inline-flex items-center justify-center w-6 h-6 rounded-full ${
-                  selectedPrograms.length === 7 
-                    ? "bg-green-500" 
-                    : "bg-doge-gold"
-                } text-white text-sm font-medium`}
-                animate={{
-                  scale: selectedPrograms.length > 0 ? [1, 1.2, 1] : 1,
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                {selectedPrograms.length}
-              </motion.div>
-            </div>
-            {selectedPrograms.length < 7 && (
-              <motion.span 
-                className="text-sm text-muted-foreground"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                {7 - selectedPrograms.length} more to go
-              </motion.span>
-            )}
-          </CardTitle>
+          <DraftHeader 
+            selectedCount={selectedPrograms.length} 
+            remainingCount={7 - selectedPrograms.length}
+          />
         </CardHeader>
 
         <CardContent className="space-y-4">
           <AnimatePresence mode="popLayout">
             {selectedPrograms.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center"
-              >
-                <p className="text-sm sm:text-base text-muted-foreground">
-                  Drag and drop programs here to draft them.
-                  <br />
-                  Draft 7 programs to cut from the federal budget.
-                </p>
-              </motion.div>
+              <EmptyDraftState />
             ) : (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
