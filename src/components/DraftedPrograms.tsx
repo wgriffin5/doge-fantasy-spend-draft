@@ -36,6 +36,38 @@ export default function DraftedPrograms({
     }).format(budget);
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    const card = document.getElementById("draft-picks");
+    if (card) {
+      card.style.transform = "scale(1.02)";
+      card.style.borderColor = "var(--doge-gold)";
+    }
+  };
+
+  const handleDragLeave = () => {
+    const card = document.getElementById("draft-picks");
+    if (card) {
+      card.style.transform = "scale(1)";
+      card.style.borderColor = "";
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const card = document.getElementById("draft-picks");
+    if (card) {
+      card.style.transform = "scale(1)";
+      card.style.borderColor = "";
+    }
+    
+    const programId = e.dataTransfer.getData("programId");
+    const program = selectedPrograms.find(p => p.id === programId);
+    if (program) {
+      onRemoveProgram(program);
+    }
+  };
+
   return (
     <motion.div
       initial={{ scale: 0.95, opacity: 0 }}
@@ -43,7 +75,13 @@ export default function DraftedPrograms({
       transition={{ duration: 0.3 }}
       className="px-4 sm:px-0"
     >
-      <Card id="draft-picks" className="relative overflow-hidden">
+      <Card 
+        id="draft-picks" 
+        className="relative overflow-hidden transition-all duration-200"
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             Your Draft Picks
@@ -62,14 +100,18 @@ export default function DraftedPrograms({
         <CardContent className="space-y-4">
           <AnimatePresence mode="popLayout">
             {selectedPrograms.length === 0 ? (
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="text-sm sm:text-base text-muted-foreground"
+                className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center"
               >
-                Draft 7 programs to cut from the federal budget.
-              </motion.p>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Drag and drop programs here to draft them.
+                  <br />
+                  Draft 7 programs to cut from the federal budget.
+                </p>
+              </motion.div>
             ) : (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}

@@ -10,6 +10,7 @@ import {
 import { Skull, PartyPopper, DollarSign } from "lucide-react";
 import { useState } from "react";
 import AdvancedPredictionForm from "./AdvancedPredictionForm";
+import { motion } from "framer-motion";
 
 interface Program {
   id: string;
@@ -40,6 +41,7 @@ export default function ProgramCard({
   showAdvancedFeatures = false,
 }: ProgramCardProps) {
   const [showAdvancedForm, setShowAdvancedForm] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const getFrivolityRating = (budget: number) => {
     if (budget > 10000000000) return { icon: Skull, label: "Extremely Wasteful" };
@@ -47,75 +49,79 @@ export default function ProgramCard({
     return { icon: DollarSign, label: "Somewhat Wasteful" };
   };
 
-  const handleDraftClick = () => {
-    console.log("[ProgramCard] Draft button clicked", {
-      programId: program.id,
-      isSelected,
-      selectedCount
-    });
-    onSelect();
+  const handleDragStart = (e: React.DragEvent) => {
+    if ((selectedCount >= 7 && !isSelected) || program.is_cut) {
+      e.preventDefault();
+      return;
+    }
+    setIsDragging(true);
+    e.dataTransfer.setData("programId", program.id);
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
   };
 
   const frivolity = getFrivolityRating(program.annual_budget);
   const FrivolityIcon = frivolity.icon;
 
   return (
-    <Card className={`transform transition-all hover:scale-105 ${isSelected ? "border-doge-gold" : ""}`}>
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-lg">{program.name}</CardTitle>
-          <Badge variant={program.is_cut ? "destructive" : "secondary"}>
-            {program.is_cut ? "Cut" : "Active"}
-          </Badge>
-        </div>
-        <CardDescription>{program.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <FrivolityIcon className="h-5 w-5 text-doge-gold" />
-              <span className="text-sm font-medium">{frivolity.label}</span>
-            </div>
-            <span className="font-bold text-doge-gold">
-              {formatBudget(program.annual_budget)}
-            </span>
+    <motion.div
+      animate={{ scale: isDragging ? 0.95 : 1 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Card 
+        className={`transform transition-all cursor-move ${
+          isSelected ? "border-doge-gold" : ""
+        } ${isDragging ? "opacity-50" : ""}`}
+        draggable={!program.is_cut && (selectedCount < 7 || isSelected)}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <CardHeader>
+          <div className="flex justify-between items-start">
+            <CardTitle className="text-lg">{program.name}</CardTitle>
+            <Badge variant={program.is_cut ? "destructive" : "secondary"}>
+              {program.is_cut ? "Cut" : "Active"}
+            </Badge>
           </div>
-          <div className="flex justify-between items-center">
-            <Badge variant="outline">{program.department}</Badge>
-            <div className="space-x-2">
+          <CardDescription>{program.description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FrivolityIcon className="h-5 w-5 text-doge-gold" />
+                <span className="text-sm font-medium">{frivolity.label}</span>
+              </div>
+              <span className="font-bold text-doge-gold">
+                {formatBudget(program.annual_budget)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <Badge variant="outline">{program.department}</Badge>
               {showAdvancedFeatures && (
                 <Button
                   variant="outline"
                   className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
-                  onClick={() => {
-                    console.log("[ProgramCard] Advanced button clicked");
-                    setShowAdvancedForm(!showAdvancedForm);
-                  }}
+                  onClick={() => setShowAdvancedForm(!showAdvancedForm)}
                 >
                   Advanced
                 </Button>
               )}
-              <Button
-                variant={isSelected ? "destructive" : "default"}
-                onClick={handleDraftClick}
-                disabled={(selectedCount >= 7 && !isSelected) || program.is_cut}
-              >
-                {isSelected ? "Remove" : "Draft"}
-              </Button>
             </div>
+            {showAdvancedFeatures && showAdvancedForm && (
+              <div className="mt-4 p-4 border rounded-lg">
+                <AdvancedPredictionForm
+                  program={program}
+                  onClose={() => setShowAdvancedForm(false)}
+                  userEmail={userEmail || ""}
+                />
+              </div>
+            )}
           </div>
-          {showAdvancedFeatures && showAdvancedForm && (
-            <div className="mt-4 p-4 border rounded-lg">
-              <AdvancedPredictionForm
-                program={program}
-                onClose={() => setShowAdvancedForm(false)}
-                userEmail={userEmail || ""}
-              />
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
