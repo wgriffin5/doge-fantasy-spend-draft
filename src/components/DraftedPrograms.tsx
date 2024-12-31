@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
@@ -121,7 +122,7 @@ export default function DraftedPrograms({
   };
 
   // Clean up any lingering styles when component unmounts
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       resetCardStyles();
     };
