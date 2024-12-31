@@ -5,6 +5,8 @@ import ScoreBoard from "@/components/ScoreBoard";
 import ActivePlayers from "@/components/ActivePlayers";
 import LeagueSection from "@/components/league/LeagueSection";
 import FeedbackForm from "@/components/FeedbackForm";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Program {
   id: string;
@@ -28,6 +30,19 @@ export default function DraftSection({
   onEmailSubmit,
   userEmail,
 }: DraftSectionProps) {
+  // Fetch all programs to pass to DraftedPrograms
+  const { data: programs = [] } = useQuery({
+    queryKey: ["programs"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("programs")
+        .select("*")
+        .order("name");
+      if (error) throw error;
+      return data;
+    },
+  });
+
   return (
     <section className="py-20">
       <div className="container mx-auto px-4">
@@ -45,6 +60,7 @@ export default function DraftSection({
               selectedPrograms={selectedPrograms}
               onRemoveProgram={onSelectProgram}
               onEmailSubmit={onEmailSubmit}
+              allPrograms={programs}
             />
             <LeagueSection />
             <ScoreBoard />

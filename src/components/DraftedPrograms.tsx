@@ -18,12 +18,14 @@ interface DraftedProgramsProps {
   selectedPrograms: Program[];
   onRemoveProgram: (program: Program) => void;
   onEmailSubmit: (email: string) => void;
+  allPrograms: Program[];
 }
 
 export default function DraftedPrograms({
   selectedPrograms,
   onRemoveProgram,
   onEmailSubmit,
+  allPrograms,
 }: DraftedProgramsProps) {
   const { toast } = useToast();
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
@@ -72,31 +74,12 @@ export default function DraftedPrograms({
     const programId = e.dataTransfer.getData("programId");
     console.log("[DraftedPrograms] Program ID from drop:", programId);
     
-    // Find the program in the selected programs
-    const program = selectedPrograms.find(p => p.id === programId);
+    // First check if program is already selected
+    const existingProgram = selectedPrograms.find(p => p.id === programId);
     
-    if (!program) {
-      console.log("[DraftedPrograms] Program not found in selected programs, must be a new draft");
-      // This means it's a new program being drafted
-      // We should NOT call onRemoveProgram here as that would remove it
-      // Instead, we celebrate the successful draft
-      playSuccess();
-      triggerCelebration();
-      
-      const remainingDrafts = 7 - (selectedPrograms.length + 1);
-      const draftMessage = remainingDrafts > 0 
-        ? `${remainingDrafts} draft${remainingDrafts === 1 ? '' : 's'} remaining!`
-        : "All draft picks complete! 🎉";
-        
-      toast({
-        title: "Program Drafted! 🎯",
-        description: draftMessage,
-        duration: 3000,
-      });
-    } else {
-      console.log("[DraftedPrograms] Program found in selected programs, removing");
-      // If the program is already drafted, we remove it
-      onRemoveProgram(program);
+    if (existingProgram) {
+      console.log("[DraftedPrograms] Program already drafted, removing");
+      onRemoveProgram(existingProgram);
       playSuccess();
       
       const remainingDrafts = 7 - (selectedPrograms.length - 1);
@@ -105,6 +88,27 @@ export default function DraftedPrograms({
         description: `${remainingDrafts} draft${remainingDrafts === 1 ? '' : 's'} remaining`,
         duration: 3000,
       });
+    } else {
+      // Find the program in allPrograms
+      const programToDraft = allPrograms.find(p => p.id === programId);
+      
+      if (programToDraft && selectedPrograms.length < 7) {
+        console.log("[DraftedPrograms] Adding new program:", programToDraft.name);
+        onRemoveProgram(programToDraft); // This actually adds the program since it's not in selectedPrograms
+        playSuccess();
+        triggerCelebration();
+        
+        const remainingDrafts = 7 - (selectedPrograms.length + 1);
+        const draftMessage = remainingDrafts > 0 
+          ? `${remainingDrafts} draft${remainingDrafts === 1 ? '' : 's'} remaining!`
+          : "All draft picks complete! 🎉";
+          
+        toast({
+          title: `${programToDraft.name} Drafted! 🎯`,
+          description: draftMessage,
+          duration: 3000,
+        });
+      }
     }
   };
 
