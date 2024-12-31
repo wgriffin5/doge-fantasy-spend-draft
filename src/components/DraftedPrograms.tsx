@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
@@ -8,6 +8,8 @@ import DraftedProgramsList from "./DraftedProgramsList";
 import DraftSubmissionForm from "./DraftSubmissionForm";
 import DraftHeader from "./draft/DraftHeader";
 import EmptyDraftState from "./draft/EmptyDraftState";
+import { Button } from "./ui/button";
+import { RefreshCw } from "lucide-react";
 
 interface Program {
   id: string;
@@ -32,6 +34,8 @@ export default function DraftedPrograms({
 }: DraftedProgramsProps) {
   const { toast } = useToast();
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [needsReset, setNeedsReset] = useState(false);
 
   const totalBudget = selectedPrograms.reduce(
     (sum, program) => sum + program.annual_budget,
@@ -53,8 +57,11 @@ export default function DraftedPrograms({
     if (card) {
       card.style.transform = "";
       card.style.borderColor = "";
+      card.style.backgroundColor = "";
       card.style.transition = "all 0.2s ease";
     }
+    setIsDragging(false);
+    setNeedsReset(false);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -64,15 +71,17 @@ export default function DraftedPrograms({
       card.style.transition = "all 0.2s ease";
       card.style.transform = "scale(1.02)";
       card.style.borderColor = "var(--doge-gold)";
+      card.style.backgroundColor = "transparent";
     }
+    setIsDragging(true);
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
-    // Only reset if we're actually leaving the card (not entering a child element)
     if (e.currentTarget.contains(e.relatedTarget as Node)) {
       return;
     }
     resetCardStyles();
+    setNeedsReset(true);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -147,10 +156,23 @@ export default function DraftedPrograms({
         onDrop={handleDrop}
       >
         <CardHeader>
-          <DraftHeader 
-            selectedCount={selectedPrograms.length} 
-            remainingCount={7 - selectedPrograms.length}
-          />
+          <div className="flex items-center justify-between">
+            <DraftHeader 
+              selectedCount={selectedPrograms.length} 
+              remainingCount={7 - selectedPrograms.length}
+            />
+            {(isDragging || needsReset) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={resetCardStyles}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Reset View
+              </Button>
+            )}
+          </div>
         </CardHeader>
 
         <CardContent className="space-y-4">
