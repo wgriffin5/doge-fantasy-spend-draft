@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import useSound from "use-sound";
 import { triggerCelebration } from "./draft/ConfettiCelebration";
@@ -96,7 +96,11 @@ export default function DraftedPrograms({
         console.log("[DraftedPrograms] Adding new program:", programToDraft.name);
         onRemoveProgram(programToDraft);
         playSuccess();
-        triggerCelebration();
+        
+        // Call celebration without any overlay
+        window.requestAnimationFrame(() => {
+          triggerCelebration();
+        });
         
         const remainingDrafts = 7 - (selectedPrograms.length + 1);
         const draftMessage = remainingDrafts > 0 
@@ -138,36 +142,30 @@ export default function DraftedPrograms({
         </CardHeader>
 
         <CardContent className="space-y-4">
-          <AnimatePresence mode="popLayout">
-            {selectedPrograms.length === 0 ? (
-              <EmptyDraftState />
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-              >
-                <DraftedProgramsList
-                  selectedPrograms={selectedPrograms}
-                  onRemoveProgram={onRemoveProgram}
-                  formatBudget={formatBudget}
-                />
-                <div className="pt-2">
-                  <div className="mb-2 text-sm sm:text-base font-medium">
-                    Total Budget Cuts:{" "}
-                    <motion.span
-                      key={totalBudget}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-doge-gold"
-                    >
-                      {formatBudget(totalBudget)}
-                    </motion.span>
-                  </div>
+          {selectedPrograms.length === 0 ? (
+            <EmptyDraftState />
+          ) : (
+            <div>
+              <DraftedProgramsList
+                selectedPrograms={selectedPrograms}
+                onRemoveProgram={onRemoveProgram}
+                formatBudget={formatBudget}
+              />
+              <div className="pt-2">
+                <div className="mb-2 text-sm sm:text-base font-medium">
+                  Total Budget Cuts:{" "}
+                  <motion.span
+                    key={totalBudget}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-doge-gold"
+                  >
+                    {formatBudget(totalBudget)}
+                  </motion.span>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+            </div>
+          )}
 
           <DraftSubmissionForm
             selectedPrograms={selectedPrograms}
