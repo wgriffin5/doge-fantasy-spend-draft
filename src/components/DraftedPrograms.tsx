@@ -1,5 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
+import { useToast } from "@/hooks/use-toast";
+import useSound from "use-sound";
+import { triggerCelebration } from "./draft/ConfettiCelebration";
 import DraftedProgramsList from "./DraftedProgramsList";
 import DraftSubmissionForm from "./DraftSubmissionForm";
 
@@ -22,6 +25,9 @@ export default function DraftedPrograms({
   onRemoveProgram,
   onEmailSubmit,
 }: DraftedProgramsProps) {
+  const { toast } = useToast();
+  const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
+
   const totalBudget = selectedPrograms.reduce(
     (sum, program) => sum + program.annual_budget,
     0
@@ -64,6 +70,19 @@ export default function DraftedPrograms({
     const programId = e.dataTransfer.getData("programId");
     const program = selectedPrograms.find(p => p.id === programId);
     if (program) {
+      // Play success sound
+      playSuccess();
+      
+      // Trigger confetti
+      triggerCelebration();
+      
+      // Show toast notification
+      toast({
+        title: "Program Drafted! 🎉",
+        description: `${program.name} has been added to your draft picks.`,
+        duration: 3000,
+      });
+      
       onRemoveProgram(program);
     }
   };
@@ -77,7 +96,7 @@ export default function DraftedPrograms({
     >
       <Card 
         id="draft-picks" 
-        className="relative overflow-hidden transition-all duration-200"
+        className="relative overflow-hidden transition-all duration-200 border-2 hover:border-doge-gold/50"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
