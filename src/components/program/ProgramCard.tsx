@@ -41,7 +41,6 @@ export default function ProgramCard({
   showAdvancedFeatures = false,
 }: ProgramCardProps) {
   const [showAdvancedForm, setShowAdvancedForm] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
 
   const getFrivolityRating = (budget: number) => {
     if (budget > 10000000000) return { icon: Skull, label: "Extremely Wasteful" };
@@ -49,35 +48,18 @@ export default function ProgramCard({
     return { icon: DollarSign, label: "Somewhat Wasteful" };
   };
 
-  const handleDragStart = (e: React.DragEvent) => {
-    if ((selectedCount >= 7 && !isSelected) || program.is_cut) {
-      e.preventDefault();
-      return;
-    }
-    setIsDragging(true);
-    e.dataTransfer.setData("programId", program.id);
-  };
-
-  const handleDragEnd = () => {
-    setIsDragging(false);
-  };
-
   const frivolity = getFrivolityRating(program.annual_budget);
   const FrivolityIcon = frivolity.icon;
 
+  const isDisabled = (selectedCount >= 7 && !isSelected) || program.is_cut;
+
   return (
     <motion.div
-      animate={{ scale: isDragging ? 0.95 : 1 }}
-      transition={{ duration: 0.2 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
     >
-      <Card 
-        className={`transform transition-all cursor-move ${
-          isSelected ? "border-doge-gold" : ""
-        } ${isDragging ? "opacity-50" : ""}`}
-        draggable={!program.is_cut && (selectedCount < 7 || isSelected)}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
+      <Card className={`transform transition-all ${isSelected ? "border-doge-gold" : ""}`}>
         <CardHeader>
           <div className="flex justify-between items-start">
             <CardTitle className="text-lg">{program.name}</CardTitle>
@@ -100,15 +82,26 @@ export default function ProgramCard({
             </div>
             <div className="flex justify-between items-center">
               <Badge variant="outline">{program.department}</Badge>
-              {showAdvancedFeatures && (
+              <div className="flex gap-2">
+                {showAdvancedFeatures && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
+                    onClick={() => setShowAdvancedForm(!showAdvancedForm)}
+                  >
+                    Advanced
+                  </Button>
+                )}
                 <Button
-                  variant="outline"
-                  className="border-doge-gold text-doge-gold hover:bg-doge-gold hover:text-white"
-                  onClick={() => setShowAdvancedForm(!showAdvancedForm)}
+                  variant={isSelected ? "destructive" : "default"}
+                  size="sm"
+                  onClick={onSelect}
+                  disabled={isDisabled}
                 >
-                  Advanced
+                  {isSelected ? "Remove" : "Draft"}
                 </Button>
-              )}
+              </div>
             </div>
             {showAdvancedFeatures && showAdvancedForm && (
               <div className="mt-4 p-4 border rounded-lg">

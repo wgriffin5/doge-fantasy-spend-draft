@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
@@ -8,8 +8,6 @@ import DraftedProgramsList from "./DraftedProgramsList";
 import DraftSubmissionForm from "./DraftSubmissionForm";
 import DraftHeader from "./draft/DraftHeader";
 import EmptyDraftState from "./draft/EmptyDraftState";
-import { Button } from "./ui/button";
-import { RefreshCw } from "lucide-react";
 
 interface Program {
   id: string;
@@ -34,8 +32,6 @@ export default function DraftedPrograms({
 }: DraftedProgramsProps) {
   const { toast } = useToast();
   const [playSuccess] = useSound("/sounds/success.mp3", { volume: 0.5 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [needsReset, setNeedsReset] = useState(false);
 
   const totalBudget = selectedPrograms.reduce(
     (sum, program) => sum + program.annual_budget,
@@ -51,92 +47,6 @@ export default function DraftedPrograms({
     }).format(budget);
   };
 
-  // Reset card styles to their default state
-  const resetCardStyles = () => {
-    const card = document.getElementById("draft-picks");
-    if (card) {
-      card.style.transform = "";
-      card.style.borderColor = "";
-      card.style.backgroundColor = "";
-      card.style.transition = "all 0.2s ease";
-    }
-    setIsDragging(false);
-    setNeedsReset(false);
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    const card = document.getElementById("draft-picks");
-    if (card) {
-      card.style.transition = "all 0.2s ease";
-      card.style.transform = "scale(1.02)";
-      card.style.borderColor = "var(--doge-gold)";
-      card.style.backgroundColor = "transparent";
-    }
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    if (e.currentTarget.contains(e.relatedTarget as Node)) {
-      return;
-    }
-    resetCardStyles();
-    setNeedsReset(true);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    console.log("[DraftedPrograms] Drop event received");
-    
-    resetCardStyles();
-    
-    const programId = e.dataTransfer.getData("programId");
-    console.log("[DraftedPrograms] Program ID from drop:", programId);
-    
-    const existingProgram = selectedPrograms.find(p => p.id === programId);
-    
-    if (existingProgram) {
-      console.log("[DraftedPrograms] Program already drafted, removing");
-      onRemoveProgram(existingProgram);
-      playSuccess();
-      
-      const remainingDrafts = 7 - (selectedPrograms.length - 1);
-      toast({
-        title: "Program Removed",
-        description: `${remainingDrafts} draft${remainingDrafts === 1 ? '' : 's'} remaining`,
-        duration: 3000,
-      });
-    } else {
-      const programToDraft = allPrograms.find(p => p.id === programId);
-      
-      if (programToDraft && selectedPrograms.length < 7) {
-        console.log("[DraftedPrograms] Adding new program:", programToDraft.name);
-        onRemoveProgram(programToDraft);
-        playSuccess();
-        
-        triggerCelebration();
-        
-        const remainingDrafts = 7 - (selectedPrograms.length + 1);
-        const draftMessage = remainingDrafts > 0 
-          ? `${remainingDrafts} draft${remainingDrafts === 1 ? '' : 's'} remaining!`
-          : "All draft picks complete! 🎉";
-          
-        toast({
-          title: `${programToDraft.name} Drafted! 🎯`,
-          description: draftMessage,
-          duration: 3000,
-        });
-      }
-    }
-  };
-
-  // Clean up any lingering styles when component unmounts
-  useEffect(() => {
-    return () => {
-      resetCardStyles();
-    };
-  }, []);
-
   return (
     <motion.div
       initial={{ scale: 0.95, opacity: 0 }}
@@ -145,34 +55,17 @@ export default function DraftedPrograms({
       className="px-4 sm:px-0"
     >
       <Card 
-        id="draft-picks" 
         className={`relative overflow-hidden transition-all duration-200 border-2 ${
           selectedPrograms.length === 7 
             ? "border-green-500/50 bg-green-50/10" 
-            : "hover:border-doge-gold/50"
+            : "border-doge-gold/50"
         }`}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
       >
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <DraftHeader 
-              selectedCount={selectedPrograms.length} 
-              remainingCount={7 - selectedPrograms.length}
-            />
-            {(isDragging || needsReset) && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={resetCardStyles}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Reset View
-              </Button>
-            )}
-          </div>
+          <DraftHeader 
+            selectedCount={selectedPrograms.length} 
+            remainingCount={7 - selectedPrograms.length}
+          />
         </CardHeader>
 
         <CardContent className="space-y-4">
