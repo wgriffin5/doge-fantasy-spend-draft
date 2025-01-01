@@ -34,8 +34,11 @@ export default function Index() {
     setUserEmail(email);
   };
 
+  // Add console.log for debugging
+  console.log("Index component rendering");
+
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen bg-background">
       <WelcomePopup />
       <GuidedTour />
       <TopEmailCapture />
@@ -55,6 +58,6 @@ export default function Index() {
         onEmailSubmit={handleEmailSubmit}
         userEmail={userEmail}
       />
-    </div>
+    </main>
   );
 }
