@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
-import { X } from "lucide-react";
+import { X, ArrowRight } from "lucide-react";
 import useSound from "use-sound";
 
 interface Step {
@@ -9,32 +9,37 @@ interface Step {
   title: string;
   message: string;
   position: "top" | "bottom" | "left" | "right";
+  action?: string;
 }
 
 const steps: Step[] = [
   {
     target: "#how-to-play",
     title: "Welcome to Fantasy D.O.G.E!",
-    message: "First, let's understand how the game works. Read through these simple steps.",
+    message: "Your mission is to pick the 7 federal spending programs that you think are the most wasteful, bloated, useless and likely to be cut. If or when DOGE cuts your drafted programs, you'll earn points!",
     position: "bottom",
+    action: "Let's get started!"
   },
   {
     target: "#program-grid",
     title: "Browse Programs",
-    message: "Here you can explore federal programs and their budgets. Look for ones you think should be cut!",
+    message: "Here are the government spending programs you can draft. Each program has a description and a risk level indicating how likely it is to be cut by DOGE. Look for programs you think are wasteful or vulnerable!",
     position: "left",
+    action: "Show me how to draft"
   },
   {
     target: "#draft-picks",
     title: "Your Draft Picks",
-    message: "This is your picks basket. Select up to 7 programs you predict will be cut or streamlined.",
+    message: "This is your picks basket. You can draft up to 7 programs you predict will be cut or streamlined. Choose wisely - you can remove programs if you change your mind!",
     position: "left",
+    action: "Got it!"
   },
   {
     target: "#email-input",
     title: "Save Your Picks",
-    message: "Enter your email to save your picks and join the movement!",
+    message: "Once you've selected your programs, enter your email to save your draft and track your predictions. We'll notify you when DOGE makes cuts!",
     position: "top",
+    action: "Start drafting!"
   },
 ];
 
@@ -43,11 +48,9 @@ export default function GuidedTour() {
   const [isVisible, setIsVisible] = useState(true);
   const [playSelect] = useSound('/sounds/select.mp3', { volume: 0.5 });
 
+  // Temporarily removed localStorage check for testing
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem("hasSeenDOGETour");
-    if (hasSeenTour) {
-      setIsVisible(false);
-    }
+    setIsVisible(true);
   }, []);
 
   const handleNext = () => {
@@ -137,8 +140,12 @@ export default function GuidedTour() {
                     />
                   ))}
                 </div>
-                <Button onClick={handleNext} className="bg-doge-gold hover:bg-doge-gold/90">
-                  {currentStep === steps.length - 1 ? "Got it!" : "Next"}
+                <Button 
+                  onClick={handleNext} 
+                  className="bg-doge-gold hover:bg-doge-gold/90 flex items-center gap-2"
+                >
+                  {steps[currentStep].action || "Next"}
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>
             </div>
