@@ -1,5 +1,5 @@
 import EmailSubmission from "../common/EmailSubmission";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { ArrowDown } from "lucide-react";
 
 export default function TopEmailCapture() {
@@ -39,6 +39,7 @@ export default function TopEmailCapture() {
               successMessage="Welcome aboard! Check your email for next steps."
               onSuccess={handleSuccess}
               variant="C"
+              className="w-full"
             />
           </div>
         </div>

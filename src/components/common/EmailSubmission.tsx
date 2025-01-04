@@ -39,6 +39,8 @@ export default function EmailSubmission({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) return;
+    
     console.log("Starting email submission process...");
     setIsSubmitting(true);
 
@@ -84,7 +86,7 @@ export default function EmailSubmission({
       toast.success(successMessage);
       onSuccess(email);
       setEmail("");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in email submission:", error);
       toast.error("Failed to save your email. Please try again.");
     } finally {
@@ -100,6 +102,7 @@ export default function EmailSubmission({
     onSubmit: handleSubmit,
     buttonText,
     buttonIcon,
+    className,
   };
 
   switch (variant) {
