@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import SocialShare from "@/components/SocialShare";
 import InaugurationCountdown from "@/components/InaugurationCountdown";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,22 @@ import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 
 export default function HeroSection() {
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  
+  const phrases = [
+    ""If I made a game, Fantasy DOGE would be it!" - Elon Musk",
+    "Fantasy DOGE is like fantasy football, but instead of drafting football players, you draft the federal spending programs you think Most Likely to get cut by the Department of Government Efficiency.",
+    "Fantasy DOGE - the game where you draft the federal spending programs that you think are most ripe for cuts by the Department of Government Efficiency. When they get cut, you earn points, compete, and win."
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
+    }, 8000); // Rotate every 8 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   const scrollToPrograms = () => {
     document.getElementById("program-grid")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -40,9 +57,15 @@ export default function HeroSection() {
             You Draft the Waste, DOGE Cuts the Fat!
           </p>
           
-          <p className="mx-auto mb-6 md:mb-8 max-w-2xl text-sm italic text-muted-foreground">
-            "If I made a game, Fantasy DOGE would be it!" - Elon Musk
-          </p>
+          <motion.p 
+            key={currentPhraseIndex}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mx-auto mb-6 md:mb-8 max-w-2xl text-sm italic text-muted-foreground"
+          >
+            {phrases[currentPhraseIndex]}
+          </motion.p>
 
           <div className="mb-6 md:mb-8 space-y-4">
             <InaugurationCountdown />
