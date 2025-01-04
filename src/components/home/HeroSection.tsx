@@ -9,9 +9,9 @@ export default function HeroSection() {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   
   const phrases = [
-    ""If I made a game, Fantasy DOGE would be it!" - Elon Musk",
-    "Fantasy DOGE is like fantasy football, but instead of drafting football players, you draft the federal spending programs you think Most Likely to get cut by the Department of Government Efficiency.",
-    "Fantasy DOGE - the game where you draft the federal spending programs that you think are most ripe for cuts by the Department of Government Efficiency. When they get cut, you earn points, compete, and win."
+    '"If I made a game, Fantasy DOGE would be it!" - Elon Musk',
+    'Fantasy DOGE is like fantasy football, but instead of drafting football players, you draft the federal spending programs you think Most Likely to get cut by the Department of Government Efficiency.',
+    'Fantasy DOGE - the game where you draft the federal spending programs that you think are most ripe for cuts by the Department of Government Efficiency. When they get cut, you earn points, compete, and win.'
   ];
 
   useEffect(() => {
