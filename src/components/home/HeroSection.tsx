@@ -41,7 +41,7 @@ export default function HeroSection() {
           </p>
           
           <p className="mx-auto mb-6 md:mb-8 max-w-2xl text-sm italic text-muted-foreground">
-            "If I made a game, this would be it!" - Elon Musk
+            "If I made a game, Fantasy DOGE would be it!" - Elon Musk
           </p>
 
           <div className="mb-6 md:mb-8 space-y-4">
