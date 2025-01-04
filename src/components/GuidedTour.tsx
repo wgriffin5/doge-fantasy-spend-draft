@@ -45,12 +45,15 @@ const steps: Step[] = [
 
 export default function GuidedTour() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [playSelect] = useSound('/sounds/select.mp3', { volume: 0.5 });
 
-  // Temporarily removed localStorage check for testing
   useEffect(() => {
-    setIsVisible(true);
+    // Check localStorage immediately on mount
+    const hasSeenTour = localStorage.getItem("hasSeenDOGETour");
+    if (!hasSeenTour) {
+      setIsVisible(true);
+    }
   }, []);
 
   const handleNext = () => {
