@@ -51,7 +51,7 @@ export default function EmailSubmission({
         .from("player_levels")
         .insert([{ email, level: "rookie" }]);
 
-      if (dbError) {
+      if (dbError && dbError.code !== '23505') { // Ignore unique constraint violations
         console.error("Database error:", dbError);
         throw dbError;
       }

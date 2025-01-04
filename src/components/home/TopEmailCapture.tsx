@@ -22,7 +22,7 @@ export default function TopEmailCapture() {
           </p>
         </div>
       ),
-      duration: 5000, // Show for 5 seconds to ensure user sees the guidance
+      duration: 5000,
     });
     
     console.log("Email submission successful:", email);
