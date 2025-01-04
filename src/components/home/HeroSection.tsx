@@ -37,9 +37,11 @@ export default function HeroSection() {
             </span>
           </h1>
           <p className="mx-auto mb-6 md:mb-8 max-w-2xl text-base md:text-lg text-muted-foreground px-4">
-            You Draft the Waste, DOGE Cuts the Fat! Join the Department of Government Efficiency Fantasy League
-            and help identify wasteful spending. Draft programs you think will be cut, earn points for successful
-            predictions, and compete for the top spot on our leaderboard.
+            You Draft the Waste, DOGE Cuts the Fat!
+          </p>
+          
+          <p className="mx-auto mb-6 md:mb-8 max-w-2xl text-sm italic text-muted-foreground">
+            "If I made a game, this would be it!" - Elon Musk
           </p>
 
           <div className="mb-6 md:mb-8 space-y-4">
