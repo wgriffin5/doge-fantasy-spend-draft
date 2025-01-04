@@ -37,8 +37,8 @@ export default function HeroSection() {
             </span>
           </h1>
           <p className="mx-auto mb-6 md:mb-8 max-w-2xl text-base md:text-lg text-muted-foreground px-4">
-            Join thousands of players in the Department of Government Efficiency Fantasy League!
-            Draft federal spending programs you think will be cut, earn points for successful
+            You Draft the Waste, DOGE Cuts the Fat! Join the Department of Government Efficiency Fantasy League
+            and help identify wasteful spending. Draft programs you think will be cut, earn points for successful
             predictions, and compete for the top spot on our leaderboard.
           </p>
 
