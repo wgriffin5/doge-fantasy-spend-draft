@@ -33,7 +33,6 @@ serve(async (req) => {
 
     // Extract origin from request headers
     const origin = req.headers.get("origin") || "https://fantasy-doge.com";
-    Deno.env.set("PUBLIC_SITE_URL", origin);
 
     // Get user data for dynamic content
     const { data: playerLevel } = await supabase
@@ -49,7 +48,7 @@ serve(async (req) => {
 
     const userEngagement = {
       predictionsCount: predictions?.length || 0,
-      lastVisit: new Date(), // You might want to track this in a separate table
+      lastVisit: new Date(),
     };
 
     // Randomly assign a variant if none is specified
@@ -64,7 +63,8 @@ serve(async (req) => {
         emailContent = getWelcomeEmailContent({ 
           variant,
           userLevel: playerLevel?.level,
-          predictionsCount: playerLevel?.predictions_made
+          predictionsCount: playerLevel?.predictions_made,
+          baseUrl: origin
         });
         break;
       case "draft":
