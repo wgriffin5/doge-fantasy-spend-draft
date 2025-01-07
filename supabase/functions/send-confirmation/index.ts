@@ -31,6 +31,10 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
     const { to, type, programNames, totalBudget, variant: requestedVariant }: EmailData = await req.json();
 
+    // Extract origin from request headers
+    const origin = req.headers.get("origin") || "https://fantasy-doge.com";
+    Deno.env.set("PUBLIC_SITE_URL", origin);
+
     // Get user data for dynamic content
     const { data: playerLevel } = await supabase
       .from('player_levels')

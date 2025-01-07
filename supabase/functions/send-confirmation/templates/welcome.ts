@@ -12,8 +12,8 @@ export const getWelcomeEmailContent = ({ variant, userLevel = "rookie", predicti
     D: "🎯 Ready to Play Fantasy D.O.G.E.?"
   };
 
-  // Base URL for the application - using window.location.origin in the edge function
-  const baseUrl = "https://fantasy-doge.com";
+  // Get the base URL from the request URL
+  const baseUrl = Deno.env.get("PUBLIC_SITE_URL") || "https://fantasy-doge.com";
 
   const templates = {
     A: `
