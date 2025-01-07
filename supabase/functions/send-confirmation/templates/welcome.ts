@@ -12,7 +12,7 @@ export const getWelcomeEmailContent = ({ variant, userLevel = "rookie", predicti
     D: "🎯 Ready to Play Fantasy D.O.G.E.?"
   };
 
-  // Base URL for the application
+  // Base URL for the application - using window.location.origin in the edge function
   const baseUrl = "https://fantasy-doge.com";
 
   const templates = {
@@ -38,7 +38,7 @@ export const getWelcomeEmailContent = ({ variant, userLevel = "rookie", predicti
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${baseUrl}" 
+              <a href="${baseUrl}/program-grid" 
                  style="display: inline-block; background: #F2A900; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;">
                 Return to the Game
               </a>
@@ -75,7 +75,7 @@ export const getWelcomeEmailContent = ({ variant, userLevel = "rookie", predicti
           </div>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${baseUrl}" 
+            <a href="${baseUrl}/program-grid" 
                style="display: inline-block; background: #F2A900; color: #1a1a1a; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;">
               Return to the Game
             </a>
@@ -112,7 +112,7 @@ export const getWelcomeEmailContent = ({ variant, userLevel = "rookie", predicti
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${baseUrl}" 
+              <a href="${baseUrl}/program-grid" 
                  style="display: inline-block; background: linear-gradient(to right, #F2A900, #9B87F5); color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">
                 Return to the Game
               </a>
@@ -150,7 +150,7 @@ export const getWelcomeEmailContent = ({ variant, userLevel = "rookie", predicti
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${baseUrl}" 
+              <a href="${baseUrl}/program-grid" 
                  style="display: inline-block; background: linear-gradient(to right, #6366F1, #4F46E5); color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">
                 Return to the Game
               </a>
