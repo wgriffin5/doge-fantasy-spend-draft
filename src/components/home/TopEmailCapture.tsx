@@ -1,10 +1,8 @@
 import EmailSubmission from "../common/EmailSubmission";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { ArrowDown } from "lucide-react";
 
 export default function TopEmailCapture() {
-  const { toast } = useToast();
-
   const handleSuccess = (email: string) => {
     // Scroll to program grid
     document.getElementById("program-grid")?.scrollIntoView({ 
@@ -12,8 +10,7 @@ export default function TopEmailCapture() {
       block: "start"
     });
 
-    toast({
-      title: "Welcome aboard!",
+    toast.success("Welcome aboard!", {
       description: (
         <div className="space-y-2">
           <p>Check your email for next steps.</p>

@@ -39,7 +39,10 @@ export default function EmailSubmission({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !email.includes("@")) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
     
     console.log("Starting email submission process...");
     setIsSubmitting(true);
