@@ -51,14 +51,25 @@ export default function EmailSubmission({
       console.log("Tracking attempt event...");
       await trackEmailEvent(variant, type, "attempt", email);
 
-      console.log("Inserting into player_levels...");
-      const { error: dbError } = await supabase
-        .from("player_levels")
-        .insert([{ email, level: "rookie" }]);
+      // First check if the email already exists
+      const { data: existingPlayer } = await supabase
+        .from('player_levels')
+        .select('email')
+        .eq('email', email)
+        .maybeSingle();
 
-      if (dbError && dbError.code !== '23505') { // Ignore unique constraint violations
-        console.error("Database error:", dbError);
-        throw dbError;
+      if (!existingPlayer) {
+        console.log("Inserting into player_levels...");
+        const { error: dbError } = await supabase
+          .from("player_levels")
+          .insert([{ email, level: "rookie" }]);
+
+        if (dbError && dbError.code !== '23505') { // Ignore unique constraint violations
+          console.error("Database error:", dbError);
+          throw dbError;
+        }
+      } else {
+        console.log("Email already exists in player_levels");
       }
 
       console.log("Sending confirmation email...");
