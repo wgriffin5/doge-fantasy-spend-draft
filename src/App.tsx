@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Vision from "./pages/Vision";
@@ -17,6 +17,10 @@ function App() {
         <Route path="/vision" element={<Vision />} />
         <Route path="/community" element={<Community />} />
         <Route path="/how-to-play" element={<HowToPlay />} />
+        <Route 
+          path="/program-grid" 
+          element={<Navigate to="/#program-grid" replace />} 
+        />
       </Routes>
       <Toaster 
         position="top-center"

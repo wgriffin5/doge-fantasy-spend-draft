@@ -65,7 +65,7 @@ export default function WelcomePopup() {
         if (!isUserEngaged()) {
           setOpen(true);
         } else {
-          // If user is engaged, try again in 30 seconds
+          // If user is engaged, mark as seen
           localStorage.setItem("hasSeenWelcomePopup", "true");
         }
       }, 30000);
@@ -78,7 +78,7 @@ export default function WelcomePopup() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-background">
         <DialogHeader>
           <DialogTitle className="text-2xl">Join the Reform Movement!</DialogTitle>
           <DialogDescription>
