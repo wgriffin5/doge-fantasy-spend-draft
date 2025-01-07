@@ -47,6 +47,30 @@ export default function DraftedPrograms({
     }).format(budget);
   };
 
+  const handleEmailSubmit = async (email: string) => {
+    try {
+      // Play success sound and trigger celebration
+      playSuccess();
+      triggerCelebration();
+      
+      // Show success toast
+      toast({
+        title: "Draft submitted successfully! 🎉",
+        description: `Total budget cuts: ${formatBudget(totalBudget)}`,
+      });
+
+      // Call the parent handler
+      onEmailSubmit(email);
+    } catch (error) {
+      console.error("Error submitting draft:", error);
+      toast({
+        title: "Error submitting draft",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <motion.div
       initial={{ scale: 0.95, opacity: 0 }}
@@ -93,7 +117,7 @@ export default function DraftedPrograms({
             selectedPrograms={selectedPrograms}
             totalBudget={totalBudget}
             formatBudget={formatBudget}
-            onEmailSubmit={onEmailSubmit}
+            onEmailSubmit={handleEmailSubmit}
           />
         </CardContent>
       </Card>
