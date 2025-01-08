@@ -36,18 +36,31 @@ export default function DraftSubmissionForm({
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("draft_picks").insert({
+      // First, save the draft picks to the database
+      const { error: dbError } = await supabase.from("draft_picks").insert({
         email,
         program_ids: selectedPrograms.map((p) => p.id),
       });
 
-      if (error) throw error;
+      if (dbError) throw dbError;
+
+      // Then, send the confirmation email
+      const { error: emailError } = await supabase.functions.invoke('send-confirmation', {
+        body: {
+          to: email,
+          type: "draft",
+          programNames: selectedPrograms.map(p => p.name),
+          totalBudget: totalBudget,
+          variant: "A" // Using variant A for draft confirmation emails
+        }
+      });
+
+      if (emailError) {
+        console.error("Error sending confirmation email:", emailError);
+        // Don't throw here - we still want to complete the submission even if email fails
+      }
 
       onEmailSubmit(email);
-      toast({
-        title: "Draft submitted successfully! 🎉",
-        description: `Total budget cuts: ${formatBudget(totalBudget)}`,
-      });
     } catch (error) {
       console.error("Error submitting draft:", error);
       toast({
