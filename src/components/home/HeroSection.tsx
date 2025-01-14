@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowDown, Trophy, DollarSign, Users } from "lucide-react";
 import useSound from "use-sound";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function HeroSection() {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [showCharacterTip, setShowCharacterTip] = useState(false);
   const [playHover] = useSound('/sounds/select.mp3', { volume: 0.5 });
+  const isMobile = useIsMobile();
   
   const phrases = [
     '"If I made a game, Fantasy DOGE would be it!" - Elon Musk',
@@ -88,7 +90,7 @@ export default function HeroSection() {
                   initial={{ opacity: 0, scale: 0.8, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                  className="absolute -right-2 md:right-0 top-1/2 transform -translate-y-1/2 max-w-[200px] z-10"
+                  className={`absolute ${isMobile ? 'bottom-0 left-1/2 -translate-x-1/2 translate-y-full mt-4' : '-right-2 md:right-0 top-1/2 transform -translate-y-1/2'} max-w-[200px] z-10`}
                 >
                   <div className="relative">
                     <motion.img
@@ -99,13 +101,19 @@ export default function HeroSection() {
                       onHoverStart={() => playHover()}
                     />
                     <motion.div 
-                      className="absolute left-20 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg"
-                      initial={{ opacity: 0, x: -10 }}
+                      className={`absolute ${isMobile ? 'left-1/2 -translate-x-1/2 top-full mt-2' : 'left-20 top-1/2 transform -translate-y-1/2'} bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg`}
+                      initial={{ opacity: 0, x: isMobile ? 0 : -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 }}
                     >
                       <div className="text-sm font-medium">{currentCharacter.quote}</div>
-                      <div className="absolute left-0 top-1/2 transform -translate-x-2 -translate-y-1/2 rotate-45 w-4 h-4 bg-white dark:bg-gray-800" />
+                      <div 
+                        className={`absolute ${
+                          isMobile 
+                            ? 'left-1/2 top-0 -translate-x-1/2 -translate-y-2 rotate-45' 
+                            : 'left-0 top-1/2 transform -translate-x-2 -translate-y-1/2 rotate-45'
+                        } w-4 h-4 bg-white dark:bg-gray-800`} 
+                      />
                     </motion.div>
                   </div>
                 </motion.div>
