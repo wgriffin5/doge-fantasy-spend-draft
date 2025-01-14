@@ -19,19 +19,19 @@ export default function HeroSection() {
 
   const characters = [
     {
+      name: "Doge",
       image: "/lovable-uploads/c673cccd-9961-42c2-9bc2-4d150ae3152d.png",
-      quote: "Wow! Much game. Very efficiency. Click to play!",
-      name: "Doge"
+      quote: "Wow! Much game. Very efficiency. Click to play!"
     },
     {
+      name: "Elon",
       image: "/lovable-uploads/62d7ee9d-6255-45a7-9796-b404dd5b73bc.png",
-      quote: "First principles approach: Eliminate inefficiency, redesign government. Much innovation!",
-      name: "Elon"
+      quote: "First principles approach: Eliminate inefficiency, redesign government. Much innovation!"
     },
     {
+      name: "Donny",
       image: "/lovable-uploads/574113f5-dcac-411e-8a5a-d310e7d6805c.png",
-      quote: "This game is tremendous. The best game ever made. Believe me!",
-      name: "Donny"
+      quote: "This game is tremendous. The best game ever made. Believe me!"
     }
   ];
 
