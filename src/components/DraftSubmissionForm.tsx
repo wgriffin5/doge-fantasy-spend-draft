@@ -32,46 +32,64 @@ export default function DraftSubmissionForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || selectedPrograms.length === 0) return;
+    if (!email) return;
 
     setIsSubmitting(true);
     try {
-      // First, save the draft picks to the database
+      // Save the draft picks to the database with current status
       const { error: dbError } = await supabase.from("draft_picks").insert({
         email,
         program_ids: selectedPrograms.map((p) => p.id),
+        status: selectedPrograms.length === 7 ? 'complete' : 'incomplete'
       });
 
       if (dbError) throw dbError;
 
-      // Then, send the confirmation email
-      const { error: emailError } = await supabase.functions.invoke('send-confirmation', {
-        body: {
-          to: email,
-          type: "draft",
-          programNames: selectedPrograms.map(p => p.name),
-          totalBudget: totalBudget,
-          variant: "A" // Using variant A for draft confirmation emails
-        }
-      });
+      // Send confirmation email only if draft is complete
+      if (selectedPrograms.length === 7) {
+        const { error: emailError } = await supabase.functions.invoke('send-confirmation', {
+          body: {
+            to: email,
+            type: "draft",
+            programNames: selectedPrograms.map(p => p.name),
+            totalBudget: totalBudget,
+            variant: "A"
+          }
+        });
 
-      if (emailError) {
-        console.error("Error sending confirmation email:", emailError);
-        // Don't throw here - we still want to complete the submission even if email fails
+        if (emailError) {
+          console.error("Error sending confirmation email:", emailError);
+        }
+
+        // Show success toast with more detailed message for complete drafts
+        toast({
+          title: "Draft submitted successfully! 🎉",
+          description: `Your ${selectedPrograms.length} program picks have been recorded and a confirmation email has been sent to ${email}. Total budget cuts: ${formatBudget(totalBudget)}`,
+          duration: 5000,
+        });
+      } else {
+        // Show different message for incomplete drafts
+        toast({
+          title: "Email saved! 📧",
+          description: "We'll notify you when you're ready to complete your draft picks.",
+          duration: 5000,
+        });
       }
 
-      // Show success toast with more detailed message
-      toast({
-        title: "Draft submitted successfully! 🎉",
-        description: `Your ${selectedPrograms.length} program picks have been recorded and a confirmation email has been sent to ${email}. Total budget cuts: ${formatBudget(totalBudget)}`,
-        duration: 5000, // Show for 5 seconds
+      // Track email capture analytics
+      await supabase.from("email_capture_analytics").insert({
+        email,
+        type: "draft",
+        event_type: selectedPrograms.length === 7 ? "complete" : "incomplete",
+        variant: "A"
       });
 
+      console.log("Email captured successfully:", email);
       onEmailSubmit(email);
     } catch (error) {
       console.error("Error submitting draft:", error);
       toast({
-        title: "Error submitting draft",
+        title: "Error saving email",
         description: "Please try again later",
         variant: "destructive",
       });
@@ -102,10 +120,10 @@ export default function DraftSubmissionForm({
       </div>
       <Button
         type="submit"
-        disabled={isSubmitting || !email || selectedPrograms.length === 0}
+        disabled={isSubmitting || !email}
         className="w-full"
       >
-        {isSubmitting ? "Submitting..." : "Submit Draft"}
+        {isSubmitting ? "Saving..." : (selectedPrograms.length === 7 ? "Submit Complete Draft" : "Save Progress")}
       </Button>
     </motion.form>
   );
