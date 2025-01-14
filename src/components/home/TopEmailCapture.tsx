@@ -2,8 +2,11 @@ import EmailSubmission from "../common/EmailSubmission";
 import { toast } from "sonner";
 import { ArrowDown, Bell } from "lucide-react";
 import { motion } from "framer-motion";
+import useSound from "use-sound";
 
 export default function TopEmailCapture() {
+  const [playHover] = useSound('/sounds/select.mp3', { volume: 0.5 });
+
   const handleSuccess = (email: string) => {
     // Scroll to program grid
     document.getElementById("program-grid")?.scrollIntoView({ 
@@ -31,14 +34,27 @@ export default function TopEmailCapture() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       className="w-full bg-gradient-to-r from-doge-gold/10 via-doge-purple/10 to-doge-blue/10 py-6 sticky top-0 z-50 backdrop-blur-sm"
+      whileHover={{ scale: 1.01 }}
+      onHoverStart={() => playHover()}
     >
       <div className="container mx-auto px-4">
         <div className="flex justify-center">
           <div className="w-full max-w-md">
             <div className="text-center mb-4">
-              <p className="text-sm font-medium text-muted-foreground">
+              <motion.p 
+                className="text-sm font-medium text-muted-foreground"
+                animate={{ 
+                  scale: [1, 1.02, 1],
+                  opacity: [0.8, 1, 0.8]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
                 Join 1,000+ players tracking $50B+ in potential budget cuts
-              </p>
+              </motion.p>
             </div>
             <EmailSubmission
               type="welcome"

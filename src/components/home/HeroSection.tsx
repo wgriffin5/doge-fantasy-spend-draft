@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import SocialShare from "@/components/SocialShare";
 import InaugurationCountdown from "@/components/InaugurationCountdown";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowDown, Trophy, DollarSign, Users } from "lucide-react";
+import useSound from "use-sound";
 
 export default function HeroSection() {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  const [showCharacterTip, setShowCharacterTip] = useState(false);
+  const [playHover] = useSound('/sounds/select.mp3', { volume: 0.5 });
   
   const phrases = [
     '"If I made a game, Fantasy DOGE would be it!" - Elon Musk',
@@ -14,10 +17,48 @@ export default function HeroSection() {
     'Fantasy DOGE - the game where you draft the federal spending programs that you think are most ripe for cuts by the Department of Government Efficiency. When they get cut, you earn points, compete, and win.'
   ];
 
+  const characters = [
+    {
+      image: "/lovable-uploads/62d7ee9d-6255-45a7-9796-b404dd5b73bc.png",
+      quote: "Wow! Much game. Very efficiency. Click to play!",
+      name: "Lonnie"
+    },
+    {
+      image: "/lovable-uploads/574113f5-dcac-411e-8a5a-d310e7d6805c.png",
+      quote: "This game is tremendous. The best game ever made. Believe me!",
+      name: "Donny"
+    },
+    {
+      image: "/lovable-uploads/c673cccd-9961-42c2-9bc2-4d150ae3152d.png",
+      quote: "Let's disrupt the system. Start by drafting programs!",
+      name: "V"
+    }
+  ];
+
+  const [currentCharacter, setCurrentCharacter] = useState(characters[0]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
     }, 8000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    // Show character tip after a short delay
+    const timer = setTimeout(() => setShowCharacterTip(true), 2000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Rotate characters every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentCharacter((prev) => {
+        const nextIndex = (characters.indexOf(prev) + 1) % characters.length;
+        return characters[nextIndex];
+      });
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -34,13 +75,43 @@ export default function HeroSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="mb-8"
+            className="mb-8 relative"
           >
             <img
               src="/lovable-uploads/bdbfdeaa-9954-4832-b038-ef022726e8c4.png"
               alt="Uncle Elon Needs You"
               className="mx-auto max-w-md rounded-lg shadow-lg"
             />
+            
+            <AnimatePresence>
+              {showCharacterTip && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                  className="absolute -right-4 top-1/2 transform -translate-y-1/2 max-w-[200px]"
+                >
+                  <div className="relative">
+                    <motion.img
+                      src={currentCharacter.image}
+                      alt={currentCharacter.name}
+                      className="w-16 h-16 rounded-full border-2 border-doge-gold shadow-lg"
+                      whileHover={{ scale: 1.1, rotate: [0, -5, 5, -5, 0] }}
+                      onHoverStart={() => playHover()}
+                    />
+                    <motion.div 
+                      className="absolute left-20 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <div className="text-sm font-medium">{currentCharacter.quote}</div>
+                      <div className="absolute left-0 top-1/2 transform -translate-x-2 -translate-y-1/2 rotate-45 w-4 h-4 bg-white dark:bg-gray-800" />
+                    </motion.div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
           
           <h1 className="mb-4 md:mb-6 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
@@ -54,37 +125,25 @@ export default function HeroSection() {
             </span>
           </h1>
 
-          <div className="mx-auto mb-8 max-w-2xl space-y-4">
-            <p className="text-lg md:text-xl font-medium text-foreground">
-              You Draft the Waste, DOGE Cuts the Fat!
-            </p>
-            
-            <motion.p 
-              key={currentPhraseIndex}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="text-sm italic text-muted-foreground"
-            >
-              {phrases[currentPhraseIndex]}
-            </motion.p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div className="doge-card group hover:scale-105 transition-all">
-                <Trophy className="mx-auto mb-2 h-6 w-6 text-doge-gold group-hover:scale-110 transition-all" />
-                <p className="font-medium">Draft Programs</p>
-                <p className="text-muted-foreground">Pick programs you think will be cut</p>
-              </div>
-              <div className="doge-card group hover:scale-105 transition-all">
-                <DollarSign className="mx-auto mb-2 h-6 w-6 text-doge-purple group-hover:scale-110 transition-all" />
-                <p className="font-medium">Earn Points</p>
-                <p className="text-muted-foreground">Get rewarded for correct predictions</p>
-              </div>
-              <div className="doge-card group hover:scale-105 transition-all">
-                <Users className="mx-auto mb-2 h-6 w-6 text-doge-blue group-hover:scale-110 transition-all" />
-                <p className="font-medium">Compete & Win</p>
-                <p className="text-muted-foreground">Rise to the top of the leaderboard</p>
-              </div>
+          <p className="text-lg md:text-xl font-medium text-foreground">
+            You Draft the Waste, DOGE Cuts the Fat!
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="doge-card group hover:scale-105 transition-all">
+              <Trophy className="mx-auto mb-2 h-6 w-6 text-doge-gold group-hover:scale-110 transition-all" />
+              <p className="font-medium">Draft Programs</p>
+              <p className="text-muted-foreground">Pick programs you think will be cut</p>
+            </div>
+            <div className="doge-card group hover:scale-105 transition-all">
+              <DollarSign className="mx-auto mb-2 h-6 w-6 text-doge-purple group-hover:scale-110 transition-all" />
+              <p className="font-medium">Earn Points</p>
+              <p className="text-muted-foreground">Get rewarded for correct predictions</p>
+            </div>
+            <div className="doge-card group hover:scale-105 transition-all">
+              <Users className="mx-auto mb-2 h-6 w-6 text-doge-blue group-hover:scale-110 transition-all" />
+              <p className="font-medium">Compete & Win</p>
+              <p className="text-muted-foreground">Rise to the top of the leaderboard</p>
             </div>
           </div>
 
@@ -100,19 +159,20 @@ export default function HeroSection() {
               <Button
                 size="lg"
                 onClick={scrollToPrograms}
-                className="w-full sm:w-auto bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90 group relative"
+                onMouseEnter={() => playHover()}
               >
                 Start Drafting Now
                 <ArrowDown className="ml-2 h-4 w-4 group-hover:animate-bounce" />
+                <motion.div
+                  className="absolute -top-2 -right-2 w-4 h-4 bg-doge-gold rounded-full"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
               </Button>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground"
-            >
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
                 <span>1,000+ Active Players</span>
@@ -121,10 +181,8 @@ export default function HeroSection() {
                 <div className="h-2 w-2 rounded-full bg-doge-gold animate-pulse"></div>
                 <span>$50B+ Budget Cuts Predicted</span>
               </div>
-            </motion.div>
+            </div>
           </div>
-
-          <SocialShare />
         </div>
       </div>
 
