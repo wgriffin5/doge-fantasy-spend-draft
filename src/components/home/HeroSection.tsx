@@ -19,6 +19,11 @@ export default function HeroSection() {
 
   const characters = [
     {
+      image: "/lovable-uploads/c673cccd-9961-42c2-9bc2-4d150ae3152d.png",
+      quote: "Wow! Much game. Very efficiency. Click to play!",
+      name: "Doge"
+    },
+    {
       image: "/lovable-uploads/62d7ee9d-6255-45a7-9796-b404dd5b73bc.png",
       quote: "First principles approach: Eliminate inefficiency, redesign government. Much innovation!",
       name: "Elon"
@@ -27,15 +32,10 @@ export default function HeroSection() {
       image: "/lovable-uploads/574113f5-dcac-411e-8a5a-d310e7d6805c.png",
       quote: "This game is tremendous. The best game ever made. Believe me!",
       name: "Donny"
-    },
-    {
-      image: "/lovable-uploads/c673cccd-9961-42c2-9bc2-4d150ae3152d.png",
-      quote: "Wow! Much game. Very efficiency. Click to play!",
-      name: "Doge"
     }
   ];
 
-  const [currentCharacter, setCurrentCharacter] = useState(characters[2]); // Start with Doge
+  const [currentCharacter, setCurrentCharacter] = useState(characters[0]); // Start with Doge
 
   useEffect(() => {
     const interval = setInterval(() => {
