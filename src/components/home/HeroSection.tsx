@@ -3,7 +3,7 @@ import SocialShare from "@/components/SocialShare";
 import InaugurationCountdown from "@/components/InaugurationCountdown";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Trophy, DollarSign, Users } from "lucide-react";
 
 export default function HeroSection() {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
@@ -17,7 +17,7 @@ export default function HeroSection() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
-    }, 8000); // Rotate every 8 seconds
+    }, 8000);
 
     return () => clearInterval(interval);
   }, []);
@@ -53,19 +53,40 @@ export default function HeroSection() {
               ></span>
             </span>
           </h1>
-          <p className="mx-auto mb-6 md:mb-8 max-w-2xl text-base md:text-lg text-muted-foreground px-4">
-            You Draft the Waste, DOGE Cuts the Fat!
-          </p>
-          
-          <motion.p 
-            key={currentPhraseIndex}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="mx-auto mb-6 md:mb-8 max-w-2xl text-sm italic text-muted-foreground"
-          >
-            {phrases[currentPhraseIndex]}
-          </motion.p>
+
+          <div className="mx-auto mb-8 max-w-2xl space-y-4">
+            <p className="text-lg md:text-xl font-medium text-foreground">
+              You Draft the Waste, DOGE Cuts the Fat!
+            </p>
+            
+            <motion.p 
+              key={currentPhraseIndex}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="text-sm italic text-muted-foreground"
+            >
+              {phrases[currentPhraseIndex]}
+            </motion.p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div className="doge-card group hover:scale-105 transition-all">
+                <Trophy className="mx-auto mb-2 h-6 w-6 text-doge-gold group-hover:scale-110 transition-all" />
+                <p className="font-medium">Draft Programs</p>
+                <p className="text-muted-foreground">Pick programs you think will be cut</p>
+              </div>
+              <div className="doge-card group hover:scale-105 transition-all">
+                <DollarSign className="mx-auto mb-2 h-6 w-6 text-doge-purple group-hover:scale-110 transition-all" />
+                <p className="font-medium">Earn Points</p>
+                <p className="text-muted-foreground">Get rewarded for correct predictions</p>
+              </div>
+              <div className="doge-card group hover:scale-105 transition-all">
+                <Users className="mx-auto mb-2 h-6 w-6 text-doge-blue group-hover:scale-110 transition-all" />
+                <p className="font-medium">Compete & Win</p>
+                <p className="text-muted-foreground">Rise to the top of the leaderboard</p>
+              </div>
+            </div>
+          </div>
 
           <div className="mb-6 md:mb-8 space-y-4">
             <InaugurationCountdown />
@@ -74,15 +95,15 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex justify-center gap-4"
+              className="flex flex-col sm:flex-row justify-center gap-4"
             >
               <Button
                 size="lg"
                 onClick={scrollToPrograms}
-                className="w-full sm:w-auto bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90"
+                className="w-full sm:w-auto bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90 group"
               >
                 Start Drafting Now
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-4 w-4 group-hover:animate-bounce" />
               </Button>
             </motion.div>
 
@@ -93,11 +114,11 @@ export default function HeroSection() {
               className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground"
             >
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
                 <span>1,000+ Active Players</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-doge-gold"></div>
+                <div className="h-2 w-2 rounded-full bg-doge-gold animate-pulse"></div>
                 <span>$50B+ Budget Cuts Predicted</span>
               </div>
             </motion.div>
