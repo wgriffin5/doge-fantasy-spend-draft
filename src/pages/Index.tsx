@@ -3,8 +3,6 @@ import HeroSection from "@/components/home/HeroSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import DraftSection from "@/components/home/DraftSection";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
-import GuidedTour from "@/components/GuidedTour";
-import WelcomePopup from "@/components/WelcomePopup";
 import TopEmailCapture from "@/components/home/TopEmailCapture";
 
 interface Program {
@@ -34,13 +32,10 @@ export default function Index() {
     setUserEmail(email);
   };
 
-  // Add console.log for debugging
   console.log("Index component rendering");
 
   return (
     <main className="min-h-screen bg-background">
-      <WelcomePopup />
-      <GuidedTour />
       <TopEmailCapture />
       <HeroSection />
       
