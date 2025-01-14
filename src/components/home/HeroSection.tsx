@@ -72,11 +72,28 @@ export default function HeroSection() {
     <section className="relative overflow-hidden py-12 md:py-20">
       <div className="container mx-auto px-4">
         <div className="text-center">
+          <div className="relative z-30 mb-12">
+            <h1 className="mb-4 md:mb-6 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
+              Fantasy{" "}
+              <span className="relative">
+                <span className="relative z-10 doge-gradient-text">D.O.G.E.</span>
+                <span
+                  className="absolute inset-0 doge-gradient opacity-75 blur-sm"
+                  aria-hidden="true"
+                ></span>
+              </span>
+            </h1>
+
+            <p className="text-lg md:text-xl font-medium text-foreground">
+              You Draft the Waste, DOGE Cuts the Fat!
+            </p>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="mb-8 relative max-w-2xl mx-auto"
+            className="mb-16 relative max-w-2xl mx-auto"
           >
             <img
               src="/lovable-uploads/bdbfdeaa-9954-4832-b038-ef022726e8c4.png"
@@ -92,9 +109,9 @@ export default function HeroSection() {
                   exit={{ opacity: 0, scale: 0.8, y: 20 }}
                   className={`absolute ${
                     isMobile 
-                      ? 'bottom-0 left-1/2 -translate-x-1/2 translate-y-[120%] mt-8' 
+                      ? 'bottom-0 left-1/2 -translate-x-1/2 translate-y-[150%]' 
                       : '-right-2 md:right-0 top-1/2 transform -translate-y-1/2'
-                  } max-w-[200px] z-10`}
+                  } max-w-[200px] z-20`}
                 >
                   <div className="relative">
                     <motion.img
@@ -107,7 +124,7 @@ export default function HeroSection() {
                     <motion.div 
                       className={`absolute ${
                         isMobile 
-                          ? 'left-1/2 -translate-x-1/2 top-full mt-2' 
+                          ? 'left-1/2 -translate-x-1/2 top-full mt-3' 
                           : 'left-20 top-1/2 transform -translate-y-1/2'
                       } bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg`}
                       initial={{ opacity: 0, x: isMobile ? 0 : -10 }}
@@ -129,24 +146,7 @@ export default function HeroSection() {
             </AnimatePresence>
           </motion.div>
           
-          <div className="relative z-20">
-            <h1 className="mb-4 md:mb-6 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
-              Fantasy{" "}
-              <span className="relative">
-                <span className="relative z-10 doge-gradient-text">D.O.G.E.</span>
-                <span
-                  className="absolute inset-0 doge-gradient opacity-75 blur-sm"
-                  aria-hidden="true"
-                ></span>
-              </span>
-            </h1>
-
-            <p className="text-lg md:text-xl font-medium text-foreground">
-              You Draft the Waste, DOGE Cuts the Fat!
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mt-8">
             <div className="doge-card group hover:scale-105 transition-all">
               <Trophy className="mx-auto mb-2 h-6 w-6 text-doge-gold group-hover:scale-110 transition-all" />
               <p className="font-medium">Draft Programs</p>
