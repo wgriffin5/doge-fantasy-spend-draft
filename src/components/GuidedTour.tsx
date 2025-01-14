@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { X, ArrowRight } from "lucide-react";
 import useSound from "use-sound";
+import CharacterAvatar from "./characters/CharacterAvatar";
 
 interface Step {
   target: string;
@@ -10,6 +11,8 @@ interface Step {
   message: string;
   position: "top" | "bottom" | "left" | "right";
   action?: string;
+  character: "doge" | "elon" | "vivek";
+  characterMessage?: string;
 }
 
 const steps: Step[] = [
@@ -18,30 +21,50 @@ const steps: Step[] = [
     title: "Welcome to Fantasy D.O.G.E!",
     message: "Your mission is to pick the 7 federal spending programs that you think are the most wasteful, bloated, useless and likely to be cut. If or when DOGE cuts your drafted programs, you'll earn points!",
     position: "bottom",
-    action: "Let's get started!"
+    action: "Let's get started!",
+    character: "doge",
+    characterMessage: "Much waste! Very reform! Wow!"
   },
   {
     target: "#program-grid",
     title: "Browse Programs",
     message: "Here are the government spending programs you can draft. Each program has a description and a risk level indicating how likely it is to be cut by DOGE. Look for programs you think are wasteful or vulnerable!",
     position: "left",
-    action: "Show me how to draft"
+    action: "Show me how to draft",
+    character: "elon",
+    characterMessage: "Time to disrupt government spending! 🚀"
   },
   {
     target: "#draft-picks",
     title: "Your Draft Picks",
     message: "This is your picks basket. You can draft up to 7 programs you predict will be cut or streamlined. Choose wisely - you can remove programs if you change your mind!",
     position: "left",
-    action: "Got it!"
+    action: "Got it!",
+    character: "vivek",
+    characterMessage: "Let's trim the fat from these programs!"
   },
   {
     target: "#email-input",
     title: "Save Your Picks",
     message: "Once you've selected your programs, enter your email to save your draft and track your predictions. We'll notify you when DOGE makes cuts!",
     position: "top",
-    action: "Start drafting!"
+    action: "Start drafting!",
+    character: "doge",
+    characterMessage: "Such email! Very notify! Wow!"
   },
 ];
+
+const characterImages = {
+  doge: "/lovable-uploads/doge-avatar.png",
+  elon: "/lovable-uploads/elon-avatar.png",
+  vivek: "/lovable-uploads/vivek-avatar.png"
+};
+
+const characterColors = {
+  doge: "doge-gold",
+  elon: "doge-blue",
+  vivek: "doge-purple"
+};
 
 export default function GuidedTour() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -49,7 +72,6 @@ export default function GuidedTour() {
   const [playSelect] = useSound('/sounds/select.mp3', { volume: 0.5 });
 
   useEffect(() => {
-    // Check localStorage immediately on mount
     const hasSeenTour = localStorage.getItem("hasSeenDOGETour");
     if (!hasSeenTour) {
       setIsVisible(true);
@@ -58,6 +80,15 @@ export default function GuidedTour() {
 
   const handleNext = () => {
     playSelect();
+    const nextTarget = document.querySelector(steps[currentStep + 1]?.target);
+    
+    if (nextTarget) {
+      nextTarget.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -130,6 +161,20 @@ export default function GuidedTour() {
                 </Button>
               </div>
               <p className="text-muted-foreground mb-4">{steps[currentStep].message}</p>
+              
+              <div className="flex items-center gap-3 mb-4 bg-secondary/50 p-3 rounded-lg">
+                <CharacterAvatar
+                  image={characterImages[steps[currentStep].character]}
+                  alt={steps[currentStep].character}
+                  color={characterColors[steps[currentStep].character]}
+                  Icon={ArrowRight}
+                  iconAnimation={{ scale: 1.2, rotate: [0, 45, 0] }}
+                />
+                <p className="text-sm font-medium text-secondary-foreground">
+                  {steps[currentStep].characterMessage}
+                </p>
+              </div>
+
               <div className="flex justify-between items-center">
                 <div className="flex space-x-1">
                   {steps.map((_, index) => (
