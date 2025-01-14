@@ -20,7 +20,7 @@ export default function HeroSection() {
   const characters = [
     {
       name: "Doge",
-      image: "/lovable-uploads/c673cccd-9961-42c2-9bc2-4d150ae3152d.png",
+      image: "/lovable-uploads/9337db98-0b92-4b9e-8aab-f85f6b4078c1.png",
       quote: "Wow! Much game. Very efficiency. Click to play!"
     },
     {
