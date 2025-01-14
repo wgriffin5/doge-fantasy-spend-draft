@@ -53,7 +53,8 @@ export default function HeroSection() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentCharacter((prev) => {
-        const nextIndex = (characters.indexOf(prev) + 1) % characters.length;
+        const currentIndex = characters.findIndex(char => char.name === prev.name);
+        const nextIndex = (currentIndex + 1) % characters.length;
         return characters[nextIndex];
       });
     }, 5000);
