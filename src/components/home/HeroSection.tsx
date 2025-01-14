@@ -75,12 +75,12 @@ export default function HeroSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="mb-8 relative"
+            className="mb-8 relative max-w-2xl mx-auto" // Added max-width and centered
           >
             <img
               src="/lovable-uploads/bdbfdeaa-9954-4832-b038-ef022726e8c4.png"
               alt="Uncle Elon Needs You"
-              className="mx-auto max-w-md rounded-lg shadow-lg"
+              className="mx-auto rounded-lg shadow-lg"
             />
             
             <AnimatePresence>
@@ -89,7 +89,7 @@ export default function HeroSection() {
                   initial={{ opacity: 0, scale: 0.8, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                  className="absolute -right-4 top-1/2 transform -translate-y-1/2 max-w-[200px]"
+                  className="absolute -right-2 md:right-0 top-1/2 transform -translate-y-1/2 max-w-[200px] z-10"
                 >
                   <div className="relative">
                     <motion.img
