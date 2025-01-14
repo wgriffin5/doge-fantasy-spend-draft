@@ -3,9 +3,18 @@ import SocialShare from "@/components/SocialShare";
 import InaugurationCountdown from "@/components/InaugurationCountdown";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowDown, Trophy, DollarSign, Users } from "lucide-react";
+import { ArrowDown, Trophy, DollarSign, Users, Bell } from "lucide-react";
 import useSound from "use-sound";
 import { useIsMobile } from "@/hooks/use-mobile";
+import NotificationSignup from "@/components/NotificationSignup";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function HeroSection() {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
@@ -37,7 +46,7 @@ export default function HeroSection() {
     }
   ];
 
-  const [currentCharacter, setCurrentCharacter] = useState(characters[0]); // Start with Doge
+  const [currentCharacter, setCurrentCharacter] = useState(characters[0]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -65,7 +74,13 @@ export default function HeroSection() {
   }, []);
 
   const scrollToPrograms = () => {
-    document.getElementById("program-grid")?.scrollIntoView({ behavior: "smooth" });
+    const programGrid = document.getElementById("program-grid");
+    if (programGrid) {
+      programGrid.scrollIntoView({ 
+        behavior: "smooth",
+        block: "start"
+      });
+    }
   };
 
   return (
@@ -163,6 +178,28 @@ export default function HeroSection() {
               transition={{ delay: 0.5 }}
               className="flex flex-col sm:flex-row justify-center gap-4"
             >
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90 group relative"
+                    onMouseEnter={() => playHover()}
+                  >
+                    Get Notified
+                    <Bell className="ml-2 h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Get Notified</DialogTitle>
+                    <DialogDescription>
+                      Stay updated on game events and your predictions!
+                    </DialogDescription>
+                  </DialogHeader>
+                  <NotificationSignup />
+                </DialogContent>
+              </Dialog>
+
               <Button
                 size="lg"
                 onClick={scrollToPrograms}
