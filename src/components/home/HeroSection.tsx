@@ -89,17 +89,19 @@ export default function HeroSection() {
             </p>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="mb-16 relative max-w-2xl mx-auto"
-          >
-            <img
-              src="/lovable-uploads/bdbfdeaa-9954-4832-b038-ef022726e8c4.png"
-              alt="Uncle Elon Needs You"
-              className="mx-auto rounded-lg shadow-lg"
-            />
+          <div className="space-y-8 md:space-y-12">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="relative max-w-2xl mx-auto"
+            >
+              <img
+                src="/lovable-uploads/bdbfdeaa-9954-4832-b038-ef022726e8c4.png"
+                alt="Uncle Elon Needs You"
+                className="mx-auto rounded-lg shadow-lg"
+              />
+            </motion.div>
             
             <AnimatePresence>
               {showCharacterTip && (
@@ -107,46 +109,34 @@ export default function HeroSection() {
                   initial={{ opacity: 0, scale: 0.8, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                  className={`absolute ${
-                    isMobile 
-                      ? 'bottom-0 left-1/2 -translate-x-1/2 translate-y-[150%]' 
-                      : '-right-2 md:right-0 top-1/2 transform -translate-y-1/2'
-                  } max-w-[200px] z-20`}
+                  className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8"
                 >
-                  <div className="relative">
-                    <motion.img
-                      src={currentCharacter.image}
-                      alt={currentCharacter.name}
-                      className="w-16 h-16 rounded-full border-2 border-doge-gold shadow-lg"
-                      whileHover={{ scale: 1.1, rotate: [0, -5, 5, -5, 0] }}
-                      onHoverStart={() => playHover()}
-                    />
-                    <motion.div 
-                      className={`absolute ${
-                        isMobile 
-                          ? 'left-1/2 -translate-x-1/2 top-full mt-3' 
-                          : 'left-20 top-1/2 transform -translate-y-1/2'
-                      } bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg`}
-                      initial={{ opacity: 0, x: isMobile ? 0 : -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      <div className="text-sm font-medium">{currentCharacter.quote}</div>
+                  <motion.img
+                    src={currentCharacter.image}
+                    alt={currentCharacter.name}
+                    className="w-16 h-16 rounded-full border-2 border-doge-gold shadow-lg"
+                    whileHover={{ scale: 1.1, rotate: [0, -5, 5, -5, 0] }}
+                    onHoverStart={() => playHover()}
+                  />
+                  <motion.div 
+                    className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-sm relative"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <div className="text-sm font-medium">{currentCharacter.quote}</div>
+                    {!isMobile && (
                       <div 
-                        className={`absolute ${
-                          isMobile 
-                            ? 'left-1/2 top-0 -translate-x-1/2 -translate-y-2 rotate-45' 
-                            : 'left-0 top-1/2 transform -translate-x-2 -translate-y-1/2 rotate-45'
-                        } w-4 h-4 bg-white dark:bg-gray-800`} 
+                        className="absolute left-0 top-1/2 transform -translate-x-2 -translate-y-1/2 rotate-45 w-4 h-4 bg-white dark:bg-gray-800"
                       />
-                    </motion.div>
-                  </div>
+                    )}
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mt-12">
             <div className="doge-card group hover:scale-105 transition-all">
               <Trophy className="mx-auto mb-2 h-6 w-6 text-doge-gold group-hover:scale-110 transition-all" />
               <p className="font-medium">Draft Programs</p>
