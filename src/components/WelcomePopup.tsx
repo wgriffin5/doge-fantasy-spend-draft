@@ -78,7 +78,7 @@ export default function WelcomePopup() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[425px] bg-background">
+      <DialogContent className="fixed z-[100] w-[95%] max-w-md left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 bg-background rounded-lg shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl">Join the Reform Movement!</DialogTitle>
           <DialogDescription>
