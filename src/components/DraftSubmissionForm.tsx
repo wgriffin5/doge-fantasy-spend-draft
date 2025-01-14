@@ -60,6 +60,13 @@ export default function DraftSubmissionForm({
         // Don't throw here - we still want to complete the submission even if email fails
       }
 
+      // Show success toast with more detailed message
+      toast({
+        title: "Draft submitted successfully! 🎉",
+        description: `Your ${selectedPrograms.length} program picks have been recorded and a confirmation email has been sent to ${email}. Total budget cuts: ${formatBudget(totalBudget)}`,
+        duration: 5000, // Show for 5 seconds
+      });
+
       onEmailSubmit(email);
     } catch (error) {
       console.error("Error submitting draft:", error);
