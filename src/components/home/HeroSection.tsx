@@ -90,7 +90,11 @@ export default function HeroSection() {
                   initial={{ opacity: 0, scale: 0.8, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                  className={`absolute ${isMobile ? 'bottom-0 left-1/2 -translate-x-1/2 translate-y-full mt-4' : '-right-2 md:right-0 top-1/2 transform -translate-y-1/2'} max-w-[200px] z-10`}
+                  className={`absolute ${
+                    isMobile 
+                      ? 'bottom-0 left-1/2 -translate-x-1/2 translate-y-[120%] mt-8' 
+                      : '-right-2 md:right-0 top-1/2 transform -translate-y-1/2'
+                  } max-w-[200px] z-10`}
                 >
                   <div className="relative">
                     <motion.img
@@ -101,7 +105,11 @@ export default function HeroSection() {
                       onHoverStart={() => playHover()}
                     />
                     <motion.div 
-                      className={`absolute ${isMobile ? 'left-1/2 -translate-x-1/2 top-full mt-2' : 'left-20 top-1/2 transform -translate-y-1/2'} bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg`}
+                      className={`absolute ${
+                        isMobile 
+                          ? 'left-1/2 -translate-x-1/2 top-full mt-2' 
+                          : 'left-20 top-1/2 transform -translate-y-1/2'
+                      } bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg`}
                       initial={{ opacity: 0, x: isMobile ? 0 : -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 }}
@@ -121,20 +129,22 @@ export default function HeroSection() {
             </AnimatePresence>
           </motion.div>
           
-          <h1 className="mb-4 md:mb-6 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
-            Fantasy{" "}
-            <span className="relative">
-              <span className="relative z-10 doge-gradient-text">D.O.G.E.</span>
-              <span
-                className="absolute inset-0 doge-gradient opacity-75 blur-sm"
-                aria-hidden="true"
-              ></span>
-            </span>
-          </h1>
+          <div className="relative z-20">
+            <h1 className="mb-4 md:mb-6 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
+              Fantasy{" "}
+              <span className="relative">
+                <span className="relative z-10 doge-gradient-text">D.O.G.E.</span>
+                <span
+                  className="absolute inset-0 doge-gradient opacity-75 blur-sm"
+                  aria-hidden="true"
+                ></span>
+              </span>
+            </h1>
 
-          <p className="text-lg md:text-xl font-medium text-foreground">
-            You Draft the Waste, DOGE Cuts the Fat!
-          </p>
+            <p className="text-lg md:text-xl font-medium text-foreground">
+              You Draft the Waste, DOGE Cuts the Fat!
+            </p>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div className="doge-card group hover:scale-105 transition-all">
