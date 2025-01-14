@@ -87,6 +87,7 @@ export default function HeroSection() {
     <section className="relative overflow-hidden py-12 md:py-20">
       <div className="container mx-auto px-4">
         <div className="text-center">
+          {/* Title Section */}
           <div className="relative z-30 mb-12">
             <h1 className="mb-4 md:mb-6 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
               Fantasy{" "}
@@ -105,6 +106,7 @@ export default function HeroSection() {
           </div>
 
           <div className="space-y-8 md:space-y-12">
+            {/* Elon Image Section */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -118,13 +120,14 @@ export default function HeroSection() {
               />
             </motion.div>
             
+            {/* Character Tip Section */}
             <AnimatePresence>
               {showCharacterTip && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                  className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8"
+                  className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mt-8"
                 >
                   <motion.img
                     src={currentCharacter.image}
@@ -151,6 +154,7 @@ export default function HeroSection() {
             </AnimatePresence>
           </div>
           
+          {/* Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mt-12">
             <div className="doge-card group hover:scale-105 transition-all">
               <Trophy className="mx-auto mb-2 h-6 w-6 text-doge-gold group-hover:scale-110 transition-all" />
@@ -172,6 +176,7 @@ export default function HeroSection() {
           <div className="mb-6 md:mb-8 space-y-4">
             <InaugurationCountdown />
             
+            {/* Call to Action Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -182,14 +187,16 @@ export default function HeroSection() {
                 <DialogTrigger asChild>
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90 group relative"
+                    className="min-h-[48px] w-full sm:w-auto bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90 group relative touch-manipulation"
                     onMouseEnter={() => playHover()}
                   >
-                    Get Notified
-                    <Bell className="ml-2 h-4 w-4" />
+                    <span className="flex items-center justify-center gap-2">
+                      <Bell className="h-5 w-5" />
+                      Get Notified & Start Playing
+                    </span>
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="sm:max-w-md">
                   <DialogHeader>
                     <DialogTitle>Get Notified</DialogTitle>
                     <DialogDescription>
@@ -199,21 +206,6 @@ export default function HeroSection() {
                   <NotificationSignup />
                 </DialogContent>
               </Dialog>
-
-              <Button
-                size="lg"
-                onClick={scrollToPrograms}
-                className="w-full sm:w-auto bg-gradient-to-r from-doge-gold to-doge-purple hover:from-doge-gold/90 hover:to-doge-purple/90 group relative"
-                onMouseEnter={() => playHover()}
-              >
-                Start Drafting Now
-                <ArrowDown className="ml-2 h-4 w-4 group-hover:animate-bounce" />
-                <motion.div
-                  className="absolute -top-2 -right-2 w-4 h-4 bg-doge-gold rounded-full"
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-              </Button>
             </motion.div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground">
