@@ -35,6 +35,8 @@ export default function HeroSection() {
     }
   ];
 
+  const [currentCharacter, setCurrentCharacter] = useState(characters[0]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
