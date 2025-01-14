@@ -20,8 +20,8 @@ export default function HeroSection() {
   const characters = [
     {
       image: "/lovable-uploads/62d7ee9d-6255-45a7-9796-b404dd5b73bc.png",
-      quote: "Wow! Much game. Very efficiency. Click to play!",
-      name: "Lonnie"
+      quote: "First principles approach: Eliminate inefficiency, redesign government. Much innovation!",
+      name: "Elon"
     },
     {
       image: "/lovable-uploads/574113f5-dcac-411e-8a5a-d310e7d6805c.png",
@@ -30,12 +30,10 @@ export default function HeroSection() {
     },
     {
       image: "/lovable-uploads/c673cccd-9961-42c2-9bc2-4d150ae3152d.png",
-      quote: "Let's disrupt the system. Start by drafting programs!",
-      name: "V"
+      quote: "Wow! Much game. Very efficiency. Click to play!",
+      name: "Doge"
     }
   ];
-
-  const [currentCharacter, setCurrentCharacter] = useState(characters[0]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,12 +44,10 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
-    // Show character tip after a short delay
     const timer = setTimeout(() => setShowCharacterTip(true), 2000);
     return () => clearInterval(timer);
   }, []);
 
-  // Rotate characters every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentCharacter((prev) => {
@@ -75,7 +71,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="mb-8 relative max-w-2xl mx-auto" // Added max-width and centered
+            className="mb-8 relative max-w-2xl mx-auto"
           >
             <img
               src="/lovable-uploads/bdbfdeaa-9954-4832-b038-ef022726e8c4.png"
