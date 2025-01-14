@@ -35,7 +35,7 @@ export default function HeroSection() {
     }
   ];
 
-  const [currentCharacter, setCurrentCharacter] = useState(characters[0]);
+  const [currentCharacter, setCurrentCharacter] = useState(characters[2]); // Start with Doge
 
   useEffect(() => {
     const interval = setInterval(() => {
